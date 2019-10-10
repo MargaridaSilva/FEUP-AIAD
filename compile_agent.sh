@@ -1,0 +1,1 @@
+javac -cp lib/jade.jar BookSellerAgent.java BookSellerGui.java BookBuyerAgent.java
