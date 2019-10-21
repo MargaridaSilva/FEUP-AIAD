@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import agents.*;
 
@@ -54,6 +55,8 @@ public class EnvironmentLauncher extends Repast3Launcher {
     public EnvironmentLauncher(int BOARD_DIM, int NUM_PREDATORS) {
         super();
         this.random = new Random(System.currentTimeMillis());
+        this.agents = new ConcurrentHashMap<>();
+        this.predators = new ArrayList<>();
         this.BOARD_DIM = BOARD_DIM;
         this.NUM_PREDATORS = NUM_PREDATORS;
         System.gc();
@@ -61,10 +64,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
     private void launchAgents() throws StaleProxyException {
 
-        this.predators = new ArrayList<>();
-
         this.launchPredators();
-
         this.setUpAgentsAIDMap();
     }
 
@@ -77,7 +77,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
     }
 
     private void setUpAgentsAIDMap() {
-        this.predators.forEach((Agent a) -> agents.put(a.getAID(), a));
+        this.predators.forEach((Agent a) -> this.agents.put(a.getAID(), a));
     }
 
     @Override
