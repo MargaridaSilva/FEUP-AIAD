@@ -24,6 +24,6 @@ public final class PredatorAgent extends AnimalAgent {
 
     protected void setup() {
         // Printout a welcome message
-		System.out.println("Hallo! Buyer-agent "+ getAID().getName()+" is ready.");
+		System.out.println("Hallo! Predator-agent "+ getAID().getName()+" is ready.");
     }
 }
