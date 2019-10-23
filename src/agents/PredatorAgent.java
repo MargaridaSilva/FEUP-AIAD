@@ -9,17 +9,14 @@ import launchers.EnvironmentLauncher;
  */
 public final class PredatorAgent extends AnimalAgent {
 
-    private PredatorAgent(EnvironmentLauncher model, float energyExpenditure, Integer[] coordinates) {
-        super(model, energyExpenditure, coordinates);
+    private PredatorAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
+        super(model, position, energyExpenditure);
     }
 
-    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, int BOARD_DIM) {
+    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, int[] position) {
         Random random = new Random();
         float energyExpenditure = random.nextFloat();
-        int x = random.nextInt(BOARD_DIM);
-        int y = random.nextInt(BOARD_DIM);
-        Integer[] coordinates = new Integer[]{x,y};
-        return new PredatorAgent(model, energyExpenditure, coordinates);
+        return new PredatorAgent(model, position, energyExpenditure);
     }
 
     protected void setup() {
