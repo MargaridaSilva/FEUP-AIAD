@@ -9,15 +9,15 @@ import sajas.core.Agent;
 public abstract class AnimalAgent extends Agent {
 
     protected EnvironmentLauncher model;
+    protected int[] position;
     protected float energy;
     protected float energyExpenditure;
-    protected Integer[] coordinates;
 
-    protected AnimalAgent(EnvironmentLauncher model, float energyExpenditure, Integer[] coordinates) {
+    protected AnimalAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
         this.model = model;
+        this.position = position;
         this.energy = 1;
         this.energyExpenditure = energyExpenditure;
-        this.coordinates = coordinates;
     }
 
     @Override
@@ -31,22 +31,22 @@ public abstract class AnimalAgent extends Agent {
     }
 
     public  float getEnergy() {
-        return this.energy;
+        return energy;
     }
 
     public float getEnergyExpenditure() {
-        return this.energyExpenditure;
+        return energyExpenditure;
     }
 
-    public Integer[] getCoordinates() {
-        return this.coordinates;
+    public int[] getCoordinates() {
+        return position;
     }
 
     public int getX() {
-        return this.coordinates[0];
+        return position[0];
     }
 
     public int getY() {
-        return this.coordinates[1];
+        return position[1];
     }
 }
