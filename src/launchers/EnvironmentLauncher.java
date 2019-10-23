@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import agents.*;
-
 import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -19,6 +17,7 @@ import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 
+import src.agents.PredatorAgent;
 import uchicago.src.sim.engine.SimInit;
 
 /**
