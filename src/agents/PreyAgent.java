@@ -1,6 +1,13 @@
 package agents;
 
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import launchers.EnvironmentLauncher;
+import sajas.core.behaviours.CyclicBehaviour;
+import sajas.domain.DFService;
 
 import java.util.Random;
 
@@ -20,5 +27,31 @@ public class PreyAgent extends AnimalAgent{
     protected void setup() {
         // Printout a welcome message
         System.out.println("Hallo! Prey-agent "+ getAID().getName()+" is ready.");
+
+        registerService("prey-service", "prey-name");
+        addBehaviour(new HelloRequestsServer());
     }
+
+    /**
+     */
+    private class HelloRequestsServer extends CyclicBehaviour {
+        public void action() {
+            MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
+            ACLMessage msg = myAgent.receive(mt);
+            System.out.println("Prey " + getAID() + "received message: ");
+            if (msg != null) {
+                // CFP Message received. Process it
+                String title = msg.getContent();
+                System.out.println(title);
+
+                ACLMessage reply = msg.createReply();
+                reply.setPerformative(ACLMessage.REFUSE);
+                reply.setContent("Hello everyone");
+                myAgent.send(reply);
+            }
+            else {
+                block();
+            }
+        }
+    }  // End of inner class OfferRequestsServer
 }

@@ -1,7 +1,11 @@
 package agents;
 
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import launchers.EnvironmentLauncher;
 import sajas.core.Agent;
+import sajas.domain.DFService;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
 import uchicago.src.sim.network.DefaultDrawableNode;
@@ -24,6 +28,26 @@ public abstract class AnimalAgent extends Agent {
         this.position = position;
         this.energy = 1;
         this.energyExpenditure = energyExpenditure;
+    }
+
+    protected void registerService(String type, String name){
+
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName(getAID());
+
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType(type);
+        sd.setName(name);
+
+        dfd.addServices(sd);
+
+        try {
+            DFService.register(this, dfd);
+        }
+        catch (FIPAException fe) {
+            fe.printStackTrace();
+        }
+
     }
 
     @Override
@@ -68,4 +92,5 @@ public abstract class AnimalAgent extends Agent {
     public void setNode(DefaultDrawableNode node) {
         this.myNode = node;
     }
+
 }
