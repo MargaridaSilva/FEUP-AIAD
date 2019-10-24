@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import agents.PredatorAgent;
+import agents.PreyAgent;
 import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -44,19 +45,23 @@ public class EnvironmentLauncher extends Repast3Launcher {
     private DisplaySurface dsurf;
     private Object2DGrid world;
     private List<PredatorAgent> predators;
+    private List<PreyAgent> preys;
     private ContainerController mainContainer;
     private int NUM_PREDATORS;
+    private int NUM_PREYS;
     private Map<AID, Agent> agents;
 
     private static List<DefaultDrawableNode> nodes;
 
-    public EnvironmentLauncher(int BOARD_DIM, int NUM_PREDATORS) {
+    public EnvironmentLauncher(int BOARD_DIM, int NUM_PREDATORS, int NUM_PREYS) {
         super();
         this.random = new Random(System.currentTimeMillis());
         this.agents = new ConcurrentHashMap<>();
         this.predators = new ArrayList<>();
+        this.preys = new ArrayList<>();
         this.BOARD_DIM = BOARD_DIM * DENSITY;
         this.NUM_PREDATORS = NUM_PREDATORS;
+        this.NUM_PREYS = NUM_PREYS;
         this.positionGenerator = new RandomPositionGenerator(BOARD_DIM);
         System.gc();
     }
@@ -95,6 +100,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
     private void setUpAgentsAIDMap() {
         this.predators.forEach((Agent a) -> this.agents.put(a.getAID(), a));
+        this.preys.forEach((Agent a) -> this.agents.put(a.getAID(), a));
     }
 
     private void launchPredators() throws StaleProxyException {
@@ -111,9 +117,24 @@ public class EnvironmentLauncher extends Repast3Launcher {
         }
     }
 
+    private void launchPreys() throws StaleProxyException {
+        for (int i = 0; i < this.NUM_PREYS; ++i) {
+            int[] preyPosition = positionGenerator.getPosition();
+            int[] gridPosition = getGridPosition(preyPosition);
+            PreyAgent prey = PreyAgent.generatePreyAgent(this, preyPosition);
+            this.preys.add(prey);
+            this.mainContainer.acceptNewAgent("prey-" + i, prey).start();
+            DefaultDrawableNode node = generateNode("prey-" + i, Color.BLUE, preyPosition[0]*DENSITY, preyPosition[1]*DENSITY);
+            nodes.add(node);
+            prey.setNode(node);
+            //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);
+        }
+    }
+
     private void launchAgents() throws StaleProxyException {
         nodes = new ArrayList<DefaultDrawableNode>();
         this.launchPredators();
+        this.launchPreys();
         this.setUpAgentsAIDMap();
     }
 
@@ -170,10 +191,11 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
         int BOARD_DIM = Integer.parseInt(args[0]);
         int NUM_PREDATORS = Integer.parseInt(args[1]);
+        int NUM_PREYS =  Integer.parseInt(args[2]);
 
         SimInit init = new SimInit();
         init.setNumRuns(1); // works only in batch mode
-        init.loadModel(new EnvironmentLauncher(BOARD_DIM, NUM_PREDATORS), null, EnvironmentLauncher.BATCH_MODE);
+        init.loadModel(new EnvironmentLauncher(BOARD_DIM, NUM_PREDATORS, NUM_PREYS), null, EnvironmentLauncher.BATCH_MODE);
     }
 
 
