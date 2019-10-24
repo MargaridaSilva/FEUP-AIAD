@@ -3,6 +3,7 @@ package agents;
 import java.awt.*;
 import java.util.Random;
 
+import behaviours.Walk;
 import launchers.EnvironmentLauncher;
 import uchicago.src.sim.gui.Drawable;
 
@@ -14,6 +15,7 @@ public final class PredatorAgent extends AnimalAgent {
     private PredatorAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
         super(model, position, energyExpenditure);
         //this.node.setColor(this.color);
+
     }
 
     public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, int[] position) {

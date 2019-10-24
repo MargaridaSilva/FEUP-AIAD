@@ -1,5 +1,7 @@
 package utils;
 
+import behaviours.Walk;
+
 import java.util.HashSet;
 import java.util.Random;
 
@@ -12,5 +14,6 @@ public abstract class PositionGenerator {
 
     public int[] getPosition(){
         return new int[]{0,0};
+
     }
 }

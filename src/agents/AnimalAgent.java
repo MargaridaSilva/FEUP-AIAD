@@ -1,5 +1,6 @@
 package agents;
 
+import behaviours.Walk;
 import launchers.EnvironmentLauncher;
 import sajas.core.Agent;
 import uchicago.src.sim.gui.Drawable;
@@ -13,17 +14,18 @@ import java.awt.*;
  */
 public abstract class AnimalAgent extends Agent {
 
-    protected EnvironmentLauncher model;
+    public EnvironmentLauncher model;
     protected int[] position;
     protected float energy;
     protected float energyExpenditure;
-    private DefaultDrawableNode myNode;
+    public DefaultDrawableNode node;
 
     protected AnimalAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
         this.model = model;
         this.position = position;
         this.energy = 1;
         this.energyExpenditure = energyExpenditure;
+        addBehaviour(new Walk(this, 100));
     }
 
     @Override
@@ -56,6 +58,8 @@ public abstract class AnimalAgent extends Agent {
         return position[1];
     }
 
+    public void setX(int value) {position[0] = value;}
+
     /*@Override
     public void draw(SimGraphics simGraphics) {
         simGraphics.setDrawingCoordinates(getX(), getY(), 0);
@@ -66,6 +70,6 @@ public abstract class AnimalAgent extends Agent {
     }*/
 
     public void setNode(DefaultDrawableNode node) {
-        this.myNode = node;
+        this.node = node;
     }
 }

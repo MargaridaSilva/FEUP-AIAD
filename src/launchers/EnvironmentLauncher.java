@@ -17,10 +17,11 @@ import sajas.core.Agent;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
+import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Network2DDisplay;
-import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.gui.OvalNetworkItem;
 import uchicago.src.sim.network.DefaultDrawableNode;
 import uchicago.src.sim.space.Object2DGrid;
@@ -37,12 +38,13 @@ public class EnvironmentLauncher extends Repast3Launcher {
      */
     private int BOARD_DIM;
     private static final boolean BATCH_MODE = true;
-    private static final int DENSITY = 20;
+    public static final int DENSITY = 20;
     private static final String ENVIRONMENT_NAME = "Predator-Prey Environment";
     private Random random;
     private PositionGenerator positionGenerator;
-    private DisplaySurface dsurf;
+    public DisplaySurface dsurf;
     private Object2DGrid world;
+    private OpenSequenceGraph plot;
     private List<PredatorAgent> predators;
     private ContainerController mainContainer;
     private int NUM_PREDATORS;
@@ -124,6 +126,37 @@ public class EnvironmentLauncher extends Repast3Launcher {
      */
 
     public void buildSchedule() {
+        // graph
+        if (plot != null) plot.dispose();
+        /*plot = new OpenSequenceGraph("Service performance", this);
+        plot.setAxisTitles("time", "% successful service executions");
+
+        plot.addSequence("Consumers", new Sequence() {
+            public double getSValue() {
+                // iterate through consumers
+                double v = 0.0;
+                for(int i = 0; i < consumers.size(); i++) {
+                    v += consumers.get(i).getMovingAverage(10);
+                }
+                return v / consumers.size();
+            }
+        });
+        plot.addSequence("Filtering Consumers", new Sequence() {
+            public double getSValue() {
+                // iterate through filtering consumers
+                double v = 0.0;
+                for(int i = 0; i < filteringConsumers.size(); i++) {
+                    v += filteringConsumers.get(i).getMovingAverage(10);
+                }
+                return v / filteringConsumers.size();
+            }
+        });
+
+         */
+        //plot.display();
+
+        getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay");
+        //getSchedule().scheduleActionAtInterval(100, plot, "step", Schedule.LAST);
     }
 
 
@@ -146,7 +179,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
         super.begin();
         this.buildModel();
         this.buildDisplay();
-        //this.buildSchedule();
+        this.buildSchedule();
     }
 
     @Override
