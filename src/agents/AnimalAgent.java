@@ -13,11 +13,11 @@ import java.awt.*;
  */
 public abstract class AnimalAgent extends Agent {
 
-    protected EnvironmentLauncher model;
+    public EnvironmentLauncher model;
     protected int[] position;
     protected float energy;
     protected float energyExpenditure;
-    private DefaultDrawableNode myNode;
+    public DefaultDrawableNode node;
 
     protected AnimalAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
         this.model = model;
@@ -56,6 +56,22 @@ public abstract class AnimalAgent extends Agent {
         return position[1];
     }
 
+    public int[] getPosition() {
+        return position;
+    }
+
+    public void setX(int value) {
+        this.position[0] = value;
+    }
+
+    public void setY(int value) {
+        this.position[1] = value;
+    }
+
+    public void setPosition(int[] position) {
+        this.position = position;
+    }
+
     /*@Override
     public void draw(SimGraphics simGraphics) {
         simGraphics.setDrawingCoordinates(getX(), getY(), 0);
@@ -66,6 +82,10 @@ public abstract class AnimalAgent extends Agent {
     }*/
 
     public void setNode(DefaultDrawableNode node) {
-        this.myNode = node;
+        this.node = node;
     }
+
+    
+
+    
 }

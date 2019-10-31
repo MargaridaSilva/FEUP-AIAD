@@ -3,6 +3,7 @@ package agents;
 import java.awt.*;
 import java.util.Random;
 
+import behaviours.Navigate;
 import launchers.EnvironmentLauncher;
 import uchicago.src.sim.gui.Drawable;
 
@@ -22,8 +23,11 @@ public final class PredatorAgent extends AnimalAgent {
         return new PredatorAgent(model, position, energyExpenditure);
     }
 
+    @Override
     protected void setup() {
+        super.setup();
         // Printout a welcome message
+        super.addBehaviour(new Navigate(this,100));
 		System.out.println("Hallo! Predator-agent "+ getAID().getName()+" is ready.");
     }
 

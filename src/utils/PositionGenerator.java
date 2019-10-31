@@ -1,8 +1,5 @@
 package utils;
 
-import java.util.HashSet;
-import java.util.Random;
-
 public abstract class PositionGenerator {
     protected final int BOARD_DIM;
 
