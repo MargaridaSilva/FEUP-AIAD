@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import agents.ObserverAgent;
 import agents.PredatorAgent;
 import jade.core.AID;
 import jade.core.Profile;
@@ -18,11 +19,9 @@ import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
-import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Network2DDisplay;
-import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.gui.OvalNetworkItem;
 import uchicago.src.sim.network.DefaultDrawableNode;
 import uchicago.src.sim.space.Object2DGrid;
@@ -46,6 +45,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
     public DisplaySurface dsurf;
     private Object2DGrid world;
     private OpenSequenceGraph plot;
+    private ObserverAgent observer;
     private List<PredatorAgent> predators;
     private ContainerController mainContainer;
     private int NUM_PREDATORS;
@@ -114,8 +114,14 @@ public class EnvironmentLauncher extends Repast3Launcher {
         }
     }
 
+    private void launchObserver() throws StaleProxyException {
+        this.observer = new ObserverAgent(this);
+        this.mainContainer.acceptNewAgent("observer", this.observer).start();
+    }
+
     private void launchAgents() throws StaleProxyException {
         nodes = new ArrayList<DefaultDrawableNode>();
+        this.launchObserver();
         this.launchPredators();
         this.setUpAgentsAIDMap();
     }

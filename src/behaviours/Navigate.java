@@ -21,11 +21,14 @@ public class Navigate extends TickerBehaviour {
         
         AnimalAgent agent = (AnimalAgent) this.myAgent;
         int[] move = this.MOVES[random.nextInt(4)];
-        agent.setX(agent.getX() + agent.model.DENSITY * move[0]);
-        agent.setY(agent.getY() + agent.model.DENSITY * move[1]);
+        agent.setX(agent.getX() + agent.getModel().DENSITY * move[0]);
+        agent.setY(agent.getY() + agent.getModel().DENSITY * move[1]);
         
         agent.node.setX(agent.getX());
         agent.node.setY(agent.getY());
     }
     
+
+    // TODO: restringir movimento apenas às dimensões do board
+    // TODO: garantir que dois agentes não colidem
 }

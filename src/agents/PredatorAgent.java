@@ -26,9 +26,19 @@ public final class PredatorAgent extends AnimalAgent {
     @Override
     protected void setup() {
         super.setup();
-        // Printout a welcome message
+
         super.addBehaviour(new Navigate(this,100));
-		System.out.println("Hallo! Predator-agent "+ getAID().getName()+" is ready.");
+
+		System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");
+    }
+
+    @Override
+    protected void takeDown() {
+        super.takeDown();
+        
+        this.deRegisterServices();
+
+        System.out.println("Predator-agent " + this.getAID() + " terminating");
     }
 
 
