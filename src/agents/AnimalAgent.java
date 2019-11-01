@@ -4,6 +4,7 @@ import launchers.EnvironmentLauncher;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
 import uchicago.src.sim.network.DefaultDrawableNode;
+import utils.Position;
 
 import java.awt.*;
 
@@ -12,12 +13,12 @@ import java.awt.*;
  */
 public abstract class AnimalAgent extends GenericAgent {
 
-    protected int[] position;
+    protected Position position;
     protected float energy;
     protected float energyExpenditure;
     public DefaultDrawableNode node;
 
-    protected AnimalAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
+    protected AnimalAgent(EnvironmentLauncher model, Position position, float energyExpenditure) {
         super(model);
         this.position = position;
         this.energy = 1;
@@ -32,6 +33,9 @@ public abstract class AnimalAgent extends GenericAgent {
     @Override
     protected void takeDown() {
         super.takeDown();
+
+        // TODO: inform the Observer agent that he is no longer in the world, so that 
+        // the Observer won't register its position
     }
 
     public  float getEnergy() {
@@ -42,32 +46,28 @@ public abstract class AnimalAgent extends GenericAgent {
         return energyExpenditure;
     }
 
-    public int[] getCoordinates() {
-        return position;
-    }
-
     public int getX() {
-        return position[0];
+        return position.x;
     }
 
     public int getY() {
-        return position[1];
+        return position.y;
     }
 
-    public int[] getPosition() {
+    public Position getPosition() {
         return position;
     }
 
     public void setX(int value) {
-        this.position[0] = value;
+        this.position.x = value;
     }
 
     public void setY(int value) {
-        this.position[1] = value;
+        this.position.y = value;
     }
 
-    public void setPosition(int[] position) {
-        this.position = position;
+    public void setPosition(Position position) {
+        this.position = position.clone();
     }
 
     /*@Override

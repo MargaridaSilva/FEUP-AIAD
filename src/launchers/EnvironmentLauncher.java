@@ -25,6 +25,7 @@ import uchicago.src.sim.gui.Network2DDisplay;
 import uchicago.src.sim.gui.OvalNetworkItem;
 import uchicago.src.sim.network.DefaultDrawableNode;
 import uchicago.src.sim.space.Object2DGrid;
+import utils.Position;
 import utils.PositionGenerator;
 import utils.RandomPositionGenerator;
 
@@ -38,7 +39,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
      */
     private int BOARD_DIM;
     private static final boolean BATCH_MODE = true;
-    public static final int DENSITY = 20;
+    private static final int DENSITY = 20;
     private static final String ENVIRONMENT_NAME = "Predator-Prey Environment";
     private Random random;
     private PositionGenerator positionGenerator;
@@ -64,11 +65,12 @@ public class EnvironmentLauncher extends Repast3Launcher {
         System.gc();
     }
 
+    public int getBoardDim() {
+        return this.BOARD_DIM;
+    }
 
-    private int[] getGridPosition(int[] position) {
-        int x = position[0];
-        int y = position[1];
-        return new int[]{x, y};
+    public int getBoardDensity() {
+        return this.DENSITY;
     }
 
     @Override
@@ -102,12 +104,12 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
     private void launchPredators() throws StaleProxyException {
         for (int i = 0; i < this.NUM_PREDATORS; ++i) {
-            int[] predatorPosition = positionGenerator.getPosition();
-            int[] gridPosition = getGridPosition(predatorPosition);
+            Position predatorPosition = positionGenerator.getPosition();
             PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, predatorPosition);
             this.predators.add(predator);
+            this.observer.addAgent(predator);
             this.mainContainer.acceptNewAgent("predator-" + i, predator).start();
-            DefaultDrawableNode node = generateNode("predator-" + i, Color.RED, predatorPosition[0]*DENSITY, predatorPosition[1]*DENSITY);
+            DefaultDrawableNode node = generateNode("predator-" + i, Color.RED, predatorPosition.x*DENSITY, predatorPosition.y*DENSITY);
             nodes.add(node);
             predator.setNode(node);
             //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);

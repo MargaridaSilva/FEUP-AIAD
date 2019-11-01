@@ -1,34 +1,20 @@
 package behaviours;
 
-import java.util.Random;
-
-import agents.AnimalAgent;
 import sajas.core.Agent;
-import sajas.core.behaviours.TickerBehaviour;
+import sajas.core.behaviours.Behaviour;
+import sajas.core.behaviours.ParallelBehaviour;
 
-public class Navigate extends TickerBehaviour {
+public class Navigate extends ParallelBehaviour {
 
-    private Random random;
-    private final int[][] MOVES = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    public Navigate(Agent agent, long period) {
+        super(agent, WHEN_ALL);
 
-    public Navigate(Agent a, long period) {
-        super(a, period);
-        this.random = new Random(System.currentTimeMillis());
+        Move moveBehaviour = new Move(this, agent, period);
+        this.addSubBehaviour(moveBehaviour);
     }
 
-    @Override   
-    protected void onTick() {
-        
-        AnimalAgent agent = (AnimalAgent) this.myAgent;
-        int[] move = this.MOVES[random.nextInt(4)];
-        agent.setX(agent.getX() + agent.getModel().DENSITY * move[0]);
-        agent.setY(agent.getY() + agent.getModel().DENSITY * move[1]);
-        
-        agent.node.setX(agent.getX());
-        agent.node.setY(agent.getY());
+    public void addSubBehaviour(Behaviour behaviour) {
+        super.addSubBehaviour(behaviour);
     }
     
-
-    // TODO: restringir movimento apenas às dimensões do board
-    // TODO: garantir que dois agentes não colidem
 }

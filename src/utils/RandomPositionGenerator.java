@@ -14,7 +14,7 @@ public final class RandomPositionGenerator extends PositionGenerator {
         this.randomNumbers = new HashSet<>();
     }
 
-    public int[] getPosition() {
+    public Position getPosition() {
         int x, y, randomNumber = 0;
         
         do {
@@ -25,6 +25,6 @@ public final class RandomPositionGenerator extends PositionGenerator {
         x = randomNumber / BOARD_DIM;
         y = randomNumber % BOARD_DIM;
 
-        return new int[]{x,y};
+        return new Position(x,y);
     }
 }
