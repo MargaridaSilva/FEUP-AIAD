@@ -8,17 +8,18 @@ import jade.lang.acl.MessageTemplate;
 import launchers.EnvironmentLauncher;
 import sajas.core.behaviours.CyclicBehaviour;
 import sajas.domain.DFService;
+import utils.Position;
 
 import java.util.Random;
 
 public class PreyAgent extends AnimalAgent{
 
-    private PreyAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
+    private PreyAgent(EnvironmentLauncher model, Position position, float energyExpenditure) {
         super(model, position, energyExpenditure);
         //this.node.setColor(this.color);
     }
 
-    public static PreyAgent generatePreyAgent(EnvironmentLauncher model, int[] position) {
+    public static PreyAgent generatePreyAgent(EnvironmentLauncher model, Position position) {
         Random random = new Random();
         float energyExpenditure = random.nextFloat();
         return new PreyAgent(model, position, energyExpenditure);

@@ -124,16 +124,17 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
     private void launchPreys() throws StaleProxyException {
         for (int i = 0; i < this.NUM_PREYS; ++i) {
-            int[] preyPosition = positionGenerator.getPosition();
-            int[] gridPosition = getGridPosition(preyPosition);
+            Position preyPosition = positionGenerator.getPosition();
             PreyAgent prey = PreyAgent.generatePreyAgent(this, preyPosition);
             this.preys.add(prey);
             this.mainContainer.acceptNewAgent("prey-" + i, prey).start();
-            DefaultDrawableNode node = generateNode("prey-" + i, Color.BLUE, preyPosition[0]*DENSITY, preyPosition[1]*DENSITY);
+            DefaultDrawableNode node = generateNode("prey-" + i, Color.BLUE, preyPosition.x * DENSITY, preyPosition.y * DENSITY);
             nodes.add(node);
             prey.setNode(node);
             //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);
         }
+    }
+
     private void launchObserver() throws StaleProxyException {
         this.observer = new ObserverAgent(this);
         this.mainContainer.acceptNewAgent("observer", this.observer).start();

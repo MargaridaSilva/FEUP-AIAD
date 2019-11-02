@@ -24,6 +24,8 @@ import utils.Position;
  */
 public final class PredatorAgent extends AnimalAgent {
 
+    private AID[] preyAgentList;
+
     private PredatorAgent(EnvironmentLauncher model, Position position, float energyExpenditure) {
         super(model, position, energyExpenditure);
         //this.node.setColor(this.color);
