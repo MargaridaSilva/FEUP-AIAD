@@ -30,26 +30,6 @@ public abstract class AnimalAgent extends GenericAgent {
         this.energyExpenditure = energyExpenditure;
     }
 
-    protected void registerService(String type, String name){
-
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(getAID());
-
-        ServiceDescription sd = new ServiceDescription();
-        sd.setType(type);
-        sd.setName(name);
-
-        dfd.addServices(sd);
-
-        try {
-            DFService.register(this, dfd);
-        }
-        catch (FIPAException fe) {
-            fe.printStackTrace();
-        }
-
-    }
-
     @Override
     protected void setup() {
         super.setup();

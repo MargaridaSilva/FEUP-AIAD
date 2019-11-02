@@ -29,7 +29,7 @@ public class PreyAgent extends AnimalAgent{
         // Printout a welcome message
         System.out.println("Hallo! Prey-agent "+ getAID().getName()+" is ready.");
 
-        registerService("prey-service", "prey-name");
+        this.registerService("prey-service", "prey-name", new String[]{},  new String[]{});
         addBehaviour(new HelloRequestsServer());
     }
 
