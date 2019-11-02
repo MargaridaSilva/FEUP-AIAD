@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import agents.ObserverAgent;
 import agents.PredatorAgent;
 import agents.PreyAgent;
 import jade.core.AID;
@@ -18,13 +19,14 @@ import sajas.core.Agent;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
+import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Network2DDisplay;
-import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.gui.OvalNetworkItem;
 import uchicago.src.sim.network.DefaultDrawableNode;
 import uchicago.src.sim.space.Object2DGrid;
+import utils.Position;
 import utils.PositionGenerator;
 import utils.RandomPositionGenerator;
 
@@ -42,8 +44,10 @@ public class EnvironmentLauncher extends Repast3Launcher {
     private static final String ENVIRONMENT_NAME = "Predator-Prey Environment";
     private Random random;
     private PositionGenerator positionGenerator;
-    private DisplaySurface dsurf;
+    public DisplaySurface dsurf;
     private Object2DGrid world;
+    private OpenSequenceGraph plot;
+    private ObserverAgent observer;
     private List<PredatorAgent> predators;
     private List<PreyAgent> preys;
     private ContainerController mainContainer;
@@ -66,11 +70,12 @@ public class EnvironmentLauncher extends Repast3Launcher {
         System.gc();
     }
 
+    public int getBoardDim() {
+        return this.BOARD_DIM;
+    }
 
-    private int[] getGridPosition(int[] position) {
-        int x = position[0];
-        int y = position[1];
-        return new int[]{x, y};
+    public int getBoardDensity() {
+        return this.DENSITY;
     }
 
     @Override
@@ -105,12 +110,12 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
     private void launchPredators() throws StaleProxyException {
         for (int i = 0; i < this.NUM_PREDATORS; ++i) {
-            int[] predatorPosition = positionGenerator.getPosition();
-            int[] gridPosition = getGridPosition(predatorPosition);
+            Position predatorPosition = positionGenerator.getPosition();
             PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, predatorPosition);
             this.predators.add(predator);
+            this.observer.addAgent(predator);
             this.mainContainer.acceptNewAgent("predator-" + i, predator).start();
-            DefaultDrawableNode node = generateNode("predator-" + i, Color.RED, predatorPosition[0]*DENSITY, predatorPosition[1]*DENSITY);
+            DefaultDrawableNode node = generateNode("predator-" + i, Color.RED, predatorPosition.x*DENSITY, predatorPosition.y*DENSITY);
             nodes.add(node);
             predator.setNode(node);
             //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);
@@ -129,22 +134,57 @@ public class EnvironmentLauncher extends Repast3Launcher {
             prey.setNode(node);
             //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);
         }
+    private void launchObserver() throws StaleProxyException {
+        this.observer = new ObserverAgent(this);
+        this.mainContainer.acceptNewAgent("observer", this.observer).start();
     }
 
     private void launchAgents() throws StaleProxyException {
         nodes = new ArrayList<DefaultDrawableNode>();
+        this.launchObserver();
         this.launchPredators();
         this.launchPreys();
         this.setUpAgentsAIDMap();
     }
 
-    /**
+      /**
      * Agents are launched
      * Display is added to a display surface
      * @throws StaleProxyException
      */
 
     public void buildSchedule() {
+        // graph
+        if (plot != null) plot.dispose();
+        /*plot = new OpenSequenceGraph("Service performance", this);
+        plot.setAxisTitles("time", "% successful service executions");
+
+        plot.addSequence("Consumers", new Sequence() {
+            public double getSValue() {
+                // iterate through consumers
+                double v = 0.0;
+                for(int i = 0; i < consumers.size(); i++) {
+                    v += consumers.get(i).getMovingAverage(10);
+                }
+                return v / consumers.size();
+            }
+        });
+        plot.addSequence("Filtering Consumers", new Sequence() {
+            public double getSValue() {
+                // iterate through filtering consumers
+                double v = 0.0;
+                for(int i = 0; i < filteringConsumers.size(); i++) {
+                    v += filteringConsumers.get(i).getMovingAverage(10);
+                }
+                return v / filteringConsumers.size();
+            }
+        });
+
+         */
+        //plot.display();
+
+        getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay");
+        //getSchedule().scheduleActionAtInterval(100, plot, "step", Schedule.LAST);
     }
 
 
@@ -167,7 +207,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
         super.begin();
         this.buildModel();
         this.buildDisplay();
-        //this.buildSchedule();
+        this.buildSchedule();
     }
 
     @Override

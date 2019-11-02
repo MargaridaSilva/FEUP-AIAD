@@ -8,6 +8,8 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import behaviours.Move;
+import behaviours.Navigate;
 import launchers.EnvironmentLauncher;
 import jade.core.AID;
 import sajas.core.Agent;
@@ -15,30 +17,41 @@ import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.TickerBehaviour;
 import sajas.domain.DFService;
 import uchicago.src.sim.gui.Drawable;
+import utils.Position;
 
 /**
  * A class to represent a Predator agent
  */
 public final class PredatorAgent extends AnimalAgent {
 
-    private AID[] preyAgentList;
-
-    private PredatorAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
+    private PredatorAgent(EnvironmentLauncher model, Position position, float energyExpenditure) {
         super(model, position, energyExpenditure);
         //this.node.setColor(this.color);
     }
 
-    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, int[] position) {
+    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, Position position) {
         Random random = new Random();
         float energyExpenditure = random.nextFloat();
         return new PredatorAgent(model, position, energyExpenditure);
     }
 
+    @Override
     protected void setup() {
-        // Printout a welcome message
-		System.out.println("Hallo! Predator-agent "+ getAID().getName()+" is ready.");
-        TickerBehaviour tb = new UpdatePreyList(this, 10000);
-        addBehaviour(tb);
+        super.addBehaviour(new UpdatePreyList(this, 10000));
+        super.setup();
+
+        super.addBehaviour(new Navigate(this,100));
+
+		System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");
+    }
+
+    @Override
+    protected void takeDown() {
+        super.takeDown();
+        
+        this.deRegisterServices();
+
+        System.out.println("Predator-agent " + this.getAID() + " terminating");
     }
 
 

@@ -9,22 +9,22 @@ import sajas.domain.DFService;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
 import uchicago.src.sim.network.DefaultDrawableNode;
+import utils.Position;
 
 import java.awt.*;
 
 /**
  * A class to represent an Animal agent
  */
-public abstract class AnimalAgent extends Agent {
+public abstract class AnimalAgent extends GenericAgent {
 
-    protected EnvironmentLauncher model;
-    protected int[] position;
+    protected Position position;
     protected float energy;
     protected float energyExpenditure;
-    private DefaultDrawableNode myNode;
+    public DefaultDrawableNode node;
 
-    protected AnimalAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
-        this.model = model;
+    protected AnimalAgent(EnvironmentLauncher model, Position position, float energyExpenditure) {
+        super(model);
         this.position = position;
         this.energy = 1;
         this.energyExpenditure = energyExpenditure;
@@ -58,6 +58,9 @@ public abstract class AnimalAgent extends Agent {
     @Override
     protected void takeDown() {
         super.takeDown();
+
+        // TODO: inform the Observer agent that he is no longer in the world, so that 
+        // the Observer won't register its position
     }
 
     public  float getEnergy() {
@@ -68,16 +71,28 @@ public abstract class AnimalAgent extends Agent {
         return energyExpenditure;
     }
 
-    public int[] getCoordinates() {
-        return position;
-    }
-
     public int getX() {
-        return position[0];
+        return position.x;
     }
 
     public int getY() {
-        return position[1];
+        return position.y;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setX(int value) {
+        this.position.x = value;
+    }
+
+    public void setY(int value) {
+        this.position.y = value;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position.clone();
     }
 
     /*@Override
@@ -90,7 +105,7 @@ public abstract class AnimalAgent extends Agent {
     }*/
 
     public void setNode(DefaultDrawableNode node) {
-        this.myNode = node;
+        this.node = node;
     }
 
 }
