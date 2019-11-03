@@ -14,15 +14,15 @@ import utils.Position;
  */
 public final class PredatorAgent extends AnimalAgent {
 
-    private PredatorAgent(EnvironmentLauncher model, Position position, float energyExpenditure) {
-        super(model, position, energyExpenditure);
+    private PredatorAgent(EnvironmentLauncher model, Position position, float energyExpenditure, Gender gender) {
+        super(model, position, energyExpenditure, gender);
         //this.node.setColor(this.color);
     }
 
-    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, Position position) {
+    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, Position position, Gender gender) {
         Random random = new Random();
         float energyExpenditure = random.nextFloat();
-        return new PredatorAgent(model, position, energyExpenditure);
+        return new PredatorAgent(model, position, energyExpenditure, gender);
     }
 
     @Override

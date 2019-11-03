@@ -13,12 +13,14 @@ import java.awt.*;
  */
 public abstract class AnimalAgent extends GenericAgent {
 
+    public enum Gender {MALE, FEMALE}
     protected Position position;
     protected float energy;
     protected float energyExpenditure;
+    protected Gender gender;
     public DefaultDrawableNode node;
 
-    protected AnimalAgent(EnvironmentLauncher model, Position position, float energyExpenditure) {
+    protected AnimalAgent(EnvironmentLauncher model, Position position, float energyExpenditure, Gender gender) {
         super(model);
         this.position = position;
         this.energy = 1;

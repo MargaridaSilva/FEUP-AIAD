@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import agents.ObserverAgent;
 import agents.PredatorAgent;
+import agents.AnimalAgent.Gender;
 import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -49,18 +50,20 @@ public class EnvironmentLauncher extends Repast3Launcher {
     private ObserverAgent observer;
     private List<PredatorAgent> predators;
     private ContainerController mainContainer;
-    private int NUM_PREDATORS;
+    private int NUM_MALE_PREDATORS;
+    private int NUM_FEMALE_PREDATORS;
     private Map<AID, Agent> agents;
 
     private static List<DefaultDrawableNode> nodes;
 
-    public EnvironmentLauncher(int BOARD_DIM, int NUM_PREDATORS) {
+    public EnvironmentLauncher(int BOARD_DIM, int NUM_MALE_PREDATORS, int NUM_FEMALE_PREDATORS) {
         super();
         this.random = new Random(System.currentTimeMillis());
         this.agents = new ConcurrentHashMap<>();
         this.predators = new ArrayList<>();
         this.BOARD_DIM = BOARD_DIM * DENSITY;
-        this.NUM_PREDATORS = NUM_PREDATORS;
+        this.NUM_MALE_PREDATORS = NUM_MALE_PREDATORS;
+        this.NUM_FEMALE_PREDATORS = NUM_FEMALE_PREDATORS;
         this.positionGenerator = new RandomPositionGenerator(BOARD_DIM);
         System.gc();
     }
@@ -103,13 +106,20 @@ public class EnvironmentLauncher extends Repast3Launcher {
     }
 
     private void launchPredators() throws StaleProxyException {
-        for (int i = 0; i < this.NUM_PREDATORS; ++i) {
+        int numPredators = this.NUM_MALE_PREDATORS + this.NUM_FEMALE_PREDATORS;
+        for (int i = 0; i < numPredators; ++i) {
             Position predatorPosition = positionGenerator.getPosition();
-            PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, predatorPosition);
+            Gender gender = Gender.MALE;
+            Color color = Color.BLUE;
+            if(i >= this.NUM_MALE_PREDATORS) {
+                gender = Gender.FEMALE;
+                color = Color.PINK;
+            }
+            PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, predatorPosition, gender);
             this.predators.add(predator);
             this.observer.addAgent(predator);
             this.mainContainer.acceptNewAgent("predator-" + i, predator).start();
-            DefaultDrawableNode node = generateNode("predator-" + i, Color.RED, predatorPosition.x*DENSITY, predatorPosition.y*DENSITY);
+            DefaultDrawableNode node = generateNode("predator-" + i, color, predatorPosition.x*DENSITY, predatorPosition.y*DENSITY);
             nodes.add(node);
             predator.setNode(node);
             //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);
@@ -211,11 +221,12 @@ public class EnvironmentLauncher extends Repast3Launcher {
     public static void main(String[] args) throws IOException {
 
         int BOARD_DIM = Integer.parseInt(args[0]);
-        int NUM_PREDATORS = Integer.parseInt(args[1]);
+        int NUM_MALE_PREDATORS = Integer.parseInt(args[1]);
+        int NUM_FEMALE_PREDATORS = Integer.parseInt(args[2]);
 
         SimInit init = new SimInit();
         init.setNumRuns(1); // works only in batch mode
-        init.loadModel(new EnvironmentLauncher(BOARD_DIM, NUM_PREDATORS), null, EnvironmentLauncher.BATCH_MODE);
+        init.loadModel(new EnvironmentLauncher(BOARD_DIM, NUM_MALE_PREDATORS, NUM_FEMALE_PREDATORS), null, EnvironmentLauncher.BATCH_MODE);
     }
 
 
