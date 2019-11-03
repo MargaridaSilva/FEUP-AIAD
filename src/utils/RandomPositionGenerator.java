@@ -10,7 +10,7 @@ public final class RandomPositionGenerator extends PositionGenerator {
 
     public RandomPositionGenerator(int BOARD_DIM) {
         super(BOARD_DIM);
-        this.random = new Random(System.currentTimeMillis());
+        this.random = new Random();
         this.randomNumbers = new HashSet<>();
     }
 

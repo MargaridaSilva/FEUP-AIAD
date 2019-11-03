@@ -28,7 +28,7 @@ public class ChooseNextMove extends Behaviour {
         super(agent);
         this.finished = false;
         this.parentBehaviour = parentBehaviour;
-        this.random = new Random(System.currentTimeMillis());
+        this.random = new Random();
         this.remainingMoves = remainingMoves;
     }
 

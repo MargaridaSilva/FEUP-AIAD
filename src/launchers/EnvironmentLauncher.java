@@ -58,7 +58,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
     public EnvironmentLauncher(int BOARD_DIM, int NUM_MALE_PREDATORS, int NUM_FEMALE_PREDATORS) {
         super();
-        this.random = new Random(System.currentTimeMillis());
+        this.random = new Random();
         this.agents = new ConcurrentHashMap<>();
         this.predators = new ArrayList<>();
         this.BOARD_DIM = BOARD_DIM * DENSITY;
