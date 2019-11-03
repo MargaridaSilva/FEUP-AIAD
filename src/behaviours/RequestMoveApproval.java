@@ -20,8 +20,6 @@ public class RequestMoveApproval extends ProposeInitiator {
         this.possiblePosition = possiblePosition;
         this.parentBehaviour = parentBehaviour;
         this.remainingMoves = remainingMoves;
-        //this.registerHandleAcceptProposal(this);
-        //this.registerHandleRejectProposal(this);
     }
 
     @Override
@@ -42,7 +40,7 @@ public class RequestMoveApproval extends ProposeInitiator {
         
         super.handleRejectProposal(reject_proposal);
 
-        ChooseNextMove chooseNextMoveBehaviour = new ChooseNextMove(this.parentBehaviour, this.myAgent, this.remainingMoves);
+        ChooseNextMove chooseNextMoveBehaviour = new ChooseNextMove(this.myAgent, this.parentBehaviour, this.remainingMoves);
 
         this.parentBehaviour.addSubBehaviour(chooseNextMoveBehaviour);
     }

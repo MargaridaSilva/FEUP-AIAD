@@ -25,6 +25,7 @@ public abstract class AnimalAgent extends GenericAgent {
         this.position = position;
         this.energy = 1;
         this.energyExpenditure = energyExpenditure;
+        this.gender = gender;
     }
 
     @Override

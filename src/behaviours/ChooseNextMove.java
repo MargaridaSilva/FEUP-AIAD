@@ -14,6 +14,9 @@ import jade.core.AID;
 import sajas.core.Agent;
 import sajas.core.behaviours.Behaviour;
 import sajas.domain.DFService;
+import utils.Communication;
+import utils.Locator;
+import utils.MessageConstructor;
 import utils.Position;
 
 public class ChooseNextMove extends Behaviour {
@@ -24,7 +27,7 @@ public class ChooseNextMove extends Behaviour {
     private final int[][] MOVES = {{1,0}, {-1,0}, {0,1}, {0,-1}};
     private ArrayList<Integer> remainingMoves;
 
-    public ChooseNextMove(Navigate parentBehaviour, Agent agent, ArrayList<Integer> remainingMoves) {
+    public ChooseNextMove(Agent agent, Navigate parentBehaviour, ArrayList<Integer> remainingMoves) {
         super(agent);
         this.finished = false;
         this.parentBehaviour = parentBehaviour;
@@ -58,42 +61,20 @@ public class ChooseNextMove extends Behaviour {
     public ACLMessage getProposalMessage(Position possiblePosition) {
         
         // locate the Observer agent
-        AID observerAgentName =  this.findObserver();
+        AID observerAgentName =  Locator.findObserver(this.myAgent);
         if(observerAgentName == null) {
             System.out.println("Predator-agent " + this.myAgent.getAID().getName() + " can't find the Observer agent.");
             return null;
         }
 
         // prepare Propose message
-        ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
-        msg.addReceiver(observerAgentName);
-        msg.setProtocol(FIPANames.InteractionProtocol.FIPA_PROPOSE);
-        msg.setOntology("position");
-        try {
-            msg.setContentObject(possiblePosition);
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-
+        ACLMessage msg = MessageConstructor.getMessage(observerAgentName, 
+                                                        ACLMessage.PROPOSE, 
+                                                        FIPANames.InteractionProtocol.FIPA_PROPOSE, 
+                                                        Communication.Ontology.VALIDATE_MOVE, 
+                                                        Communication.Language.MOVE, 
+                                                        possiblePosition);
         return msg;
-    }
-
-    private AID findObserver() {
-        DFAgentDescription agentDescription = new DFAgentDescription();
-        ServiceDescription serviceDescription = new ServiceDescription();
-        serviceDescription.setType("inform-world");
-        agentDescription.addServices(serviceDescription);
-        DFAgentDescription[] result = new DFAgentDescription[0];
-        try {
-            result = DFService.search(this.myAgent, agentDescription);
-        } catch(FIPAException e) {
-            e.printStackTrace();
-        }
-
-        if(result.length == 0)
-            return null;
-        else
-            return result[0].getName();
     }
 
     @Override

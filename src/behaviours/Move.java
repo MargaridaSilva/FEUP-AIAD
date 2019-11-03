@@ -10,7 +10,7 @@ public class Move extends TickerBehaviour {
 
     private Navigate parentBehaviour;
 
-    public Move(Navigate parentBehaviour, Agent agent, long period) {
+    public Move(Agent agent, Navigate parentBehaviour, long period) {
         super(agent, period);
         this.parentBehaviour = parentBehaviour;
     }
@@ -18,10 +18,7 @@ public class Move extends TickerBehaviour {
     protected void onTick() {
         
         ArrayList<Integer> possibleMoves = new ArrayList<>(Arrays.asList(0,1,2,3));
-        ChooseNextMove chooseNextMove = new ChooseNextMove(this.parentBehaviour, this.myAgent, possibleMoves);
+        ChooseNextMove chooseNextMove = new ChooseNextMove(this.myAgent, this.parentBehaviour, possibleMoves);
         parentBehaviour.addSubBehaviour(chooseNextMove);
     }
-
-    // TODO: restringir movimento apenas às dimensões do board
-    // TODO: garantir que dois agentes não colidem
 }

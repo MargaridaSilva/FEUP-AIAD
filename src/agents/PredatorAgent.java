@@ -3,10 +3,11 @@ package agents;
 import java.awt.*;
 import java.util.Random;
 
-import behaviours.Move;
+import behaviours.AnswerMateRequest;
+import behaviours.CallToMate;
 import behaviours.Navigate;
 import launchers.EnvironmentLauncher;
-import uchicago.src.sim.gui.Drawable;
+import utils.Communication;
 import utils.Position;
 
 /**
@@ -16,7 +17,6 @@ public final class PredatorAgent extends AnimalAgent {
 
     private PredatorAgent(EnvironmentLauncher model, Position position, float energyExpenditure, Gender gender) {
         super(model, position, energyExpenditure, gender);
-        //this.node.setColor(this.color);
     }
 
     public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, Position position, Gender gender) {
@@ -29,9 +29,31 @@ public final class PredatorAgent extends AnimalAgent {
     protected void setup() {
         super.setup();
 
-        super.addBehaviour(new Navigate(this,100));
+        // register services
+        this.registerServices();
+
+        // add behaviours
+        if(this.gender == Gender.MALE)
+            this.addBehaviour(new AnswerMateRequest(this));                              
+
+            
+        Navigate navigateBehaviour = new Navigate(this,100);
+        
+        if(this.gender == Gender.FEMALE)
+            navigateBehaviour.addSubBehaviour(new CallToMate(this, navigateBehaviour));
+        
+        super.addBehaviour(navigateBehaviour);
 
 		System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");
+    }
+
+    private void registerServices() {
+        if(this.gender == Gender.MALE) {
+            this.registerService(Communication.ServiceType.PREDATOR_MATE, 
+                             Communication.ServiceName.PREDATOR_REPRODUCTION, 
+                             new String[]{Communication.Language.PREDATOR_MATE}, 
+                             new String[]{Communication.Ontology.PREDATOR_FIND_MATE});
+        }
     }
 
     @Override

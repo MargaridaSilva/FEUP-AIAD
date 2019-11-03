@@ -9,13 +9,14 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import sajas.core.Agent;
 import sajas.proto.ProposeResponder;
+import utils.Communication;
 import utils.Position;
 
 public class MoveApproval extends ProposeResponder {
 
     private static final MessageTemplate template = MessageTemplate.and(MessageTemplate.and(
   		    MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_PROPOSE),
-              MessageTemplate.MatchPerformative(ACLMessage.PROPOSE)), MessageTemplate.MatchOntology("position"));
+              MessageTemplate.MatchPerformative(ACLMessage.PROPOSE)), MessageTemplate.MatchOntology(Communication.Ontology.VALIDATE_MOVE));
 
     public MoveApproval(Agent agent) {
         this(agent, template);

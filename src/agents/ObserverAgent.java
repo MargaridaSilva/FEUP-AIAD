@@ -23,7 +23,7 @@ import sajas.proto.ContractNetResponder;
 import launchers.EnvironmentLauncher;
 import sajas.core.Agent;
 import sajas.domain.DFService;
-
+import utils.Communication;
 import utils.Position;
 
 /**
@@ -79,7 +79,9 @@ public class ObserverAgent extends GenericAgent {
     protected void setup() {
         super.setup();
 
-        this.registerService("inform-world", "track-world", new String[]{"move-language"}, new String[]{"validate-move-ontology"});
+        this.registerService(Communication.ServiceType.INFORM_WORLD, 
+                             Communication.ServiceName.TRACK_WORLD, new String[]{Communication.Language.MOVE},
+                             new String[]{Communication.Ontology.VALIDATE_MOVE});
         
         System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
