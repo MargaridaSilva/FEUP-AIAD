@@ -1,5 +1,8 @@
 package agents;
 
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import launchers.EnvironmentLauncher;
 import uchicago.src.sim.network.DefaultDrawableNode;
 import utils.Configs;

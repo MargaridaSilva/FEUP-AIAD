@@ -61,4 +61,40 @@ public final class PredatorAgent extends AnimalAgent {
     }
 
 
+    private class UpdatePreyList extends TickerBehaviour{
+
+        public UpdatePreyList(PredatorAgent predatorAgent, int i) {
+            super(predatorAgent, i);
+        }
+
+        @Override
+        protected void onTick() {
+
+            // Update the list of prey agents
+            DFAgentDescription template = new DFAgentDescription();
+            ServiceDescription sd = new ServiceDescription();
+            sd.setType("prey-service");
+            template.addServices(sd);
+
+            try {
+                DFAgentDescription[] result = DFService.search(myAgent, template);
+
+
+                System.out.println("Found the following prey agents:");
+
+                preyAgentList = new AID[result.length];
+
+                for (int i = 0; i < result.length; ++i) {
+                    preyAgentList[i] = result[i].getName();
+                    System.out.println(preyAgentList[i].getName());
+                }
+               System.out.println();
+
+            }
+            catch (FIPAException fe) {
+                fe.printStackTrace();
+            }
+        }
+    }
+
 }

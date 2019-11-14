@@ -49,6 +49,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
     private OpenSequenceGraph plot;
     private ObserverAgent observer;
     private List<PredatorAgent> predators;
+    private List<PreyAgent> preys;
     private ContainerController mainContainer;
     private int NUM_MALE_PREDATORS;
     private int NUM_FEMALE_PREDATORS;
@@ -103,6 +104,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
     private void setUpAgentsAIDMap() {
         this.predators.forEach((Agent a) -> this.agents.put(a.getAID(), a));
+        this.preys.forEach((Agent a) -> this.agents.put(a.getAID(), a));
     }
 
     private void launchPredators() throws StaleProxyException {
@@ -126,6 +128,19 @@ public class EnvironmentLauncher extends Repast3Launcher {
         }
     }
 
+    private void launchPreys() throws StaleProxyException {
+        for (int i = 0; i < this.NUM_PREYS; ++i) {
+            Position preyPosition = positionGenerator.getPosition();
+            PreyAgent prey = PreyAgent.generatePreyAgent(this, preyPosition);
+            this.preys.add(prey);
+            this.mainContainer.acceptNewAgent("prey-" + i, prey).start();
+            DefaultDrawableNode node = generateNode("prey-" + i, Color.BLUE, preyPosition.x * DENSITY, preyPosition.y * DENSITY);
+            nodes.add(node);
+            prey.setNode(node);
+            //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);
+        }
+    }
+
     private void launchObserver() throws StaleProxyException {
         this.observer = new ObserverAgent(this);
         this.mainContainer.acceptNewAgent("observer", this.observer).start();
@@ -135,6 +150,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
         nodes = new ArrayList<DefaultDrawableNode>();
         this.launchObserver();
         this.launchPredators();
+        this.launchPreys();
         this.setUpAgentsAIDMap();
     }
 
