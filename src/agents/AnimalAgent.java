@@ -1,71 +1,105 @@
 package agents;
 
 import launchers.EnvironmentLauncher;
-import sajas.core.Agent;
-import uchicago.src.sim.gui.Drawable;
-import uchicago.src.sim.gui.SimGraphics;
 import uchicago.src.sim.network.DefaultDrawableNode;
+import utils.Configs;
+import utils.Position;
 
 import java.awt.*;
+import java.util.Random;
+
+import behaviours.BehaviourManager;
 
 /**
  * A class to represent an Animal agent
  */
-public abstract class AnimalAgent extends Agent {
+public abstract class AnimalAgent extends GenericAgent {
 
-    protected EnvironmentLauncher model;
-    protected int[] position;
-    protected float energy;
-    protected float energyExpenditure;
-    private DefaultDrawableNode myNode;
+    public enum Gender {MALE, FEMALE}
+    protected Position position;
+    protected double energy;
+    protected double energyExpenditure;
+    protected Gender gender;
+    public DefaultDrawableNode node;
 
-    protected AnimalAgent(EnvironmentLauncher model, int[] position, float energyExpenditure) {
-        this.model = model;
+    protected AnimalAgent(EnvironmentLauncher model, Position position, Gender gender) {
+        super(model);
         this.position = position;
-        this.energy = 1;
-        this.energyExpenditure = energyExpenditure;
+        this.gender = gender;
+
+        Random random = new Random();
+
+        // random number in [0.5 , 1.0]
+        this.setEnergy(0.5 + 0.5 * random.nextDouble());
+
+        // random number in [MIN_ENERGY_EXP, MAX_ENERGY_EXP]
+        this.energyExpenditure = Configs.MIN_ENERGY_EXP + (Configs.MAX_ENERGY_EXP - Configs.MIN_ENERGY_EXP) * random.nextDouble();
+        
     }
 
     @Override
     protected void setup() {
         super.setup();
+        this.addBehaviour(new BehaviourManager(this));
     }
 
     @Override
     protected void takeDown() {
         super.takeDown();
+
+        // TODO: inform the Observer agent that he is no longer in the world, so that 
+        // the Observer won't register its position
     }
 
-    public  float getEnergy() {
+    public void decreaseEnergy() {
+        this.energy -= energyExpenditure;
+    }
+
+    public  double getEnergy() {
         return energy;
     }
 
-    public float getEnergyExpenditure() {
+    public double getEnergyExpenditure() {
         return energyExpenditure;
     }
 
-    public int[] getCoordinates() {
-        return position;
-    }
-
     public int getX() {
-        return position[0];
+        return position.x;
     }
 
     public int getY() {
-        return position[1];
+        return position.y;
     }
 
-    /*@Override
-    public void draw(SimGraphics simGraphics) {
-        simGraphics.setDrawingCoordinates(getX(), getY(), 0);
-        //scaling the circles
-        //simGraphics.setDrawingParameters(10, 10, 1);
-        simGraphics.drawCircle(this.color);
-        //simGraphics.fillPolygon(this.color);
-    }*/
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setX(int value) {
+        this.position.x = value;
+    }
+
+    public void setY(int value) {
+        this.position.y = value;
+    }
+
+    public void setPosition(Position position) {
+        int boardDensity = this.model.getBoardDensity();
+        this.position = position.clone();
+        this.node.setX(boardDensity * position.x);
+        this.node.setY(boardDensity * position.y);
+        this.decreaseEnergy();
+    }
+
+    public void setMateColor() {
+        this.node.setColor(Color.MAGENTA);
+    }
 
     public void setNode(DefaultDrawableNode node) {
-        this.myNode = node;
+        this.node = node;
+    }
+
+    public void setEnergy(double energy) {
+        this.energy = energy;
     }
 }
