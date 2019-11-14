@@ -9,28 +9,27 @@ import launchers.EnvironmentLauncher;
 import sajas.core.behaviours.CyclicBehaviour;
 import sajas.domain.DFService;
 import utils.Position;
-import behaviours.Navigate;
 
 import java.util.Random;
 
+import behaviours.BehaviourManager;
+
 public class PreyAgent extends AnimalAgent{
 
-    private PreyAgent(EnvironmentLauncher model, Position position, float energyExpenditure) {
-        super(model, position, energyExpenditure);
+    private PreyAgent(EnvironmentLauncher model, Position position, Gender gender) {
+        super(model, position, gender);
         //this.node.setColor(this.color);
     }
 
-    public static PreyAgent generatePreyAgent(EnvironmentLauncher model, Position position) {
-        Random random = new Random();
-        float energyExpenditure = random.nextFloat();
-        return new PreyAgent(model, position, energyExpenditure);
+    public static PreyAgent generatePreyAgent(EnvironmentLauncher model, Position position, Gender gender) {
+        
+        return new PreyAgent(model, position, gender);
     }
 
     @Override
     protected void setup() {
 
-        super.setup();
-        super.addBehaviour(new Navigate(this,100));
+        super.addBehaviour(new BehaviourManager(this));
 
         System.out.println("Prey-agent "+ getAID().getName()+" is ready.");
         this.registerService("prey-service", "prey-name", new String[]{},  new String[]{});

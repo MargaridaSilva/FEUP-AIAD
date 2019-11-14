@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import agents.ObserverAgent;
 import agents.PredatorAgent;
+import agents.PreyAgent;
 import agents.AnimalAgent.Gender;
 import jade.core.AID;
 import jade.core.Profile;
@@ -23,7 +24,9 @@ import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Network2DDisplay;
+import uchicago.src.sim.gui.NetworkDrawable;
 import uchicago.src.sim.gui.OvalNetworkItem;
+import uchicago.src.sim.gui.RectNetworkItem;
 import uchicago.src.sim.network.DefaultDrawableNode;
 import uchicago.src.sim.space.Object2DGrid;
 import utils.Position;
@@ -53,18 +56,23 @@ public class EnvironmentLauncher extends Repast3Launcher {
     private ContainerController mainContainer;
     private int NUM_MALE_PREDATORS;
     private int NUM_FEMALE_PREDATORS;
+    private int NUM_MALE_PREYS;
+    private int NUM_FEMALE_PREYS;
     private Map<AID, Agent> agents;
 
     private static List<DefaultDrawableNode> nodes;
 
-    public EnvironmentLauncher(int BOARD_DIM, int NUM_MALE_PREDATORS, int NUM_FEMALE_PREDATORS) {
+    public EnvironmentLauncher(int BOARD_DIM, int NUM_MALE_PREDATORS, int NUM_FEMALE_PREDATORS, int NUM_MALE_PREYS, int NUM_FEMALE_PREYS) {
         super();
         this.random = new Random();
         this.agents = new ConcurrentHashMap<>();
         this.predators = new ArrayList<>();
+        this.preys = new ArrayList<>();
         this.BOARD_DIM = BOARD_DIM;
         this.NUM_MALE_PREDATORS = NUM_MALE_PREDATORS;
         this.NUM_FEMALE_PREDATORS = NUM_FEMALE_PREDATORS;
+        this.NUM_MALE_PREYS = NUM_MALE_PREYS;
+        this.NUM_FEMALE_PREYS = NUM_MALE_PREYS;
         this.positionGenerator = new RandomPositionGenerator(BOARD_DIM);
         System.gc();
     }
@@ -121,23 +129,28 @@ public class EnvironmentLauncher extends Repast3Launcher {
             this.predators.add(predator);
             this.mainContainer.acceptNewAgent("predator-" + i, predator).start();
             this.observer.addAgent(predator);
-            DefaultDrawableNode node = generateNode("predator-" + i, color, predatorPosition.x*DENSITY, predatorPosition.y*DENSITY);
+            DefaultDrawableNode node = generateOvalNode("predator-" + i, color, predatorPosition.x*DENSITY, predatorPosition.y*DENSITY);
             nodes.add(node);
             predator.setNode(node);
-            //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);
         }
     }
 
     private void launchPreys() throws StaleProxyException {
-        for (int i = 0; i < this.NUM_PREYS; ++i) {
+        int numPreys = this.NUM_MALE_PREYS + this.NUM_FEMALE_PREYS;
+        for (int i = 0; i < numPreys; ++i) {
             Position preyPosition = positionGenerator.getPosition();
-            PreyAgent prey = PreyAgent.generatePreyAgent(this, preyPosition);
+            Gender gender = Gender.MALE;
+            Color color = Color.BLUE;
+            if(i >= this.NUM_MALE_PREYS) {
+                gender = Gender.FEMALE;
+                color = Color.PINK;
+            }
+            PreyAgent prey = PreyAgent.generatePreyAgent(this, preyPosition, gender);
             this.preys.add(prey);
             this.mainContainer.acceptNewAgent("prey-" + i, prey).start();
-            DefaultDrawableNode node = generateNode("prey-" + i, Color.BLUE, preyPosition.x * DENSITY, preyPosition.y * DENSITY);
+            DefaultDrawableNode node = generateRectNode("prey-" + i, color, preyPosition.x * DENSITY, preyPosition.y * DENSITY);
             nodes.add(node);
             prey.setNode(node);
-            //this.world.putObjectAt(gridPosition[0], gridPosition[1], predator);
         }
     }
 
@@ -239,10 +252,12 @@ public class EnvironmentLauncher extends Repast3Launcher {
         int BOARD_DIM = Integer.parseInt(args[0]);
         int NUM_MALE_PREDATORS = Integer.parseInt(args[1]);
         int NUM_FEMALE_PREDATORS = Integer.parseInt(args[2]);
+        int NUM_MALE_PREYS = Integer.parseInt(args[3]);
+        int NUM_FEMALE_PREYS = Integer.parseInt(args[4]);
 
         SimInit init = new SimInit();
         init.setNumRuns(1); // works only in batch mode
-        init.loadModel(new EnvironmentLauncher(BOARD_DIM, NUM_MALE_PREDATORS, NUM_FEMALE_PREDATORS), null, EnvironmentLauncher.BATCH_MODE);
+        init.loadModel(new EnvironmentLauncher(BOARD_DIM, NUM_MALE_PREDATORS, NUM_FEMALE_PREDATORS, NUM_MALE_PREYS, NUM_FEMALE_PREYS), null, EnvironmentLauncher.BATCH_MODE);
     }
 
 
@@ -256,16 +271,26 @@ public class EnvironmentLauncher extends Repast3Launcher {
         return null;
     }
 
-    private DefaultDrawableNode generateNode(String label, Color color, int x, int y) {
+    private DefaultDrawableNode generateDrawableNode(NetworkDrawable drawable, Color color, String label) {
+        DefaultDrawableNode node = new DefaultDrawableNode(label, drawable);
+        node.setColor(color);
+        return node;
+    }
+
+    private DefaultDrawableNode generateOvalNode(String label, Color color, int x, int y) {
         OvalNetworkItem oval = new OvalNetworkItem(x,y);
         oval.allowResizing(false);
         oval.setHeight(DENSITY);
         oval.setWidth(DENSITY);
+        return generateDrawableNode(oval, color, label);
+    }
 
-        DefaultDrawableNode node = new DefaultDrawableNode(label, oval);
-        node.setColor(color);
-
-        return node;
+    private DefaultDrawableNode generateRectNode(String label, Color color, int x, int y) {
+        RectNetworkItem rect = new RectNetworkItem(x,y);
+        rect.allowResizing(false);
+        rect.setHeight(DENSITY);
+        rect.setWidth(DENSITY);
+        return generateDrawableNode(rect, color, label);
     }
 
 }
