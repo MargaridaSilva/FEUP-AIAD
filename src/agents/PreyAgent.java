@@ -27,32 +27,7 @@ public class PreyAgent extends AnimalAgent{
 
     protected void setup() {
         // Printout a welcome message
-        System.out.println("Hallo! Prey-agent "+ getAID().getName()+" is ready.");
-
+        System.out.println("Prey-agent "+ getAID().getName()+" is ready.");
         this.registerService("prey-service", "prey-name", new String[]{},  new String[]{});
-        addBehaviour(new HelloRequestsServer());
     }
-
-    /**
-     */
-    private class HelloRequestsServer extends CyclicBehaviour {
-        public void action() {
-            MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
-            ACLMessage msg = myAgent.receive(mt);
-            System.out.println("Prey " + getAID() + "received message: ");
-            if (msg != null) {
-                // CFP Message received. Process it
-                String title = msg.getContent();
-                System.out.println(title);
-
-                ACLMessage reply = msg.createReply();
-                reply.setPerformative(ACLMessage.REFUSE);
-                reply.setContent("Hello everyone");
-                myAgent.send(reply);
-            }
-            else {
-                block();
-            }
-        }
-    }  // End of inner class OfferRequestsServer
 }

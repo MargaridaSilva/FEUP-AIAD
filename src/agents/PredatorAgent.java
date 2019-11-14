@@ -90,39 +90,7 @@ public final class PredatorAgent extends AnimalAgent {
             catch (FIPAException fe) {
                 fe.printStackTrace();
             }
-
-            // Perform the request
-            myAgent.addBehaviour(new SayHelloPerformer());
         }
     }
-
-    private class SayHelloPerformer extends Behaviour {
-
-        @Override
-        public void action() {
-
-            System.out.println("Sending Hello message to :");
-
-            // Send the cfp to all sellers
-            ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-            for (int i = 0; i < preyAgentList.length; ++i) {
-                cfp.addReceiver(preyAgentList[i]);
-                System.out.println(preyAgentList[i]);
-            }
-            cfp.setContent("Hello Prey");
-            cfp.setConversationId("comm");
-            cfp.setReplyWith("cfp"+System.currentTimeMillis()); // Unique value
-            myAgent.send(cfp);
-            System.out.println("Sent");
-        }
-
-        @Override
-        public boolean done() {
-            return false;
-        }
-    }
-
-
-
 
 }
