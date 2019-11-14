@@ -19,11 +19,13 @@ public class ObserverAgent extends GenericAgent {
 
     private final int BOARD_DIM;
     private HashMap<Position, AID> agentsPositions;
+    private HashMap<AID, Position> preysPositions;
 
     public ObserverAgent(EnvironmentLauncher model) {
         super(model);
         this.BOARD_DIM = model.getBoardDim();
         this.agentsPositions = new HashMap<>();
+        this.preysPositions = new HashMap<>();
     }
 
     public void addAgent(AnimalAgent agent) {

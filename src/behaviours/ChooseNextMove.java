@@ -18,13 +18,13 @@ import utils.Position;
 public class ChooseNextMove extends Behaviour {
 
     private boolean finished;
-    private Navigate parentBehaviour;
+    private BehaviourManager parentBehaviour;
     private Random random;
     private final int[][] MOVES = {{1,0}, {-1,0}, {0,1}, {0,-1}};
     private ArrayList<Integer> remainingMoves;
     private Position goalPosition;
     
-    public ChooseNextMove(Agent agent, Navigate parentBehaviour, ArrayList<Integer> remainingMoves) {
+    public ChooseNextMove(Agent agent, BehaviourManager parentBehaviour, ArrayList<Integer> remainingMoves) {
         super(agent);
         this.finished = false;
         this.parentBehaviour = parentBehaviour;
@@ -32,7 +32,7 @@ public class ChooseNextMove extends Behaviour {
         this.remainingMoves = remainingMoves;
     }
 
-    public ChooseNextMove(Agent agent, Navigate parentBehaviour, ArrayList<Integer> remainingMoves, Position goalPosition) {
+    public ChooseNextMove(Agent agent, BehaviourManager parentBehaviour, ArrayList<Integer> remainingMoves, Position goalPosition) {
         this(agent, parentBehaviour, remainingMoves);
         this.goalPosition = goalPosition;
     }

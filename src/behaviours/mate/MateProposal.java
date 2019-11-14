@@ -1,17 +1,18 @@
-package behaviours;
+package behaviours.mate;
 
 import java.util.Enumeration;
 import java.util.Vector;
 
+import behaviours.BehaviourManager;
 import jade.lang.acl.ACLMessage;
 import sajas.core.Agent;
 import sajas.proto.ContractNetInitiator;
 
 public class MateProposal extends ContractNetInitiator {
 
-    private Navigate parentBehaviour;
+    private BehaviourManager parentBehaviour;
 
-    public MateProposal(Agent agent, ACLMessage cfp, Navigate parentBehaviour) {
+    public MateProposal(Agent agent, ACLMessage cfp, BehaviourManager parentBehaviour) {
         super(agent, cfp);
         this.parentBehaviour = parentBehaviour;
     }

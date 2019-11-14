@@ -1,4 +1,4 @@
-package behaviours;
+package behaviours.mate;
 
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;

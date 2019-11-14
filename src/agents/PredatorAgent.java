@@ -1,11 +1,10 @@
 package agents;
 
-import java.awt.*;
 import java.util.Random;
 
-import behaviours.AnswerMateRequest;
-import behaviours.CallToMate;
-import behaviours.Navigate;
+import behaviours.mate.AnswerMateRequest;
+import behaviours.mate.CallToMate;
+import behaviours.BehaviourManager;
 import launchers.EnvironmentLauncher;
 import utils.Communication;
 import utils.Position;
@@ -32,16 +31,16 @@ public final class PredatorAgent extends AnimalAgent {
         // register services
         this.registerServices();
 
-        Navigate navigateBehaviour = new Navigate(this);
+        BehaviourManager agentManagerBehaviour = new BehaviourManager(this);
 
         // add behaviours
         if(this.gender == Gender.MALE)
-            this.addBehaviour(new AnswerMateRequest(this, navigateBehaviour));                              
+            this.addBehaviour(new AnswerMateRequest(this, agentManagerBehaviour));
         
         if(this.gender == Gender.FEMALE)
-            navigateBehaviour.addSubBehaviour(new CallToMate(this, navigateBehaviour));
+            agentManagerBehaviour.addSubBehaviour(new CallToMate(this, agentManagerBehaviour));
         
-        super.addBehaviour(navigateBehaviour);
+        super.addBehaviour(agentManagerBehaviour);
 
 		System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");
     }

@@ -12,10 +12,10 @@ public class RequestMoveApproval extends ProposeInitiator {
 
     private Position possiblePosition;
     private ArrayList<Integer> remainingMoves;
-    private Navigate parentBehaviour;
+    private BehaviourManager parentBehaviour;
 
-    public RequestMoveApproval(Agent agent, ACLMessage msg, Navigate parentBehaviour, Position possiblePosition,
-            ArrayList<Integer> remainingMoves) {
+    public RequestMoveApproval(Agent agent, ACLMessage msg, BehaviourManager parentBehaviour, Position possiblePosition,
+                               ArrayList<Integer> remainingMoves) {
         super(agent, msg);
         this.possiblePosition = possiblePosition;
         this.parentBehaviour = parentBehaviour;

@@ -11,10 +11,10 @@ import utils.Position;
 
 public class MoveTowardsFemale extends TickerBehaviour {
 
-    private Navigate parentBehaviour;
+    private BehaviourManager parentBehaviour;
     private Position finalPosition;
 
-    public MoveTowardsFemale(Agent agent, Navigate parentBehaviour, Position finalPosition) {
+    public MoveTowardsFemale(Agent agent, BehaviourManager parentBehaviour, Position finalPosition) {
         super(agent, Configs.TICK_PERIOD);
         this.parentBehaviour = parentBehaviour;
         this.finalPosition = finalPosition;

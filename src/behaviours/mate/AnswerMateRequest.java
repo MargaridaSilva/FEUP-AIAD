@@ -1,6 +1,8 @@
-package behaviours;
+package behaviours.mate;
 
 import agents.AnimalAgent;
+import behaviours.BehaviourManager;
+import behaviours.MoveTowardsFemale;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -15,7 +17,7 @@ import utils.Position;
 
 public class AnswerMateRequest extends ContractNetResponder {
 
-    private Navigate parentBehaviour;
+    private BehaviourManager parentBehaviour;
     private Position femalePosition;
 
     private static final MessageTemplate template = MessageTemplate.and(
@@ -23,7 +25,7 @@ public class AnswerMateRequest extends ContractNetResponder {
                     MessageTemplate.MatchPerformative(ACLMessage.CFP)),
             MessageTemplate.MatchOntology(Communication.Ontology.PREDATOR_FIND_MATE));
 
-    public AnswerMateRequest(Agent maleAgent, Navigate parentBehaviour) {
+    public AnswerMateRequest(Agent maleAgent, BehaviourManager parentBehaviour) {
         this(maleAgent, template);
         this.parentBehaviour = parentBehaviour;
     }

@@ -1,9 +1,9 @@
-package behaviours;
+package behaviours.mate;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import agents.AnimalAgent;
+import behaviours.BehaviourManager;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -16,9 +16,9 @@ import utils.MessageConstructor;
 public class CallToMate extends Behaviour {
 
     private boolean finished;
-    private Navigate parentBehaviour;
+    private BehaviourManager parentBehaviour;
 
-    public CallToMate(Agent femaleAgent, Navigate parentBehaviour) {
+    public CallToMate(Agent femaleAgent, BehaviourManager parentBehaviour) {
         super(femaleAgent);
         this.finished = false;
         this.parentBehaviour = parentBehaviour;

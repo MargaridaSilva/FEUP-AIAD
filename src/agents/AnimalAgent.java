@@ -20,6 +20,16 @@ public abstract class AnimalAgent extends GenericAgent {
     protected Gender gender;
     public DefaultDrawableNode node;
 
+
+    protected enum State {
+        EAT,
+        CHILL,
+        WAIT_FOR_MALE,
+        REPRODUCE
+    }
+
+    protected State state;
+
     protected AnimalAgent(EnvironmentLauncher model, Position position, float energyExpenditure, Gender gender) {
         super(model);
         this.position = position;
