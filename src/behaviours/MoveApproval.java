@@ -1,5 +1,8 @@
 package behaviours;
 
+
+import java.util.ArrayList;
+
 import agents.ObserverAgent;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -14,9 +17,14 @@ import utils.Position;
 
 public class MoveApproval extends ProposeResponder {
 
-    private static final MessageTemplate template = MessageTemplate.and(MessageTemplate.and(
-  		    MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_PROPOSE),
-              MessageTemplate.MatchPerformative(ACLMessage.PROPOSE)), MessageTemplate.MatchOntology(Communication.Ontology.VALIDATE_MOVE));
+    private static final MessageTemplate template = 
+    MessageTemplate.and(
+        MessageTemplate.and(
+  		      MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_PROPOSE),
+              MessageTemplate.MatchPerformative(ACLMessage.PROPOSE)), 
+        MessageTemplate.or(
+            MessageTemplate.MatchOntology(Communication.Ontology.VALIDATE_MOVE_GOAL), 
+            MessageTemplate.MatchOntology(Communication.Ontology.VALIDATE_MOVE))); 
 
     public MoveApproval(Agent agent) {
         this(agent, template);
@@ -28,23 +36,39 @@ public class MoveApproval extends ProposeResponder {
 
     @Override
     protected ACLMessage prepareResponse(ACLMessage propose) throws NotUnderstoodException, RefuseException {
+        
+        ACLMessage reply = propose.createReply();
+        Position position = null;
+        ObserverAgent observer = ((ObserverAgent)this.myAgent);
 
-        Position content = null;
         try {
-            content = (Position)propose.getContentObject();
+            if(propose.getOntology() == Communication.Ontology.VALIDATE_MOVE_GOAL) {
+                ArrayList<Position> content = (ArrayList<Position>) propose.getContentObject();
+                
+                if(content.get(0) == content.get(1)) {
+                    reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                    observer.updateAgentPosition(propose.getSender(), content.get(0));
+                    return reply;
+                }
+                position = content.get(0);
+                
+            }
+            else 
+                position = (Position)propose.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
         }
         
-        ACLMessage reply = propose.createReply();
-        boolean positionTaken = ((ObserverAgent)this.myAgent).isPositionTaken(content);
-        boolean positionOutLimits = ((ObserverAgent)this.myAgent).isPositionOutLimits(content);
-        
+        boolean positionTaken = observer.isPositionTaken(position);
+        boolean positionOutLimits = observer.isPositionOutLimits(position);
+
         if(positionTaken || positionOutLimits) {
             reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
         } else {
             reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+            observer.updateAgentPosition(propose.getSender(), position);
         }
+        
         return reply;
     }
 }

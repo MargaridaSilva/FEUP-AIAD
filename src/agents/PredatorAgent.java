@@ -32,12 +32,11 @@ public final class PredatorAgent extends AnimalAgent {
         // register services
         this.registerServices();
 
+        Navigate navigateBehaviour = new Navigate(this);
+
         // add behaviours
         if(this.gender == Gender.MALE)
-            this.addBehaviour(new AnswerMateRequest(this));                              
-
-            
-        Navigate navigateBehaviour = new Navigate(this,100);
+            this.addBehaviour(new AnswerMateRequest(this, navigateBehaviour));                              
         
         if(this.gender == Gender.FEMALE)
             navigateBehaviour.addSubBehaviour(new CallToMate(this, navigateBehaviour));

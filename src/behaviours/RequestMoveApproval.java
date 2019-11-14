@@ -31,8 +31,10 @@ public class RequestMoveApproval extends ProposeInitiator {
 
         agent.setPosition(this.possiblePosition);
 
-        agent.node.setX(possiblePosition.x);
-        agent.node.setY(possiblePosition.y);
+        int x = agent.getModel().getBoardDensity() * possiblePosition.x;
+        int y = agent.getModel().getBoardDensity() * possiblePosition.y;
+        agent.node.setX(x);
+        agent.node.setY(y);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
         this.random = new Random();
         this.agents = new ConcurrentHashMap<>();
         this.predators = new ArrayList<>();
-        this.BOARD_DIM = BOARD_DIM * DENSITY;
+        this.BOARD_DIM = BOARD_DIM;
         this.NUM_MALE_PREDATORS = NUM_MALE_PREDATORS;
         this.NUM_FEMALE_PREDATORS = NUM_FEMALE_PREDATORS;
         this.positionGenerator = new RandomPositionGenerator(BOARD_DIM);
@@ -117,8 +117,8 @@ public class EnvironmentLauncher extends Repast3Launcher {
             }
             PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, predatorPosition, gender);
             this.predators.add(predator);
-            this.observer.addAgent(predator);
             this.mainContainer.acceptNewAgent("predator-" + i, predator).start();
+            this.observer.addAgent(predator);
             DefaultDrawableNode node = generateNode("predator-" + i, color, predatorPosition.x*DENSITY, predatorPosition.y*DENSITY);
             nodes.add(node);
             predator.setNode(node);
@@ -180,7 +180,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
 
 
     public void buildDisplay() {
-        Network2DDisplay display = new Network2DDisplay(nodes, this.BOARD_DIM, this.BOARD_DIM);
+        Network2DDisplay display = new Network2DDisplay(nodes, this.BOARD_DIM * DENSITY, this.BOARD_DIM * DENSITY);
         dsurf.addDisplayableProbeable(display, "Predators");
         dsurf.addZoomable(display);
         addSimEventListener(dsurf);

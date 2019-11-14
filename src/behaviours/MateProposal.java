@@ -3,7 +3,6 @@ package behaviours;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import sajas.core.Agent;
 import sajas.proto.ContractNetInitiator;
@@ -44,6 +43,9 @@ public class MateProposal extends ContractNetInitiator {
         // Accept the proposal of the best proposer
         if (accept != null) {
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+            this.parentBehaviour.stayStill();
+            WaitMalePredator waitMalePredatorBehaviour = new WaitMalePredator(this.myAgent);
+            this.parentBehaviour.addSubBehaviour(waitMalePredatorBehaviour);
         }
     }
 }

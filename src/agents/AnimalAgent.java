@@ -73,6 +73,10 @@ public abstract class AnimalAgent extends GenericAgent {
         this.position = position.clone();
     }
 
+    public void setMateColor() {
+        this.node.setColor(Color.MAGENTA);
+    }
+
     /*@Override
     public void draw(SimGraphics simGraphics) {
         simGraphics.setDrawingCoordinates(getX(), getY(), 0);

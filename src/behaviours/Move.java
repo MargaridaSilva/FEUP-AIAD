@@ -5,15 +5,17 @@ import java.util.Arrays;
 
 import sajas.core.Agent;
 import sajas.core.behaviours.TickerBehaviour;
+import utils.Configs;
 
 public class Move extends TickerBehaviour {
 
     private Navigate parentBehaviour;
 
-    public Move(Agent agent, Navigate parentBehaviour, long period) {
-        super(agent, period);
+    public Move(Agent agent, Navigate parentBehaviour) {
+        super(agent, Configs.TICK_PERIOD);
         this.parentBehaviour = parentBehaviour;
     }
+
     @Override   
     protected void onTick() {
         

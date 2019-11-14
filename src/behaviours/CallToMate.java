@@ -33,6 +33,7 @@ public class CallToMate extends Behaviour {
                                                     Communication.Language.PREDATOR_MATE, 
                                                     ((AnimalAgent)this.myAgent).getPosition());
         this.parentBehaviour.addSubBehaviour(new MateProposal(this.myAgent, msg, this.parentBehaviour));
+        this.finished = true;
     }
 
     @Override

@@ -1,19 +1,15 @@
 package behaviours;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import agents.AnimalAgent;
-import jade.domain.FIPAException;
 import jade.domain.FIPANames;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import java.io.Serializable;
 import jade.core.AID;
 import sajas.core.Agent;
 import sajas.core.behaviours.Behaviour;
-import sajas.domain.DFService;
 import utils.Communication;
 import utils.Locator;
 import utils.MessageConstructor;
@@ -26,7 +22,8 @@ public class ChooseNextMove extends Behaviour {
     private Random random;
     private final int[][] MOVES = {{1,0}, {-1,0}, {0,1}, {0,-1}};
     private ArrayList<Integer> remainingMoves;
-
+    private Position goalPosition;
+    
     public ChooseNextMove(Agent agent, Navigate parentBehaviour, ArrayList<Integer> remainingMoves) {
         super(agent);
         this.finished = false;
@@ -35,28 +32,71 @@ public class ChooseNextMove extends Behaviour {
         this.remainingMoves = remainingMoves;
     }
 
+    public ChooseNextMove(Agent agent, Navigate parentBehaviour, ArrayList<Integer> remainingMoves, Position goalPosition) {
+        this(agent, parentBehaviour, remainingMoves);
+        this.goalPosition = goalPosition;
+    }
+
+
     @Override
     public void action() {
-        
-        // Generate a random move
-        AnimalAgent agent = (AnimalAgent) this.myAgent;
+
         if(remainingMoves.size() == 0) 
         { 
             this.finished = true;
             return;
         }
-        int randomIndex = random.nextInt(remainingMoves.size());
-        int[] move = this.MOVES[remainingMoves.get(randomIndex)];
         
-        // Check if the random move is possible
-        Position possiblePosition = new Position(agent.getX() + agent.getModel().getBoardDensity() * move[0], agent.getY() + agent.getModel().getBoardDensity() * move[1]);
-        
+        Position possiblePosition = this.getMove();
         ACLMessage proposal = this.getProposalMessage(possiblePosition);
-        this.remainingMoves.remove(randomIndex);
         RequestMoveApproval requestApprovalBehaviour = new RequestMoveApproval(this.myAgent, proposal, this.parentBehaviour, possiblePosition, remainingMoves);
         this.parentBehaviour.addSubBehaviour(requestApprovalBehaviour);
         this.finished = true;
     }
+
+    private Position getMove() {
+
+        int[] move;
+
+        if(this.goalPosition == null)
+            move = this.getRandomMove();
+        else
+            move = this.getMoveTowardsGoal();
+
+        Position possiblePosition = this.getNextPosition(move);
+        return possiblePosition;
+    }
+
+    private int[] getRandomMove() {
+        int randomIndex = random.nextInt(remainingMoves.size());
+        int[] nextMove = this.MOVES[remainingMoves.get(randomIndex)];
+        this.remainingMoves.remove(randomIndex);
+        return nextMove;
+    }
+
+    private int[] getMoveTowardsGoal() {
+
+        double lowerDistance = Double.MAX_VALUE;
+        int[] nextMove = null;
+
+        for (Integer moveIndex : remainingMoves) {
+            int[] move = this.MOVES[moveIndex];
+            Position possiblePosition = this.getNextPosition(move);
+            double distToGoal = goalPosition.getDist(possiblePosition);
+            if(distToGoal < lowerDistance) {
+                nextMove = move;
+                lowerDistance = distToGoal;
+            }
+        }
+        
+        return nextMove;
+    }
+
+    private Position getNextPosition(int[] move) {
+        AnimalAgent agent = (AnimalAgent) this.myAgent;
+        return new Position(agent.getX() + move[0], agent.getY() + move[1]);
+    }
+
 
     public ACLMessage getProposalMessage(Position possiblePosition) {
         
@@ -68,12 +108,24 @@ public class ChooseNextMove extends Behaviour {
         }
 
         // prepare Propose message
+        String ontology;
+        Serializable content = possiblePosition;
+        if(this.goalPosition == null) 
+            ontology = Communication.Ontology.VALIDATE_MOVE;
+        else {
+            ontology = Communication.Ontology.VALIDATE_MOVE_GOAL;
+            ArrayList<Position> positions = new ArrayList<Position>();
+            positions.add(possiblePosition);
+            positions.add(this.goalPosition);
+            content = positions;
+        }
+
         ACLMessage msg = MessageConstructor.getMessage(observerAgentName, 
                                                         ACLMessage.PROPOSE, 
                                                         FIPANames.InteractionProtocol.FIPA_PROPOSE, 
-                                                        Communication.Ontology.VALIDATE_MOVE, 
+                                                        ontology,
                                                         Communication.Language.MOVE, 
-                                                        possiblePosition);
+                                                        content);
         return msg;
     }
 

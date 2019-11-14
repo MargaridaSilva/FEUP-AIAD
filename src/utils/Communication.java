@@ -5,8 +5,10 @@ public final class Communication {
     // ontologies
     public final class Ontology {
 
-        public static final String VALIDATE_MOVE = "validate-move";
+        public static final String VALIDATE_MOVE = "validate-move-ontology";
+        public static final String VALIDATE_MOVE_GOAL = "validate-move-goal-ontology";
         public static final String PREDATOR_FIND_MATE = "find-mate-predator-ontology";
+        public static final String PREDATOR_REACHED_FEMALE = "reach-female-predator-ontology";
     }
 
     // service types
