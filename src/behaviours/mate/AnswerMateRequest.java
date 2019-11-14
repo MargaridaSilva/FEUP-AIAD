@@ -60,7 +60,7 @@ public class AnswerMateRequest extends ContractNetResponder {
                 ACLMessage inform = accept.createReply();
                 inform.setPerformative(ACLMessage.INFORM);
                 ((AnimalAgent)this.myAgent).setMateColor();
-                this.parentBehaviour.stayStill();
+                //this.parentBehaviour.stayStill(); // TODO: fix
                 MoveTowardsFemale moveTowardsFemaleBehaviour = new MoveTowardsFemale(this.myAgent, this.parentBehaviour, this.femalePosition);
                 this.parentBehaviour.addSubBehaviour(moveTowardsFemaleBehaviour);
                 return inform;

@@ -44,7 +44,7 @@ public class MateProposal extends ContractNetInitiator {
         // Accept the proposal of the best proposer
         if (accept != null) {
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-            this.parentBehaviour.stayStill();
+            //this.parentBehaviour.stayStill(); // TODO: fix
             WaitMalePredator waitMalePredatorBehaviour = new WaitMalePredator(this.myAgent);
             this.parentBehaviour.addSubBehaviour(waitMalePredatorBehaviour);
         }

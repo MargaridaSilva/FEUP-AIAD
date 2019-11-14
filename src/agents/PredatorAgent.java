@@ -1,7 +1,5 @@
 package agents;
 
-import java.util.Random;
-
 import behaviours.mate.AnswerMateRequest;
 import behaviours.mate.CallToMate;
 import behaviours.BehaviourManager;
@@ -14,14 +12,13 @@ import utils.Position;
  */
 public final class PredatorAgent extends AnimalAgent {
 
-    private PredatorAgent(EnvironmentLauncher model, Position position, float energyExpenditure, Gender gender) {
-        super(model, position, energyExpenditure, gender);
+    private PredatorAgent(EnvironmentLauncher model, Position position, Gender gender) {
+        super(model, position, gender);
     }
 
     public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, Position position, Gender gender) {
-        Random random = new Random();
-        float energyExpenditure = random.nextFloat();
-        return new PredatorAgent(model, position, energyExpenditure, gender);
+
+        return new PredatorAgent(model, position, gender);
     }
 
     @Override

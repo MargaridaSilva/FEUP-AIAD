@@ -3,7 +3,6 @@ package behaviours;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import behaviours.predator.ManagePredator;
 import sajas.core.Agent;
 import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
@@ -12,7 +11,7 @@ public class Move extends TickerBehaviour {
 
     private BehaviourManager parentBehaviour;
 
-    public Move(Agent agent, ManagePredator parentBehaviour) {
+    public Move(Agent agent, BehaviourManager parentBehaviour) {
         super(agent, Configs.TICK_PERIOD);
         this.parentBehaviour = parentBehaviour;
     }

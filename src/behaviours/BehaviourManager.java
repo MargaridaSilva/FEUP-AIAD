@@ -1,31 +1,39 @@
 package behaviours;
 
 import agents.AnimalAgent;
+import behaviours.die.DieManager;
 import behaviours.eat.EatManager;
 import behaviours.mate.MateManager;
-import behaviours.mate.MateProposal;
 import behaviours.random.RandomManager;
-import sajas.core.Agent;
+import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.ParallelBehaviour;
+import utils.Configs;
 
-public class BehaviourManager {
+public class BehaviourManager extends ParallelBehaviour {
 
     AnimalAgent agent;
-    long period = 1000;
 
     public BehaviourManager(AnimalAgent agent) {
+        super(agent, WHEN_ALL);
         this.agent = (AnimalAgent) agent;
         this.updateBehaviour();
     }
 
-    public void updateBehaviour(){
-        float energy = agent.getEnergy();
-        if (energy < 0.5)
-            agent.addBehaviour(new EatManager(agent, period));
-        else if (energy < 0.7)
-            agent.addBehaviour(new RandomManager(agent, period));
-        else
-            agent.addBehaviour(new MateManager(agent, period));
+    public void updateBehaviour() {
+
+        double energy = agent.getEnergy();
+        Behaviour nextBehaviour = null;
+
+        if(energy >= Configs.MIN_ENERGY_MATE)
+            nextBehaviour = new MateManager(agent);
+        else if(energy >= Configs.MIN_ENERGY_RANDOM)
+            nextBehaviour = new RandomManager(agent);
+        else if(energy > 0)
+            nextBehaviour = new EatManager(agent);
+        else    
+            nextBehaviour = new DieManager(agent);
+
+        this.addSubBehaviour(nextBehaviour);         
     }
 
 }
