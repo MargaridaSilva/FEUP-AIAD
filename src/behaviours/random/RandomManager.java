@@ -1,10 +1,13 @@
 package behaviours.random;
 
-import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
+import agents.AnimalAgent;
+import sajas.core.behaviours.TickerBehaviour;
+import utils.Position;
 
 public class RandomManager extends TickerBehaviour {
-    public RandomManager(Agent a, long period) {
+    Position mate;
+
+    public RandomManager(AnimalAgent a, long period) {
         super(a, period);
     }
 

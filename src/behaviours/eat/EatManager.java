@@ -1,13 +1,13 @@
 package behaviours.eat;
 
-import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
+import agents.AnimalAgent;
+import sajas.core.behaviours.TickerBehaviour;
 import utils.Position;
 
 public class EatManager extends TickerBehaviour {
     Position food;
 
-    public EatManager(Agent a, long period) {
+    public EatManager(AnimalAgent a, long period) {
         super(a, period);
     }
 
