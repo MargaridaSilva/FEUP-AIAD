@@ -39,9 +39,7 @@ public final class PredatorAgent extends AnimalAgent {
 
     @Override
     protected void setup() {
-        super.addBehaviour(new UpdatePreyList(this, 10000));
         super.setup();
-
         super.addBehaviour(new Navigate(this,100));
 
 		System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");

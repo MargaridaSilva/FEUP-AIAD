@@ -9,6 +9,7 @@ import launchers.EnvironmentLauncher;
 import sajas.core.behaviours.CyclicBehaviour;
 import sajas.domain.DFService;
 import utils.Position;
+import behaviours.Navigate;
 
 import java.util.Random;
 
@@ -25,9 +26,23 @@ public class PreyAgent extends AnimalAgent{
         return new PreyAgent(model, position, energyExpenditure);
     }
 
+    @Override
     protected void setup() {
-        // Printout a welcome message
+
+        super.setup();
+        super.addBehaviour(new Navigate(this,100));
+
         System.out.println("Prey-agent "+ getAID().getName()+" is ready.");
         this.registerService("prey-service", "prey-name", new String[]{},  new String[]{});
     }
+
+    @Override
+    protected void takeDown() {
+        super.takeDown();
+        
+        this.deRegisterServices();
+
+        System.out.println("Prey-agent " + this.getAID() + " terminating");
+    }
+
 }
