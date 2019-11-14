@@ -28,16 +28,7 @@ public final class PredatorAgent extends AnimalAgent {
         // register services
         this.registerServices();
 
-        BehaviourManager agentManagerBehaviour = new BehaviourManager(this);
-
-        // add behaviours
-        if(this.gender == Gender.MALE)
-            this.addBehaviour(new AnswerMateRequest(this, agentManagerBehaviour));
-        
-        if(this.gender == Gender.FEMALE)
-            agentManagerBehaviour.addSubBehaviour(new CallToMate(this, agentManagerBehaviour));
-        
-        super.addBehaviour(agentManagerBehaviour);
+        super.addBehaviour(new BehaviourManager(this));
 
 		System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");
     }
@@ -60,7 +51,7 @@ public final class PredatorAgent extends AnimalAgent {
         System.out.println("Predator-agent " + this.getAID() + " terminating");
     }
 
-
+/*
     private class UpdatePreyList extends TickerBehaviour{
 
         public UpdatePreyList(PredatorAgent predatorAgent, int i) {
@@ -95,6 +86,6 @@ public final class PredatorAgent extends AnimalAgent {
                 fe.printStackTrace();
             }
         }
-    }
+    }*/
 
 }

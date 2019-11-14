@@ -1,8 +1,11 @@
 package behaviours;
 
 import agents.AnimalAgent;
+import agents.PredatorAgent;
+import agents.AnimalAgent.Gender;
 import behaviours.die.DieManager;
 import behaviours.eat.EatManager;
+import behaviours.mate.AnswerMateRequest;
 import behaviours.mate.MateManager;
 import behaviours.random.RandomManager;
 import sajas.core.behaviours.Behaviour;
@@ -11,12 +14,32 @@ import utils.Configs;
 
 public class BehaviourManager extends ParallelBehaviour {
 
-    AnimalAgent agent;
+    private AnimalAgent agent;
 
     public BehaviourManager(AnimalAgent agent) {
         super(agent, WHEN_ALL);
         this.agent = (AnimalAgent) agent;
+
         this.updateBehaviour();
+    }
+
+    private void addDefaultBehaviours() {
+
+        if(agent instanceof PredatorAgent)
+            this.addPredatorDefaultBehaviours();
+        else
+            this.addPreyDefaultBehaviours(); 
+    }
+
+    private void addPredatorDefaultBehaviours() {
+
+        if(agent.getGender() == Gender.MALE)
+            agent.addBehaviour(new AnswerMateRequest(agent, this));
+            
+    }
+
+    private void addPreyDefaultBehaviours() {
+
     }
 
     public void updateBehaviour() {
@@ -27,12 +50,13 @@ public class BehaviourManager extends ParallelBehaviour {
         if(energy >= Configs.MIN_ENERGY_MATE)
             nextBehaviour = new MateManager(agent);
         else if(energy >= Configs.MIN_ENERGY_RANDOM)
-            nextBehaviour = new RandomManager(agent);
+            nextBehaviour = new RandomManager(agent, this);
         else if(energy > 0)
             nextBehaviour = new EatManager(agent);
         else    
             nextBehaviour = new DieManager(agent);
 
+        nextBehaviour = new RandomManager(agent, this);
         this.addSubBehaviour(nextBehaviour);         
     }
 

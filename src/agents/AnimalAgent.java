@@ -105,4 +105,12 @@ public abstract class AnimalAgent extends GenericAgent {
     public void setEnergy(double energy) {
         this.energy = energy;
     }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 }
