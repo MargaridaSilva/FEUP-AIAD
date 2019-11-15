@@ -25,14 +25,22 @@ public class Move extends IteratedAchieveREInitiator {
     protected ArrayList<Integer> remainingMoves;
 
     public Move(Agent a) {
+        this(a, false);
+    }
+
+    /***
+     * Useful to skip call to firstMove()
+     */
+    public Move(Agent a, boolean skipFirstMove) {
         super(a, null);
         this.remainingMoves = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
         this.nextPosition = null;
         this.moveApproved = false;
-        this.firstMove();
+        if(!skipFirstMove)
+            this.firstMove();
     }
 
-    private void firstMove() {
+    protected void firstMove() {
 
         getMove();
         ACLMessage firstRequestMessage = getProposalMessage(nextPosition);

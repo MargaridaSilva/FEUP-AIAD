@@ -8,8 +8,9 @@ public class MoveToGoal extends Move {
     private Position goalPosition;
 
     public MoveToGoal(Agent a, Position goalPosition) {
-        super(a);
+        super(a, true);
         this.goalPosition = goalPosition;
+        this.firstMove();
     }
 
     @Override
@@ -18,6 +19,9 @@ public class MoveToGoal extends Move {
         double lowerDistance = Double.MAX_VALUE;
         int[] nextMove = null;
 
+        if(remainingMoves.isEmpty())  // all positions are taken
+            return;
+        
         for (Integer moveIndex : remainingMoves) {
             int[] move = MOVES[moveIndex];
             getNextPosition(move);
@@ -30,6 +34,4 @@ public class MoveToGoal extends Move {
         
         getNextPosition(nextMove);
     }
-
-    
 }
