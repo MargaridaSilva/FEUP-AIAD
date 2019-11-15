@@ -8,9 +8,11 @@ import behaviours.eat.EatManager;
 import behaviours.mate.AnswerMateRequest;
 import behaviours.mate.MateManager;
 import behaviours.random.RandomManager;
+import jade.core.AID;
 import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.ParallelBehaviour;
 import utils.Configs;
+import utils.Locator;
 
 public class BehaviourManager extends ParallelBehaviour {
 
@@ -19,7 +21,7 @@ public class BehaviourManager extends ParallelBehaviour {
     public BehaviourManager(AnimalAgent agent) {
         super(agent, WHEN_ALL);
         this.agent = (AnimalAgent) agent;
-
+        this.addDefaultBehaviours();
         this.updateBehaviour();
     }
 
@@ -56,7 +58,6 @@ public class BehaviourManager extends ParallelBehaviour {
         else    
             nextBehaviour = new DieManager(agent);
 
-        
         this.addSubBehaviour(nextBehaviour);         
     }
 
