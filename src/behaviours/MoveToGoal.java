@@ -13,23 +13,22 @@ public class MoveToGoal extends Move {
     }
 
     @Override
-    protected Position getMove() {
+    protected void getMove() {
 
         double lowerDistance = Double.MAX_VALUE;
         int[] nextMove = null;
 
         for (Integer moveIndex : remainingMoves) {
             int[] move = MOVES[moveIndex];
-            Position possiblePosition = this.getNextPosition(move);
-            double distToGoal = goalPosition.getDist(possiblePosition);
+            getNextPosition(move);
+            double distToGoal = goalPosition.getDist(nextPosition);
             if(distToGoal < lowerDistance) {
                 nextMove = move;
                 lowerDistance = distToGoal;
             }
         }
         
-        return getNextPosition(nextMove);
-
+        getNextPosition(nextMove);
     }
 
     
