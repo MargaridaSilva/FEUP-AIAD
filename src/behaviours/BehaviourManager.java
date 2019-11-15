@@ -55,7 +55,7 @@ public class BehaviourManager extends ParallelBehaviour {
             nextBehaviour = new EatManager(agent);
         else    
             nextBehaviour = new DieManager(agent);
-        
+   
         this.addSubBehaviour(nextBehaviour);         
     }
 }

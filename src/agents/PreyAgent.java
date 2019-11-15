@@ -1,29 +1,30 @@
 package agents;
 
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 import launchers.EnvironmentLauncher;
-import sajas.core.behaviours.CyclicBehaviour;
-import sajas.domain.DFService;
+import uchicago.src.sim.gui.RectNetworkItem;
 import utils.Position;
-
-import java.util.Random;
 
 import behaviours.BehaviourManager;
 
-public class PreyAgent extends AnimalAgent{
+public class PreyAgent extends AnimalAgent {
 
-    private PreyAgent(EnvironmentLauncher model, Position position, Gender gender) {
-        super(model, position, gender);
-        //this.node.setColor(this.color);
+    private PreyAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
+
+        super(model, id, position, gender);
     }
 
-    public static PreyAgent generatePreyAgent(EnvironmentLauncher model, Position position, Gender gender) {
+    public static PreyAgent generatePreyAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
         
-        return new PreyAgent(model, position, gender);
+        return new PreyAgent(model, id, position, gender);
+    }
+
+    public void createNode(Position position, String label) {
+        int density = model.getBoardDensity();
+        RectNetworkItem rect = new RectNetworkItem(position.x, position.y);
+        rect.allowResizing(false);
+        rect.setHeight(density);
+        rect.setWidth(density);
+        this.node = generateDrawableNode(rect, label);
     }
 
     @Override

@@ -4,7 +4,9 @@ import behaviours.mate.AnswerMateRequest;
 import behaviours.mate.CallToMate;
 import behaviours.BehaviourManager;
 import launchers.EnvironmentLauncher;
+import uchicago.src.sim.gui.OvalNetworkItem;
 import utils.Communication;
+import utils.Configs;
 import utils.Position;
 
 /**
@@ -12,13 +14,22 @@ import utils.Position;
  */
 public final class PredatorAgent extends AnimalAgent {
 
-    private PredatorAgent(EnvironmentLauncher model, Position position, Gender gender) {
-        super(model, position, gender);
+    private PredatorAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
+        super(model, id, position, gender);
     }
 
-    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, Position position, Gender gender) {
+    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
 
-        return new PredatorAgent(model, position, gender);
+        return new PredatorAgent(model, id, position, gender);
+    }
+
+    public void createNode(Position position, String label) {
+        int density = model.getBoardDensity();
+        OvalNetworkItem oval = new OvalNetworkItem(position.x,position.y);
+        oval.allowResizing(false);
+        oval.setHeight(density);
+        oval.setWidth(density);
+        this.node = generateDrawableNode(oval, label);
     }
 
     @Override

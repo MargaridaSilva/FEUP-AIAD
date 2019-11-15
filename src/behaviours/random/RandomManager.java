@@ -17,6 +17,7 @@ public class RandomManager extends TickerBehaviour {
 
     @Override
     protected void onTick() {
+        
         Move randomMoveBehaviour = new Move(myAgent);
         this.parentBehaviour.addSubBehaviour(randomMoveBehaviour);
     }
