@@ -116,41 +116,45 @@ public class EnvironmentLauncher extends Repast3Launcher {
     }
 
     private void launchPredators() throws StaleProxyException {
+
         int numPredators = this.NUM_MALE_PREDATORS + this.NUM_FEMALE_PREDATORS;
+
         for (int i = 0; i < numPredators; ++i) {
+
+            String id = "predator-" + i;
             Position predatorPosition = positionGenerator.getPosition();
             Gender gender = Gender.MALE;
-            Color color = Color.BLUE;
+
             if(i >= this.NUM_MALE_PREDATORS) {
                 gender = Gender.FEMALE;
-                color = Color.PINK;
             }
-            PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, predatorPosition, gender);
+
+            PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, id, predatorPosition, gender);
             this.predators.add(predator);
-            this.mainContainer.acceptNewAgent("predator-" + i, predator).start();
+            this.mainContainer.acceptNewAgent(id, predator).start();
             this.observer.addAgent(predator);
-            DefaultDrawableNode node = generateOvalNode("predator-" + i, color, predatorPosition.x*DENSITY, predatorPosition.y*DENSITY);
-            nodes.add(node);
-            predator.setNode(node);
+            nodes.add(predator.node);
         }
     }
 
     private void launchPreys() throws StaleProxyException {
+
         int numPreys = this.NUM_MALE_PREYS + this.NUM_FEMALE_PREYS;
+
         for (int i = 0; i < numPreys; ++i) {
+
+            String id = "prey-" + i;
             Position preyPosition = positionGenerator.getPosition();
             Gender gender = Gender.MALE;
-            Color color = Color.BLUE;
+
             if(i >= this.NUM_MALE_PREYS) {
                 gender = Gender.FEMALE;
-                color = Color.PINK;
             }
-            PreyAgent prey = PreyAgent.generatePreyAgent(this, preyPosition, gender);
+            
+            PreyAgent prey = PreyAgent.generatePreyAgent(this, id, preyPosition, gender);
             this.preys.add(prey);
-            this.mainContainer.acceptNewAgent("prey-" + i, prey).start();
-            DefaultDrawableNode node = generateRectNode("prey-" + i, color, preyPosition.x * DENSITY, preyPosition.y * DENSITY);
-            nodes.add(node);
-            prey.setNode(node);
+            this.mainContainer.acceptNewAgent(id, prey).start();
+            nodes.add(prey.node);
         }
     }
 
@@ -270,27 +274,4 @@ public class EnvironmentLauncher extends Repast3Launcher {
         }
         return null;
     }
-
-    private DefaultDrawableNode generateDrawableNode(NetworkDrawable drawable, Color color, String label) {
-        DefaultDrawableNode node = new DefaultDrawableNode(label, drawable);
-        node.setColor(color);
-        return node;
-    }
-
-    private DefaultDrawableNode generateOvalNode(String label, Color color, int x, int y) {
-        OvalNetworkItem oval = new OvalNetworkItem(x,y);
-        oval.allowResizing(false);
-        oval.setHeight(DENSITY);
-        oval.setWidth(DENSITY);
-        return generateDrawableNode(oval, color, label);
-    }
-
-    private DefaultDrawableNode generateRectNode(String label, Color color, int x, int y) {
-        RectNetworkItem rect = new RectNetworkItem(x,y);
-        rect.allowResizing(false);
-        rect.setHeight(DENSITY);
-        rect.setWidth(DENSITY);
-        return generateDrawableNode(rect, color, label);
-    }
-
 }
