@@ -1,9 +1,12 @@
 package agents;
 
+import java.io.Serializable;
+import java.lang.invoke.SerializedLambda;
 import java.util.HashMap;
 import java.util.Map;
 
 import behaviours.MoveApproval;
+import behaviours.eat.TellFood;
 import jade.core.AID;
 import launchers.EnvironmentLauncher;
 import utils.Communication;
@@ -66,12 +69,14 @@ public class ObserverAgent extends GenericAgent {
         super.setup();
 
         this.registerService(Communication.ServiceType.INFORM_WORLD, 
-                             Communication.ServiceName.TRACK_WORLD, new String[]{Communication.Language.MOVE},
-                             new String[]{Communication.Ontology.VALIDATE_MOVE});
+                             Communication.ServiceName.TRACK_WORLD,
+                            new String[]{Communication.Language.MOVE, Communication.Language.FOOD},
+                             new String[]{Communication.Ontology.VALIDATE_MOVE, Communication.Ontology.TELL_FOOD});
         
         System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
         this.addBehaviour(new MoveApproval(this));
+        this.addBehaviour(new TellFood(this));
     }
 
     @Override
@@ -83,6 +88,8 @@ public class ObserverAgent extends GenericAgent {
         System.out.println("Observer-agent " + this.getAID() + " terminating");
     }
 
-
+    public Serializable getPreys() {
+        return this.preysPositions;
+    }
 
 }

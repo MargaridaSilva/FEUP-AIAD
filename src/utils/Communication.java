@@ -10,6 +10,7 @@ public final class Communication {
         public static final String PREDATOR_FIND_MATE = "find-mate-predator-ontology";
         public static final String PREDATOR_REACHED_FEMALE = "reach-female-predator-ontology";
         public static final String FIND_FOOD = "find-food-ontology";
+        public static final String TELL_FOOD = "find-food-ontology";
     }
 
     // service types
