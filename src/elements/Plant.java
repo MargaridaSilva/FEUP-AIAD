@@ -1,6 +1,7 @@
 package elements;
 
-import launchers.EnvironmentLauncher;
+import simulation.PredatorPreyModel;
+import simulation.Space;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.RoundRectNetworkItem;
 import uchicago.src.sim.gui.SimGraphics;
@@ -16,34 +17,22 @@ import agents.AnimalAgent.Gender;
 /**
  * A class to represent an Animal agent
  */
-public class Plant{
+public class Plant implements Drawable{
 
     protected Position position;
-    public DefaultDrawableNode node;
-    private EnvironmentLauncher model;
+    private PredatorPreyModel model;
+    private Space space;
 
-    protected Plant(EnvironmentLauncher model, String id, Position position) {
+    protected Plant(PredatorPreyModel model, Space space, String id, Position position) {
         this.model = model;
+        this.space = space;
         this.position = position;
-        this.createNode(position, id);
     }
 
-    public static Plant generatePlant(EnvironmentLauncher model, String id, Position position) {
-        return new Plant(model, id, position);
+    public static Plant generatePlant(PredatorPreyModel model, Space space, String id, Position position) {
+        return new Plant(model, space, id, position);
     }
 
-    public void createNode(Position position, String label) {
-        int density = model.getBoardDensity();
-        RoundRectNetworkItem rect = new RoundRectNetworkItem(position.x*density, position.y*density);
-        rect.allowResizing(false);
-        rect.setHeight(density/2);
-        rect.setWidth(density/2);
-
-        Color color = Configs.PLANT_COLOR;
-        DefaultDrawableNode node = new DefaultDrawableNode(label, rect);
-        node.setColor(color);
-        this.node = node;
-    }
 
     public int getX() {
         return position.x;
@@ -68,12 +57,10 @@ public class Plant{
     public void setPosition(Position position) {
         this.position = position.clone();
     }
-
-    public void setNode(DefaultDrawableNode node) {
-        this.node = node;
-    }
-
     
-
+    @Override
+    public void draw(SimGraphics g) {
+        g.drawFastRoundRect(Configs.PLANT_COLOR);
+    }
     
 }

@@ -1,4 +1,4 @@
-package behaviours;
+package behaviours.observer;
 
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class MoveApproval extends AchieveREResponder {
        
         ACLMessage reply = request.createReply();
         Position position = null;
-        ObserverAgent observer = ((ObserverAgent) this.myAgent);
+        ObserverAgent observer = (ObserverAgent) this.myAgent;
 
         try {
             if (request.getOntology() == Communication.Ontology.VALIDATE_MOVE_GOAL) {

@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 
-import behaviours.MoveApproval;
 import behaviours.plant.GeneratePlant;
 import elements.Plant;
 import jade.core.AID;
-import launchers.EnvironmentLauncher;
-import sajas.core.behaviours.ParallelBehaviour;
+import behaviours.observer.MoveApproval;
+import behaviours.observer.RemoveAgent;
+import simulation.PredatorPreyModel;
 import utils.Communication;
 import utils.Position;
 
@@ -20,16 +20,18 @@ import utils.Position;
  * of the world, it just exchanges messages with the other agents, which can
  * request information regarding the state of the world around them.
  */
-public class ObserverAgent extends GenericAgent {
+public final class ObserverAgent extends GenericAgent {
 
-    private final int BOARD_DIM;
+    private final int width;
+    private final int height;
     private HashMap<Position, AID> agentsPositions;
     private HashMap<AID, Position> preysPositions;
     private HashSet<Position> plantsPosition;
 
-    public ObserverAgent(EnvironmentLauncher model) {
+    public ObserverAgent(PredatorPreyModel model) {
         super(model);
-        this.BOARD_DIM = model.getBoardDim();
+        this.width = model.getWidth();
+        this.height = model.getHeight();
         this.agentsPositions = new HashMap<>();
         this.preysPositions = new HashMap<>();
         this.plantsPosition = new HashSet<>();
@@ -42,17 +44,18 @@ public class ObserverAgent extends GenericAgent {
 
     public void addPlant(Plant plant){
         this.plantsPosition.add(plant.getPosition());
+        this.model.addElement(plant);
     }
 
     public Position generateNewPosition(){
         Position position = new Position(0, 0);
         Random random = new Random();
-        int nAttempts = 100;
+        int nAttempts = 10;
         boolean invalidPosition = true;
 
         while(nAttempts > 0 && invalidPosition){
-            position.x = random.nextInt(BOARD_DIM);
-            position.y = random.nextInt(BOARD_DIM);
+            position.x = random.nextInt(this.getModel().getWidth());
+            position.y = random.nextInt(this.getModel().getHeight());
             invalidPosition = isPositionTaken(position) || plantsPosition.contains(position);
             nAttempts--;
         }
@@ -64,6 +67,17 @@ public class ObserverAgent extends GenericAgent {
         return position;
     }
 
+    public void removeAgent(AID agentId) {
+        
+        for (Map.Entry<Position, AID> mapPosition : agentsPositions.entrySet()) {
+            
+            if(mapPosition.getValue().equals(agentId)) {
+                agentsPositions.remove(mapPosition.getKey());
+                return;
+            }
+        }
+    }
+
     public boolean isPositionTaken(Position position) {
         
         return this.agentsPositions.containsKey(position);
@@ -71,8 +85,8 @@ public class ObserverAgent extends GenericAgent {
 
     public boolean isPositionOutLimits(Position position) {
 
-        boolean outX = (position.x < 0) || (position.x >= BOARD_DIM);
-        boolean outY = (position.y < 0) || (position.y >= BOARD_DIM);
+        boolean outX = (position.x < 0) || (position.x >= width);
+        boolean outY = (position.y < 0) || (position.y >= height);
         return outX || outY;
     }
 
@@ -93,30 +107,28 @@ public class ObserverAgent extends GenericAgent {
     }
 
     @Override
-    protected void setup() {
+    public void setup() {
         super.setup();
 
         this.registerService(Communication.ServiceType.INFORM_WORLD, 
-                             Communication.ServiceName.TRACK_WORLD, new String[]{Communication.Language.MOVE},
+                             Communication.ServiceName.TRACK_WORLD, 
+                             new String[]{Communication.Language.MOVE},
                              new String[]{Communication.Ontology.VALIDATE_MOVE});
         
         System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
-        // ParallelBehaviour behaviour = new ParallelBehaviour();
-        // behaviour.addSubBehaviour((new MoveApproval(this));
         this.addBehaviour(new MoveApproval(this));
         this.addBehaviour(new GeneratePlant(this));
+        this.addBehaviour(new RemoveAgent(this));
     }
 
     @Override
     protected void takeDown() {
+        
         super.takeDown();
         
         this.deRegisterServices();
 
         System.out.println("Observer-agent " + this.getAID() + " terminating");
     }
-
-
-
 }

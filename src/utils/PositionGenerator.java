@@ -4,10 +4,12 @@ import java.util.Random;
 
 public abstract class PositionGenerator {
 
-    protected final int BOARD_DIM;
+    protected final int width;
+    protected final int height;
 
-    public PositionGenerator(int BOARD_DIM) {
-        this.BOARD_DIM = BOARD_DIM;
+    public PositionGenerator(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
     public Position getPosition(){
@@ -16,8 +18,8 @@ public abstract class PositionGenerator {
 
     public Position getRandomPosition(){
         Random random = new Random();
-        int x = random.nextInt(BOARD_DIM);
-        int y = random.nextInt(BOARD_DIM);
+        int x = random.nextInt(width);
+        int y = random.nextInt(height);
         return new Position(x, y);
     }
 }
