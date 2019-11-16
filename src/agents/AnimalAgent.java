@@ -1,8 +1,8 @@
 package agents;
 
-import launchers.EnvironmentLauncher;
-import uchicago.src.sim.gui.NetworkDrawable;
-import uchicago.src.sim.network.DefaultDrawableNode;
+import simulation.PredatorPreyModel;
+import simulation.Space;
+import uchicago.src.sim.gui.Drawable;
 import utils.Configs;
 import utils.Position;
 
@@ -14,19 +14,22 @@ import behaviours.BehaviourManager;
 /**
  * A class to represent an Animal agent
  */
-public abstract class AnimalAgent extends GenericAgent {
+public abstract class AnimalAgent extends GenericAgent implements Drawable {
 
     public enum Gender {MALE, FEMALE}
     protected Position position;
     protected double energy;
     protected double energyExpenditure;
     protected Gender gender;
-    public DefaultDrawableNode node;
+    protected Color color;
+    protected Space space;
 
-    protected AnimalAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
+    protected AnimalAgent(PredatorPreyModel model, Space space, String id, Position position, Gender gender) {
         super(model);
+        this.space = space;
         this.position = position;
         this.gender = gender;
+        this.color = getDefaultColor();
 
         Random random = new Random();
 
@@ -35,8 +38,6 @@ public abstract class AnimalAgent extends GenericAgent {
 
         // random number in [MIN_ENERGY_EXP, MAX_ENERGY_EXP]
         this.energyExpenditure = Configs.MIN_ENERGY_EXP + (Configs.MAX_ENERGY_EXP - Configs.MIN_ENERGY_EXP) * random.nextDouble();
-
-        createNode(position, id);
     }
 
     @Override
@@ -47,23 +48,16 @@ public abstract class AnimalAgent extends GenericAgent {
 
     @Override
     protected void takeDown() {
+
         super.takeDown();
+        model.removeAgent(this);
 
         // TODO: inform the Observer agent that he is no longer in the world, so that 
         // the Observer won't register its position
     }
 
-    protected abstract void createNode(Position position, String label);
-
-    protected DefaultDrawableNode generateDrawableNode(NetworkDrawable drawable, String label) {
-        Color color = getDefaultColor();
-        DefaultDrawableNode node = new DefaultDrawableNode(label, drawable);
-        node.setColor(color);
-        return node;
-    }
-
     public void decreaseEnergy() {
-
+        
         this.energy -= energyExpenditure;
         updateNodeColor();
     }
@@ -108,15 +102,12 @@ public abstract class AnimalAgent extends GenericAgent {
     }
 
     public void setPosition(Position position) {
-        int boardDensity = this.model.getBoardDensity();
         this.position = position.clone();
-        this.node.setX(boardDensity * position.x);
-        this.node.setY(boardDensity * position.y);
         this.decreaseEnergy();
     }
 
     protected void setNodeColor(Color color) {
-        this.node.setColor(color);
+        this.color = color;
     }
 
     public void setMateColor() {
@@ -130,10 +121,6 @@ public abstract class AnimalAgent extends GenericAgent {
             opacity = 1;
         Color newColor = new Color(defaultColor.getRed(), defaultColor.getGreen(), defaultColor.getBlue(), opacity);
         setNodeColor(newColor);
-    }
-
-    public void setNode(DefaultDrawableNode node) {
-        this.node = node;
     }
 
     public void setEnergy(double energy) {

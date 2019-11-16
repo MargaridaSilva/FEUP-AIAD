@@ -8,8 +8,8 @@ public final class RandomPositionGenerator extends PositionGenerator {
     private Random random;
     private HashSet<Integer> randomNumbers;
 
-    public RandomPositionGenerator(int BOARD_DIM) {
-        super(BOARD_DIM);
+    public RandomPositionGenerator(int width, int height) {
+        super(width, height);
         this.random = new Random();
         this.randomNumbers = new HashSet<>();
     }
@@ -18,12 +18,12 @@ public final class RandomPositionGenerator extends PositionGenerator {
         int x, y, randomNumber = 0;
         
         do {
-            randomNumber = random.nextInt(BOARD_DIM * BOARD_DIM);
+            randomNumber = random.nextInt(width * height);
         } while(randomNumbers.contains(randomNumber));
         randomNumbers.add(randomNumber);
 
-        x = randomNumber / BOARD_DIM;
-        y = randomNumber % BOARD_DIM;
+        x = randomNumber / width;
+        y = randomNumber % height;
 
         return new Position(x,y);
     }

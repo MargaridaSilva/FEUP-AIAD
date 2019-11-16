@@ -1,30 +1,22 @@
 package agents;
 
-import launchers.EnvironmentLauncher;
-import uchicago.src.sim.gui.RectNetworkItem;
+import simulation.PredatorPreyModel;
+import simulation.Space;
+import uchicago.src.sim.gui.SimGraphics;
 import utils.Position;
 
 import behaviours.BehaviourManager;
 
 public class PreyAgent extends AnimalAgent {
 
-    private PreyAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
+    private PreyAgent(PredatorPreyModel model, Space space, String id, Position position, Gender gender) {
 
-        super(model, id, position, gender);
+        super(model, space, id, position, gender);
     }
 
-    public static PreyAgent generatePreyAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
+    public static PreyAgent generatePreyAgent(PredatorPreyModel model, Space space, String id, Position position, Gender gender) {
         
-        return new PreyAgent(model, id, position, gender);
-    }
-
-    public void createNode(Position position, String label) {
-        int density = model.getBoardDensity();
-        RectNetworkItem rect = new RectNetworkItem(position.x, position.y);
-        rect.allowResizing(false);
-        rect.setHeight(density);
-        rect.setWidth(density);
-        this.node = generateDrawableNode(rect, label);
+        return new PreyAgent(model, space, id, position, gender);
     }
 
     @Override
@@ -36,8 +28,22 @@ public class PreyAgent extends AnimalAgent {
         this.registerService("prey-service", "prey-name", new String[]{},  new String[]{});
     }
 
+    // Drawable interface
+    public int getX() {
+        return position.x;
+    }
+
+    public int getY() {
+        return position.y;
+    }
+  
+    public void draw(SimGraphics g) {
+        g.drawFastOval(color);
+    }
+
     @Override
     protected void takeDown() {
+        
         super.takeDown();
         
         this.deRegisterServices();

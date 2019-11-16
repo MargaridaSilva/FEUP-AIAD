@@ -1,23 +1,29 @@
 package behaviours.die;
 
 import agents.AnimalAgent;
-import sajas.core.behaviours.Behaviour;
+import sajas.core.behaviours.SimpleBehaviour;
 
-public class DieManager extends Behaviour {
+public class DieManager extends SimpleBehaviour {
+
+    private boolean done;
  
     public DieManager(AnimalAgent a) {
         super(a);
+        
+        done = false;
     }
 
     @Override
     public void action() {
-        // TODO Auto-generated method stub
-
+        
+        System.out.println("Agent " + myAgent.getAID() + " is going to terminate");
+        this.myAgent.doDelete();
+        done = true;
     }
 
     @Override
     public boolean done() {
-        // TODO Auto-generated method stub
-        return false;
+        
+        return done;
     }
 }
