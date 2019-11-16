@@ -1,6 +1,7 @@
 package behaviours.eat;
 
 
+import behaviours.animals.eat.EatManager;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;

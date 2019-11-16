@@ -1,4 +1,4 @@
-package behaviours.eat;
+package behaviours.observer;
 
 import agents.ObserverAgent;
 import jade.domain.FIPANames;

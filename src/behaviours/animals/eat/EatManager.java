@@ -1,15 +1,15 @@
 package behaviours.animals.eat;
 
 import agents.AnimalAgent;
-import behaviours.BehaviourManager;
-import behaviours.MoveToGoal;
-import jade.lang.acl.ACLMessage;
+
+import behaviours.animals.BehaviourManager;
+import behaviours.animals.move.MoveToGoal;
 import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
 import utils.Position;
 
 public class EatManager extends TickerBehaviour {
-    Position food;
+    public Position food;
     BehaviourManager parentBehaviour;
 
     public EatManager(AnimalAgent a, BehaviourManager parentBehaviour) {

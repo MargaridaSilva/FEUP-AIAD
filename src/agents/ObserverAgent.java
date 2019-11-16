@@ -1,13 +1,10 @@
 package agents;
 
 import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
 import java.util.HashMap;
 import java.util.Map;
 
 import behaviours.observer.MoveApproval;
-import behaviours.observer.RemoveAgent;
-import behaviours.eat.TellFood;
 import jade.core.AID;
 import simulation.PredatorPreyModel;
 import utils.Communication;
@@ -34,6 +31,9 @@ public final class ObserverAgent extends GenericAgent {
         this.preysPositions = new HashMap<>();
     }
 
+    public HashMap<AID, Position> getPreys() {
+        return preysPositions;
+    }
     public void addAgent(AnimalAgent agent) {
 
         this.agentsPositions.put(agent.getPosition(), agent.getAID());
