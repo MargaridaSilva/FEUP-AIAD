@@ -25,6 +25,7 @@ public class TellFood extends AchieveREResponder {
 
     @Override
     protected ACLMessage handleRequest(ACLMessage request){
+        System.out.println("HANDLIIIING");
         ACLMessage reply = request.createReply();
         reply.setPerformative(ACLMessage.INFORM);
         try {
@@ -32,6 +33,7 @@ public class TellFood extends AchieveREResponder {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("REPLIED");
         return reply;
     }
 }

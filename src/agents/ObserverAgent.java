@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import behaviours.observer.MoveApproval;
+import behaviours.observer.TellFood;
 import jade.core.AID;
 import simulation.PredatorPreyModel;
 import utils.Communication;
@@ -31,9 +32,6 @@ public final class ObserverAgent extends GenericAgent {
         this.preysPositions = new HashMap<>();
     }
 
-    public HashMap<AID, Position> getPreys() {
-        return preysPositions;
-    }
     public void addAgent(AnimalAgent agent) {
 
         this.agentsPositions.put(agent.getPosition(), agent.getAID());

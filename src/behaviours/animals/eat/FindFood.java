@@ -1,7 +1,5 @@
 package behaviours.animals.eat;
 
-
-
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -21,6 +19,8 @@ public class FindFood extends AchieveREInitiator {
     public FindFood(Agent a, ACLMessage msg, EatManager parentBehaviour) {
         super(a, msg);
         this.parentBehaviour = parentBehaviour;
+        ACLMessage getFoodRequest = prepareRequest(a);
+        this.reset(getFoodRequest);
     }
 
     public static ACLMessage prepareRequest(Agent agent) {
@@ -36,7 +36,7 @@ public class FindFood extends AchieveREInitiator {
             return null;
         }
 
-        ontology = Communication.Ontology.FIND_FOOD;
+        ontology = Communication.Ontology.TELL_FOOD;
         ACLMessage msg = MessageConstructor.getMessage(observerAgent, ACLMessage.REQUEST,
                 FIPANames.InteractionProtocol.FIPA_REQUEST, ontology, Communication.Language.FOOD, content);
         return msg;
