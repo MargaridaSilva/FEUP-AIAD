@@ -69,23 +69,9 @@ public class Plant{
         this.position = position.clone();
     }
 
-    /*@Override
-    public void draw(SimGraphics simGraphics) {
-        simGraphics.setDrawingCoordinates(getX(), getY(), 0);
-        //scaling the circles
-        //simGraphics.setDrawingParameters(10, 10, 1);
-        simGraphics.drawCircle(this.color);
-        //simGraphics.fillPolygon(this.color);
-    }*/
-
     public void setNode(DefaultDrawableNode node) {
         this.node = node;
     }
-
-	public static PreyAgent generatePlants(EnvironmentLauncher environmentLauncher, String id, Position preyPosition,
-			Gender gender) {
-		return null;
-	}
 
     
 

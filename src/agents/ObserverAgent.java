@@ -3,11 +3,14 @@ package agents;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 
 import behaviours.MoveApproval;
+import behaviours.plant.GeneratePlant;
 import elements.Plant;
 import jade.core.AID;
 import launchers.EnvironmentLauncher;
+import sajas.core.behaviours.ParallelBehaviour;
 import utils.Communication;
 import utils.Position;
 
@@ -39,6 +42,26 @@ public class ObserverAgent extends GenericAgent {
 
     public void addPlant(Plant plant){
         this.plantsPosition.add(plant.getPosition());
+    }
+
+    public Position generateNewPosition(){
+        Position position = new Position(0, 0);
+        Random random = new Random();
+        int nAttempts = 100;
+        boolean invalidPosition = true;
+
+        while(nAttempts > 0 && invalidPosition){
+            position.x = random.nextInt(BOARD_DIM);
+            position.y = random.nextInt(BOARD_DIM);
+            invalidPosition = isPositionTaken(position) || plantsPosition.contains(position);
+            nAttempts--;
+        }
+        
+        if(nAttempts == 0){
+            position = null;
+        }
+
+        return position;
     }
 
     public boolean isPositionTaken(Position position) {
@@ -79,7 +102,10 @@ public class ObserverAgent extends GenericAgent {
         
         System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
+        // ParallelBehaviour behaviour = new ParallelBehaviour();
+        // behaviour.addSubBehaviour((new MoveApproval(this));
         this.addBehaviour(new MoveApproval(this));
+        this.addBehaviour(new GeneratePlant(this));
     }
 
     @Override
