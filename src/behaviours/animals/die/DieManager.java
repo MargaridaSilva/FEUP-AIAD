@@ -1,4 +1,4 @@
-package behaviours.die;
+package behaviours.animals.die;
 
 import agents.AnimalAgent;
 import sajas.core.behaviours.SimpleBehaviour;

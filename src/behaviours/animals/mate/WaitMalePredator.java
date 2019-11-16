@@ -1,4 +1,4 @@
-package behaviours.mate;
+package behaviours.animals.mate;
 
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;

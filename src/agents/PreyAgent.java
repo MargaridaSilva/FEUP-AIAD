@@ -5,7 +5,7 @@ import simulation.Space;
 import uchicago.src.sim.gui.SimGraphics;
 import utils.Position;
 
-import behaviours.BehaviourManager;
+import behaviours.animals.BehaviourManager;
 
 public class PreyAgent extends AnimalAgent {
 

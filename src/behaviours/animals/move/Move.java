@@ -1,4 +1,4 @@
-package behaviours;
+package behaviours.animals.move;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package agents;
 
-import behaviours.BehaviourManager;
+import behaviours.animals.BehaviourManager;
 import simulation.PredatorPreyModel;
 import simulation.Space;
 import uchicago.src.sim.gui.SimGraphics;

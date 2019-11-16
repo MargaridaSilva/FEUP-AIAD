@@ -1,4 +1,4 @@
-package behaviours;
+package behaviours.animals.move;
 
 import sajas.core.Agent;
 import utils.Position;

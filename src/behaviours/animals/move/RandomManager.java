@@ -1,8 +1,7 @@
-package behaviours.random;
+package behaviours.animals.move;
 
 import agents.AnimalAgent;
-import behaviours.BehaviourManager;
-import behaviours.Move;
+import behaviours.animals.BehaviourManager;
 import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
 

@@ -3,7 +3,8 @@ package agents;
 import java.util.HashMap;
 import java.util.Map;
 
-import behaviours.MoveApproval;
+import behaviours.observer.MoveApproval;
+import behaviours.observer.RemoveAgent;
 import jade.core.AID;
 import simulation.PredatorPreyModel;
 import utils.Communication;
@@ -33,6 +34,17 @@ public final class ObserverAgent extends GenericAgent {
     public void addAgent(AnimalAgent agent) {
 
         this.agentsPositions.put(agent.getPosition(), agent.getAID());
+    }
+
+    public void removeAgent(AID agentId) {
+        
+        for (Map.Entry<Position, AID> mapPosition : agentsPositions.entrySet()) {
+            
+            if(mapPosition.getValue().equals(agentId)) {
+                agentsPositions.remove(mapPosition.getKey());
+                return;
+            }
+        }
     }
 
     public boolean isPositionTaken(Position position) {
@@ -75,6 +87,7 @@ public final class ObserverAgent extends GenericAgent {
         System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
         this.addBehaviour(new MoveApproval(this));
+        this.addBehaviour(new RemoveAgent(this));
     }
 
     @Override

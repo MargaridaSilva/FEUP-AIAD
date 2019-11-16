@@ -3,13 +3,17 @@ package agents;
 import simulation.PredatorPreyModel;
 import simulation.Space;
 import uchicago.src.sim.gui.Drawable;
+import utils.Communication;
 import utils.Configs;
+import utils.Locator;
 import utils.Position;
 
 import java.awt.*;
 import java.util.Random;
 
-import behaviours.BehaviourManager;
+import behaviours.animals.BehaviourManager;
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
 
 /**
  * A class to represent an Animal agent
@@ -51,9 +55,19 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
 
         super.takeDown();
         model.removeAgent(this);
+        informObserverDelete();
+        
+    }
 
-        // TODO: inform the Observer agent that he is no longer in the world, so that 
-        // the Observer won't register its position
+    /**
+     * Inform the Observer agent that this agent is going to terminate
+     */
+    private void informObserverDelete() {
+        AID observerAgent = Locator.findObserver(this);
+        ACLMessage terminateMsg = new ACLMessage(ACLMessage.INFORM);
+        terminateMsg.setOntology(Communication.Ontology.TERMINATE);
+        terminateMsg.addReceiver(observerAgent);
+        this.send(terminateMsg);
     }
 
     public void decreaseEnergy() {

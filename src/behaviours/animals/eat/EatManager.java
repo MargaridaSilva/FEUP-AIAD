@@ -1,14 +1,14 @@
-package behaviours.mate;
+package behaviours.animals.eat;
 
 import agents.AnimalAgent;
 import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
 import utils.Position;
 
-public class MateManager extends TickerBehaviour {
+public class EatManager extends TickerBehaviour {
     Position food;
 
-    public MateManager(AnimalAgent a) {
+    public EatManager(AnimalAgent a) {
         super(a, Configs.TICK_PERIOD);
     }
 
