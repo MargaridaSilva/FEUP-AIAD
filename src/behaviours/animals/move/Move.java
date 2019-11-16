@@ -1,4 +1,4 @@
-package behaviours;
+package behaviours.animals.move;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ public class Move extends IteratedAchieveREInitiator {
      */
     public Move(Agent a, boolean skipFirstMove) {
         super(a, null);
+        
         this.remainingMoves = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
         this.nextPosition = null;
         this.moveApproved = false;
@@ -57,6 +58,7 @@ public class Move extends IteratedAchieveREInitiator {
 
         if (response.getPerformative() == ACLMessage.INFORM) {
             this.moveApproved = true;
+            
             ((AnimalAgent) myAgent).setPosition(this.nextPosition);
             return;
         } else if (response.getPerformative() == ACLMessage.FAILURE) {

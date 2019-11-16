@@ -3,15 +3,16 @@ package agents;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import launchers.EnvironmentLauncher;
 import sajas.core.Agent;
 import sajas.domain.DFService;
+import simulation.PredatorPreyModel;
 
 public class GenericAgent extends Agent {
  
-    protected EnvironmentLauncher model;
+    protected PredatorPreyModel model;
 
-    protected GenericAgent(EnvironmentLauncher model) {
+    protected GenericAgent(PredatorPreyModel model) {
+        
         this.model = model;
     }
 
@@ -49,7 +50,7 @@ public class GenericAgent extends Agent {
         }
     }
 
-    public EnvironmentLauncher getModel() {
+    public PredatorPreyModel getModel() {
         return model;
     }
 }

@@ -3,9 +3,10 @@ package agents;
 import java.util.HashMap;
 import java.util.Map;
 
-import behaviours.MoveApproval;
+import behaviours.observer.MoveApproval;
+import behaviours.observer.RemoveAgent;
 import jade.core.AID;
-import launchers.EnvironmentLauncher;
+import simulation.PredatorPreyModel;
 import utils.Communication;
 import utils.Position;
 
@@ -15,15 +16,17 @@ import utils.Position;
  * of the world, it just exchanges messages with the other agents, which can
  * request information regarding the state of the world around them.
  */
-public class ObserverAgent extends GenericAgent {
+public final class ObserverAgent extends GenericAgent {
 
-    private final int BOARD_DIM;
+    private final int width;
+    private final int height;
     private HashMap<Position, AID> agentsPositions;
     private HashMap<AID, Position> preysPositions;
 
-    public ObserverAgent(EnvironmentLauncher model) {
+    public ObserverAgent(PredatorPreyModel model) {
         super(model);
-        this.BOARD_DIM = model.getBoardDim();
+        this.width = model.getWidth();
+        this.height = model.getHeight();
         this.agentsPositions = new HashMap<>();
         this.preysPositions = new HashMap<>();
     }
@@ -33,6 +36,17 @@ public class ObserverAgent extends GenericAgent {
         this.agentsPositions.put(agent.getPosition(), agent.getAID());
     }
 
+    public void removeAgent(AID agentId) {
+        
+        for (Map.Entry<Position, AID> mapPosition : agentsPositions.entrySet()) {
+            
+            if(mapPosition.getValue().equals(agentId)) {
+                agentsPositions.remove(mapPosition.getKey());
+                return;
+            }
+        }
+    }
+
     public boolean isPositionTaken(Position position) {
         
         return this.agentsPositions.containsKey(position);
@@ -40,8 +54,8 @@ public class ObserverAgent extends GenericAgent {
 
     public boolean isPositionOutLimits(Position position) {
 
-        boolean outX = (position.x < 0) || (position.x >= BOARD_DIM);
-        boolean outY = (position.y < 0) || (position.y >= BOARD_DIM);
+        boolean outX = (position.x < 0) || (position.x >= width);
+        boolean outY = (position.y < 0) || (position.y >= height);
         return outX || outY;
     }
 
@@ -62,27 +76,27 @@ public class ObserverAgent extends GenericAgent {
     }
 
     @Override
-    protected void setup() {
+    public void setup() {
         super.setup();
 
         this.registerService(Communication.ServiceType.INFORM_WORLD, 
-                             Communication.ServiceName.TRACK_WORLD, new String[]{Communication.Language.MOVE},
+                             Communication.ServiceName.TRACK_WORLD, 
+                             new String[]{Communication.Language.MOVE},
                              new String[]{Communication.Ontology.VALIDATE_MOVE});
         
         System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
         this.addBehaviour(new MoveApproval(this));
+        this.addBehaviour(new RemoveAgent(this));
     }
 
     @Override
     protected void takeDown() {
+        
         super.takeDown();
         
         this.deRegisterServices();
 
         System.out.println("Observer-agent " + this.getAID() + " terminating");
     }
-
-
-
 }

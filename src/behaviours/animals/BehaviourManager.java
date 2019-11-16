@@ -1,13 +1,13 @@
-package behaviours;
+package behaviours.animals;
 
 import agents.AnimalAgent;
 import agents.PredatorAgent;
 import agents.AnimalAgent.Gender;
-import behaviours.die.DieManager;
-import behaviours.eat.EatManager;
-import behaviours.mate.AnswerMateRequest;
-import behaviours.mate.MateManager;
-import behaviours.random.RandomManager;
+import behaviours.animals.die.DieManager;
+import behaviours.animals.eat.EatManager;
+import behaviours.animals.mate.AnswerMateRequest;
+import behaviours.animals.mate.MateManager;
+import behaviours.animals.move.RandomManager;
 import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.ParallelBehaviour;
 import utils.Configs;

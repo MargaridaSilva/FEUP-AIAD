@@ -1,9 +1,9 @@
-package behaviours.mate;
+package behaviours.animals.mate;
 
 import java.util.ArrayList;
 
 import agents.AnimalAgent;
-import behaviours.BehaviourManager;
+import behaviours.animals.BehaviourManager;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
