@@ -25,6 +25,7 @@ public class TellFood extends AchieveREResponder {
 
     @Override
     protected ACLMessage handleRequest(ACLMessage request){
+
         ACLMessage reply = request.createReply();
         reply.setPerformative(ACLMessage.INFORM);
         try {

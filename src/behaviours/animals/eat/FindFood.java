@@ -1,10 +1,9 @@
 package behaviours.animals.eat;
 
-
-
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import sajas.core.Agent;
 import sajas.proto.AchieveREInitiator;
 import utils.Communication;
@@ -21,6 +20,8 @@ public class FindFood extends AchieveREInitiator {
     public FindFood(Agent a, ACLMessage msg, EatManager parentBehaviour) {
         super(a, msg);
         this.parentBehaviour = parentBehaviour;
+        ACLMessage getFoodRequest = prepareRequest(a);
+        this.reset(getFoodRequest);
     }
 
     public static ACLMessage prepareRequest(Agent agent) {
@@ -36,7 +37,7 @@ public class FindFood extends AchieveREInitiator {
             return null;
         }
 
-        ontology = Communication.Ontology.FIND_FOOD;
+        ontology = Communication.Ontology.TELL_FOOD;
         ACLMessage msg = MessageConstructor.getMessage(observerAgent, ACLMessage.REQUEST,
                 FIPANames.InteractionProtocol.FIPA_REQUEST, ontology, Communication.Language.FOOD, content);
         return msg;
@@ -44,7 +45,11 @@ public class FindFood extends AchieveREInitiator {
 
     @Override
     protected void handleInform(ACLMessage inform){
-        System.out.println("RECEIVED OBSERVER MESSAGE");
-        parentBehaviour.food = new Position(0,0);
+        try {
+            Serializable positions = inform.getContentObject();
+            parentBehaviour.food = new Position(0,0);
+        } catch (UnreadableException e) {
+            e.printStackTrace();
+        }
     }
 }

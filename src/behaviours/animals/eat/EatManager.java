@@ -4,12 +4,13 @@ import agents.AnimalAgent;
 
 import behaviours.animals.BehaviourManager;
 import behaviours.animals.move.MoveToGoal;
+import sajas.core.behaviours.SequentialBehaviour;
 import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
 import utils.Position;
 
 public class EatManager extends TickerBehaviour {
-    public Position food;
+    public Position food = new Position(0,0);
     BehaviourManager parentBehaviour;
 
     public EatManager(AnimalAgent a, BehaviourManager parentBehaviour) {
@@ -19,15 +20,18 @@ public class EatManager extends TickerBehaviour {
 
     @Override
     protected void onTick() {
+
+        SequentialBehaviour eat = new SequentialBehaviour(myAgent);
+
         // Find Food
-        parentBehaviour.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
+        eat.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
 
         // Move Towards Food
-        parentBehaviour.addSubBehaviour(new MoveToGoal(myAgent, food));
-
-        // Validate move
+        eat.addSubBehaviour(new MoveToGoal(myAgent, food));
 
         // Eat
+
+        this.parentBehaviour.addSubBehaviour(eat);
 
     }
 }
