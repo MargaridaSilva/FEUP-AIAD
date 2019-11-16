@@ -1,12 +1,10 @@
 package agents;
 
-import behaviours.mate.AnswerMateRequest;
-import behaviours.mate.CallToMate;
-import behaviours.BehaviourManager;
-import launchers.EnvironmentLauncher;
-import uchicago.src.sim.gui.OvalNetworkItem;
+import behaviours.animals.BehaviourManager;
+import simulation.PredatorPreyModel;
+import simulation.Space;
+import uchicago.src.sim.gui.SimGraphics;
 import utils.Communication;
-import utils.Configs;
 import utils.Position;
 
 /**
@@ -14,22 +12,13 @@ import utils.Position;
  */
 public final class PredatorAgent extends AnimalAgent {
 
-    private PredatorAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
-        super(model, id, position, gender);
+    private PredatorAgent(PredatorPreyModel model, Space space, String id, Position position, Gender gender) {
+        super(model, space, id, position, gender);
     }
 
-    public static PredatorAgent generatePredatorAgent(EnvironmentLauncher model, String id, Position position, Gender gender) {
+    public static PredatorAgent generatePredatorAgent(PredatorPreyModel model, Space space, String id, Position position, Gender gender) {
 
-        return new PredatorAgent(model, id, position, gender);
-    }
-
-    public void createNode(Position position, String label) {
-        int density = model.getBoardDensity();
-        OvalNetworkItem oval = new OvalNetworkItem(position.x,position.y);
-        oval.allowResizing(false);
-        oval.setHeight(density);
-        oval.setWidth(density);
-        this.node = generateDrawableNode(oval, label);
+        return new PredatorAgent(model, space, id, position, gender);
     }
 
     @Override
@@ -55,11 +44,25 @@ public final class PredatorAgent extends AnimalAgent {
 
     @Override
     protected void takeDown() {
+        
         super.takeDown();
         
         this.deRegisterServices();
 
         System.out.println("Predator-agent " + this.getAID() + " terminating");
+    }
+
+     // Drawable interface
+    public int getX() {
+        return position.x;
+    }
+
+    public int getY() {
+        return position.y;
+    }
+  
+    public void draw(SimGraphics g) {
+        g.drawFastRoundRect(color);
     }
 
 /*

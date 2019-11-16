@@ -1,4 +1,4 @@
-package behaviours.mate;
+package behaviours.animals.mate;
 
 import agents.AnimalAgent;
 import sajas.core.behaviours.TickerBehaviour;

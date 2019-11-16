@@ -1,4 +1,4 @@
-package behaviours.eat;
+package behaviours.animals.eat;
 
 import agents.AnimalAgent;
 import behaviours.BehaviourManager;

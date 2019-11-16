@@ -1,9 +1,9 @@
-package behaviours.mate;
+package behaviours.animals.mate;
 
 import java.util.Enumeration;
 import java.util.Vector;
 
-import behaviours.BehaviourManager;
+import behaviours.animals.BehaviourManager;
 import jade.lang.acl.ACLMessage;
 import sajas.core.Agent;
 import sajas.proto.ContractNetInitiator;

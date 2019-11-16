@@ -1,8 +1,7 @@
-package behaviours.mate;
+package behaviours.animals.mate;
 
 import agents.AnimalAgent;
-import behaviours.BehaviourManager;
-import behaviours.MoveTowardsFemale;
+import behaviours.animals.BehaviourManager;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -61,8 +60,8 @@ public class AnswerMateRequest extends ContractNetResponder {
                 inform.setPerformative(ACLMessage.INFORM);
                 ((AnimalAgent)this.myAgent).setMateColor();
                 //this.parentBehaviour.stayStill(); // TODO: fix
-                MoveTowardsFemale moveTowardsFemaleBehaviour = new MoveTowardsFemale(this.myAgent, this.parentBehaviour, this.femalePosition);
-                this.parentBehaviour.addSubBehaviour(moveTowardsFemaleBehaviour);
+                /*MoveToGoal move = new MoveToGoal(this, this.femalePosition);
+                this.parentBehaviour.addSubBehaviour(moveTowardsFemaleBehaviour);*/
                 return inform;
     }
 
