@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Random;
+
 public abstract class PositionGenerator {
 
     protected final int BOARD_DIM;
@@ -10,5 +12,12 @@ public abstract class PositionGenerator {
 
     public Position getPosition(){
         return new Position(0,0);
+    }
+
+    public Position getRandomPosition(){
+        Random random = new Random();
+        int x = random.nextInt(BOARD_DIM);
+        int y = random.nextInt(BOARD_DIM);
+        return new Position(x, y);
     }
 }

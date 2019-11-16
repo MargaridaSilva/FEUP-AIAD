@@ -1,9 +1,11 @@
 package agents;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import behaviours.MoveApproval;
+import elements.Plant;
 import jade.core.AID;
 import launchers.EnvironmentLauncher;
 import utils.Communication;
@@ -20,17 +22,23 @@ public class ObserverAgent extends GenericAgent {
     private final int BOARD_DIM;
     private HashMap<Position, AID> agentsPositions;
     private HashMap<AID, Position> preysPositions;
+    private HashSet<Position> plantsPosition;
 
     public ObserverAgent(EnvironmentLauncher model) {
         super(model);
         this.BOARD_DIM = model.getBoardDim();
         this.agentsPositions = new HashMap<>();
         this.preysPositions = new HashMap<>();
+        this.plantsPosition = new HashSet<>();
     }
 
     public void addAgent(AnimalAgent agent) {
 
         this.agentsPositions.put(agent.getPosition(), agent.getAID());
+    }
+
+    public void addPlant(Plant plant){
+        this.plantsPosition.add(plant.getPosition());
     }
 
     public boolean isPositionTaken(Position position) {

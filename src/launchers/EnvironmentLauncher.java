@@ -12,6 +12,7 @@ import agents.ObserverAgent;
 import agents.PredatorAgent;
 import agents.PreyAgent;
 import agents.AnimalAgent.Gender;
+import elements.Plant;
 import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -58,11 +59,12 @@ public class EnvironmentLauncher extends Repast3Launcher {
     private int NUM_FEMALE_PREDATORS;
     private int NUM_MALE_PREYS;
     private int NUM_FEMALE_PREYS;
+    private int NUM_PLANTS;
     private Map<AID, Agent> agents;
 
     private static List<DefaultDrawableNode> nodes;
 
-    public EnvironmentLauncher(int BOARD_DIM, int NUM_MALE_PREDATORS, int NUM_FEMALE_PREDATORS, int NUM_MALE_PREYS, int NUM_FEMALE_PREYS) {
+    public EnvironmentLauncher(int BOARD_DIM, int NUM_MALE_PREDATORS, int NUM_FEMALE_PREDATORS, int NUM_MALE_PREYS, int NUM_FEMALE_PREYS, int NUM_PLANTS) {
         super();
         this.random = new Random();
         this.agents = new ConcurrentHashMap<>();
@@ -73,6 +75,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
         this.NUM_FEMALE_PREDATORS = NUM_FEMALE_PREDATORS;
         this.NUM_MALE_PREYS = NUM_MALE_PREYS;
         this.NUM_FEMALE_PREYS = NUM_MALE_PREYS;
+        this.NUM_PLANTS = NUM_PLANTS;
         this.positionGenerator = new RandomPositionGenerator(BOARD_DIM);
         System.gc();
     }
@@ -158,6 +161,21 @@ public class EnvironmentLauncher extends Repast3Launcher {
         }
     }
 
+    private void launchPlants(){
+
+        int numPlants = this.NUM_PLANTS;
+
+        for (int i = 0; i < numPlants; ++i) {
+
+            String id = "plants-" + i;
+            Position plantPosition = positionGenerator.getRandomPosition();
+
+            Plant plant = Plant.generatePlant(this, id, plantPosition);
+            this.observer.addPlant(plant);
+            nodes.add(plant.node);
+        }
+    }
+
     private void launchObserver() throws StaleProxyException {
         this.observer = new ObserverAgent(this);
         this.mainContainer.acceptNewAgent("observer", this.observer).start();
@@ -168,6 +186,7 @@ public class EnvironmentLauncher extends Repast3Launcher {
         this.launchObserver();
         this.launchPredators();
         this.launchPreys();
+        this.launchPlants();
         this.setUpAgentsAIDMap();
     }
 
@@ -258,10 +277,11 @@ public class EnvironmentLauncher extends Repast3Launcher {
         int NUM_FEMALE_PREDATORS = Integer.parseInt(args[2]);
         int NUM_MALE_PREYS = Integer.parseInt(args[3]);
         int NUM_FEMALE_PREYS = Integer.parseInt(args[4]);
+        int NUM_PLANTS = Integer.parseInt(args[5]);
 
         SimInit init = new SimInit();
         init.setNumRuns(1); // works only in batch mode
-        init.loadModel(new EnvironmentLauncher(BOARD_DIM, NUM_MALE_PREDATORS, NUM_FEMALE_PREDATORS, NUM_MALE_PREYS, NUM_FEMALE_PREYS), null, EnvironmentLauncher.BATCH_MODE);
+        init.loadModel(new EnvironmentLauncher(BOARD_DIM, NUM_MALE_PREDATORS, NUM_FEMALE_PREDATORS, NUM_MALE_PREYS, NUM_FEMALE_PREYS, NUM_PLANTS), null, EnvironmentLauncher.BATCH_MODE);
     }
 
 
