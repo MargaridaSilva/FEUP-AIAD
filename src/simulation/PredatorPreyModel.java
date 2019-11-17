@@ -2,7 +2,6 @@ package simulation;
 
 import java.util.ArrayList;
 
-import agents.AnimalAgent;
 import agents.ObserverAgent;
 import agents.PredatorAgent;
 import agents.PreyAgent;
@@ -38,10 +37,10 @@ public class PredatorPreyModel extends Repast3Launcher {
     private Displayable display;
     private int width = 20;
     private int height = 20;
-    private int malePredators = 1;
+    private int malePredators = 2;
     private int femalePredators = 1;
-    private int malePreys = 1;
-    private int femalePreys = 1;
+    private int malePreys = 0;
+    private int femalePreys = 0;
     private int plants = 5;
 
     public PredatorPreyModel() {

@@ -116,7 +116,7 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
     public void setPosition(Position position) {
         
         this.position = position.clone();
-        this.decreaseEnergy();
+        //this.decreaseEnergy();
     }
 
     protected void setNodeColor(Color color) {
