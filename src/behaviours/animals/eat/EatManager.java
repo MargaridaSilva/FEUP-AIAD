@@ -2,18 +2,18 @@ package behaviours.animals.eat;
 
 import agents.AnimalAgent;
 
+import agents.PredatorAgent;
+import agents.PreyAgent;
 import behaviours.animals.BehaviourManager;
 import behaviours.animals.move.Move;
 import behaviours.animals.move.MoveManager;
 import behaviours.animals.move.MoveToGoal;
-import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import sajas.core.behaviours.Behaviour;
+import sajas.core.AID;
 import sajas.core.behaviours.SequentialBehaviour;
 import sajas.core.behaviours.TickerBehaviour;
-import utils.Communication;
 import utils.Configs;
-import utils.Locator;
 import utils.Position;
 
 import java.io.IOException;
@@ -47,28 +47,27 @@ public class EatManager extends TickerBehaviour implements MoveManager {
         }
         //else if(moveCompleted)
           //  this.addNextMove();
+          
         if(onFood()){
-            //Eat
             this.eatFood();
-
         }else{
-            behaviourManager.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
+            this.moveTowardsFood();
         }
-
-
     }
 
     private void eatFood(){
-        AID observerAgent = Locator.findObserver(myAgent);
-        ACLMessage terminateMsg = new ACLMessage(ACLMessage.INFORM);
-        terminateMsg.setOntology(Communication.Ontology.HANDLE_EAT);
-        terminateMsg.addReceiver(observerAgent);
-        try {
-            terminateMsg.setContentObject(food);
-        } catch (IOException e) {
-            e.printStackTrace();
+        //Eat
+        if(myAgent instanceof PredatorAgent){
+            //TODO: Get AID from prey
+            AID aid = null;
+        }else if(myAgent instanceof PreyAgent){
+
         }
-        myAgent.send(terminateMsg);
+    }
+
+    private void moveTowardsFood(){
+        // Find Food
+        this.behaviourManager.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
     }
 
     private boolean onFood(){

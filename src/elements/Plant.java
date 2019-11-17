@@ -23,7 +23,7 @@ public class Plant implements Drawable{
     private PredatorPreyModel model;
     private Space space;
 
-    protected Plant(PredatorPreyModel model, Space space, String id, Position position) {
+    public Plant(PredatorPreyModel model, Space space, String id, Position position) {
         this.model = model;
         this.space = space;
         this.position = position;
@@ -33,6 +33,24 @@ public class Plant implements Drawable{
         return new Plant(model, space, id, position);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null || !(obj instanceof Plant)){
+            return false;
+        }
+
+        final Plant plant = (Plant) obj;
+
+        return this.position.equals(plant.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.position.hashCode();
+    }
 
     public int getX() {
         return position.x;

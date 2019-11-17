@@ -1,10 +1,7 @@
 package agents;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import agents.AnimalAgent.Gender;
 import behaviours.plant.GeneratePlant;
@@ -58,9 +55,15 @@ public final class ObserverAgent extends GenericAgent {
         this.model.addElement(plant);
     }
 
+    public void removePlant(Plant plant){
+        this.plantsPositions.add(plant.getPosition());
+        this.model.addElement(plant);
+    }
+
     public Boolean isPrey(AID agent) {
         return this.preysPositions.containsKey(agent);
     }
+
     public Position generateNewPosition(){
         Position position = new Position(0, 0);
         Random random = new Random();
@@ -82,8 +85,22 @@ public final class ObserverAgent extends GenericAgent {
     }
 
     public void removeAgent(AID agentId) {
-        
         this.agentsPositions.remove(agentId);
+    }
+
+    public AID getAID(Position agentPosition){
+        Iterator<Map.Entry<AID, Position>>
+                iterator = this.agentsPositions.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<AID, Position> entry = iterator.next();
+
+            if (agentPosition.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+
+        return null;
     }
 
     public boolean isPositionTaken(Position position) {

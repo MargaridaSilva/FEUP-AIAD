@@ -15,7 +15,7 @@ public final class Communication {
         public static final String GIVE_BIRTH_PREDATORS = "birth-predators";
         public static final String GIVE_BIRTH_PREYS = "birth-preys";
         public static final String HANDLE_EAT = "handle-eat";
-
+        public static final String EAT_PREY = "eat-prey";
     }
 
     // service types
