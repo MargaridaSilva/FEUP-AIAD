@@ -1,5 +1,6 @@
 package behaviours.animals.eat;
 
+import agents.AnimalAgent;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -12,14 +13,19 @@ import utils.MessageConstructor;
 import utils.Position;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class FindFood extends AchieveREInitiator {
 
     EatManager parentBehaviour;
+    AnimalAgent agent;
 
     public FindFood(Agent a, ACLMessage msg, EatManager parentBehaviour) {
         super(a, msg);
         this.parentBehaviour = parentBehaviour;
+        this.agent = (AnimalAgent) a;
         ACLMessage getFoodRequest = prepareRequest(a);
         this.reset(getFoodRequest);
     }
@@ -46,8 +52,11 @@ public class FindFood extends AchieveREInitiator {
     @Override
     protected void handleInform(ACLMessage inform){
         try {
-            Serializable positions = inform.getContentObject();
-            parentBehaviour.food = new Position(0,0);
+            Position[] positions = (Position[]) inform.getContentObject();
+            Position closestFood = this.agent.getPosition().getClosestPosition(positions);
+            parentBehaviour.setFood(closestFood);
+            System.out.println(closestFood);
+
         } catch (UnreadableException e) {
             e.printStackTrace();
         }

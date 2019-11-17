@@ -3,19 +3,23 @@ package behaviours.animals.eat;
 import agents.AnimalAgent;
 
 import behaviours.animals.BehaviourManager;
-import behaviours.animals.move.MoveToGoal;
 import sajas.core.behaviours.SequentialBehaviour;
 import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
 import utils.Position;
 
 public class EatManager extends TickerBehaviour {
-    public Position food = new Position(0,0);
+
+    Position food;
     BehaviourManager parentBehaviour;
 
     public EatManager(AnimalAgent a, BehaviourManager parentBehaviour) {
         super(a, Configs.TICK_PERIOD);
         this.parentBehaviour = parentBehaviour;
+    }
+
+    public void setFood(Position food) {
+        this.food = food;
     }
 
     @Override
@@ -27,7 +31,7 @@ public class EatManager extends TickerBehaviour {
         eat.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
 
         // Move Towards Food
-        eat.addSubBehaviour(new MoveToGoal(myAgent, food));
+        //eat.addSubBehaviour(new MoveToGoal(myAgent, food));
 
         // Eat
 
