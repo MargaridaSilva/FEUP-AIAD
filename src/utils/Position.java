@@ -19,7 +19,7 @@ public final class Position implements Serializable {
     }
 
     public double getDist(Position p2) {
-        return (p2.x - this.x) + (p2.y - this.y);
+        return Math.abs(p2.x - this.x) + Math.abs(p2.y - this.y);
     }
 
     public Position getClosestPosition(HashSet<Position> possibleTargets) {

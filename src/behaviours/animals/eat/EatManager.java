@@ -3,6 +3,9 @@ package behaviours.animals.eat;
 import agents.AnimalAgent;
 
 import behaviours.animals.BehaviourManager;
+import behaviours.animals.move.Move;
+import behaviours.animals.move.MoveManager;
+import behaviours.animals.move.MoveToGoal;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import sajas.core.behaviours.Behaviour;
@@ -14,15 +17,19 @@ import utils.Locator;
 import utils.Position;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class EatManager extends TickerBehaviour {
+public class EatManager extends TickerBehaviour implements MoveManager {
 
     Position food;
-    BehaviourManager parentBehaviour;
+    BehaviourManager behaviourManager;
+    private boolean moveCompleted;
+    private ArrayList<Integer> possibleMoves;
 
-    public EatManager(AnimalAgent a, BehaviourManager parentBehaviour) {
+    public EatManager(AnimalAgent a, BehaviourManager behaviourManager) {
         super(a, Configs.TICK_PERIOD);
-        this.parentBehaviour = parentBehaviour;
+        this.behaviourManager = behaviourManager;
+        this.moveCompleted = false;
     }
 
     public void setFood(Position food) {
@@ -31,22 +38,13 @@ public class EatManager extends TickerBehaviour {
 
     @Override
     protected void onTick() {
-
-
+        System.out.println("AGENT " + myAgent.getName() + "- EATING " + ((AnimalAgent) myAgent).getEnergy());
         if(onFood()){
             //Eat
             this.eatFood();
 
         }else{
-            SequentialBehaviour eat = new SequentialBehaviour(myAgent);
-
-            // Find Food
-            eat.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
-
-            // Move Towards Food
-            //eat.addSubBehaviour(new MoveToGoal(myAgent, food));
-
-            this.parentBehaviour.addSubBehaviour(eat);
+            behaviourManager.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
         }
     }
 
@@ -69,6 +67,32 @@ public class EatManager extends TickerBehaviour {
         if(animalAgent == null || this.food == null) return false;
 
         return animalAgent.getPosition().equals(this.food);
+    }
+
+    public void setMoveCompleted(ArrayList<Integer> nextPossibleMoves) {
+
+        this.moveCompleted = true;
+        this.possibleMoves = nextPossibleMoves;
+    }
+
+    @Override
+    public void addNextMove() {
+
+        moveCompleted = false;
+        Move randomMoveBehaviour = new Move(this, myAgent, possibleMoves);
+        this.addSubBehaviour(randomMoveBehaviour);
+    }
+
+    @Override
+    public void removeSubBehaviour(Behaviour b) {
+
+        this.behaviourManager.removeSubBehaviour(b);
+    }
+
+    @Override
+    public void addSubBehaviour(Behaviour b) {
+
+        this.behaviourManager.addSubBehaviour(b);
     }
 
 

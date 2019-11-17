@@ -41,6 +41,7 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
 
     @Override
     protected void onTick() {
+        System.out.println("FEMALE AGENT " + myAgent.getName() + "- MATING");
 
         AnimalAgent animal = (AnimalAgent) myAgent;
         
