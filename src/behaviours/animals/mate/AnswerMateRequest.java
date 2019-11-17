@@ -39,7 +39,6 @@ public class AnswerMateRequest extends ContractNetResponder {
     @Override
     protected ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
 
-        System.out.println("|||| is proposing");
         try {
             this.female = cfp.getSender();
             this.femalePosition = ((Position)cfp.getContentObject());
@@ -57,8 +56,6 @@ public class AnswerMateRequest extends ContractNetResponder {
     protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose, ACLMessage accept)
             throws FailureException {
 
-        System.out.println("|||| will mate");
-                
         ACLMessage inform = accept.createReply();
         inform.setPerformative(ACLMessage.INFORM);
         ((AnimalAgent)this.myAgent).setMateColor();

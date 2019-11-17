@@ -1,17 +1,22 @@
 package behaviours.animals.mate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import agents.AnimalAgent;
+import agents.PredatorAgent;
 import behaviours.animals.BehaviourManager;
 import behaviours.animals.move.Move;
 import behaviours.animals.move.MoveManager;
-import behaviours.animals.move.MoveToGoal;
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
 import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.TickerBehaviour;
+import utils.Communication;
 import utils.Configs;
-import utils.Position;
+import utils.Locator;
 
 public class FemaleMateManager extends TickerBehaviour implements MoveManager {
 
@@ -23,50 +28,83 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
     private BehaviourManager behaviourManager;
     private boolean moveCompleted;
     private ArrayList<Integer> possibleMoves;
+    private WaitMale waitMale;
 
     public FemaleMateManager(AnimalAgent a, BehaviourManager behaviourManager) {
 
         super(a, Configs.TICK_PERIOD);
         this.state = State.RANDOM_MOVE_CFP;
-        System.out.println("new female mate manaegr");
         this.behaviourManager = behaviourManager;
         this.setRandomMoveCFPState();
-
+        this.waitMale = null;
     }
 
     @Override
     protected void onTick() {
 
-        System.out.println("--> Female: " + this.state);
-
         AnimalAgent animal = (AnimalAgent) myAgent;
-        /*
+        
         if (animal.getEnergy() < Configs.MIN_ENERGY_MATE) {
             this.behaviourManager.removeSubBehaviour(this);
-            this.behaviourManager.updateBehaviour();
-            return;
+            this.behaviourManager.updateBehaviour(); 
+            return; 
         }
-*/
+         
         switch (state) {
-            case RANDOM_MOVE_CFP:
-                if (moveCompleted)
-                    addNextMove();
-                break;
-            case WAIT_MALE:
-                break;
-            case MATE:
-                mate();
-                break;
-            case END_MATE:
-                this.behaviourManager.removeSubBehaviour(this);
-                this.behaviourManager.updateBehaviour();
-                break;
+        case RANDOM_MOVE_CFP:
+            if (moveCompleted)
+                addNextMove();
+            break;
+        case WAIT_MALE:
+            break;
+        case MATE:
+            mate();
+            break;
+        case END_MATE:
+            this.behaviourManager.removeSubBehaviour(this);
+            this.behaviourManager.updateBehaviour();
+            break;
         }
     }
 
     public void mate() {
-        
-        // TODO
+
+        if(waitMale != null) {
+            this.removeSubBehaviour(waitMale);
+            waitMale = null;
+        }
+
+        Random random = new Random();
+        int maxNumChildren = Configs.PREY_NUM_CHILDREN;
+        int numChildren;
+
+        if (myAgent instanceof PredatorAgent)
+            maxNumChildren = Configs.PREDATOR_NUM_CHILDREN;
+
+        numChildren = random.nextInt(maxNumChildren) + 1;
+        this.giveBirth(numChildren);
+
+        setEndMateState();
+    }
+
+    public void giveBirth(int numChildren) {
+
+        AID observerAgent = Locator.findObserver(myAgent);
+        ACLMessage birthMessage = new ACLMessage(ACLMessage.INFORM);
+        String ontology = Communication.Ontology.GIVE_BIRTH_PREYS;
+
+        if (myAgent instanceof PredatorAgent)
+            ontology = Communication.Ontology.GIVE_BIRTH_PREDATORS;
+
+        birthMessage.setOntology(ontology);
+        birthMessage.addReceiver(observerAgent);
+
+        try {
+            birthMessage.setContentObject(numChildren);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.myAgent.send(birthMessage);
     }
 
     public void setRandomMoveCFPState() {
@@ -80,10 +118,15 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
         this.state = State.MATE;
     }
 
-    public void setWaitMaleState() {
+    public void setEndMateState() {
+
+        this.state = State.END_MATE;
+    }
+
+    public void setWaitMaleState(AID male) {
         
         this.state = State.WAIT_MALE;
-        WaitMale waitMale = new WaitMale(myAgent, this);
+        this.waitMale = new WaitMale(myAgent, this);
         this.addSubBehaviour(waitMale);
     }
 
@@ -103,7 +146,11 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
 
     public void launchCFP() {
 
-        this.moveCompleted = false;
+        if(waitMale != null) {
+            this.removeSubBehaviour(waitMale);
+            waitMale = null;
+        }
+
         this.possibleMoves = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
         CallToMate callToMate = new CallToMate(myAgent, this);
         this.addSubBehaviour(callToMate);

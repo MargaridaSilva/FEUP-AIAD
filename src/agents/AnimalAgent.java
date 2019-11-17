@@ -38,7 +38,7 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
         Random random = new Random();
 
         // random number in [0.5 , 1.0]
-        this.setEnergy(0.5 * random.nextDouble());
+        this.setEnergy(0.5 + 0.5 * random.nextDouble());
 
         // random number in [MIN_ENERGY_EXP, MAX_ENERGY_EXP]
         this.energyExpenditure = Configs.MIN_ENERGY_EXP + (Configs.MAX_ENERGY_EXP - Configs.MIN_ENERGY_EXP) * random.nextDouble();
@@ -116,7 +116,7 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
     public void setPosition(Position position) {
         
         this.position = position.clone();
-        //this.decreaseEnergy();
+        this.decreaseEnergy();
     }
 
     protected void setNodeColor(Color color) {
@@ -125,6 +125,10 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
 
     public void setMateColor() {
         setNodeColor(Color.MAGENTA);
+    }
+
+    public void removeMateColor() {
+        setNodeColor(getDefaultColor());
     }
 
     protected void updateNodeColor() {

@@ -3,7 +3,6 @@ package behaviours.animals.mate;
 import java.util.ArrayList;
 
 import agents.AnimalAgent;
-import behaviours.animals.BehaviourManager;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -22,7 +21,6 @@ public class CallToMate extends Behaviour {
         super(femaleAgent);
         this.finished = false;
         this.mateManager = mateManager;
-        System.out.println("sending call to mate!");
     }
     @Override
     public void action() {
