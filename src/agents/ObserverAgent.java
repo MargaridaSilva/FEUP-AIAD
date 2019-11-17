@@ -5,14 +5,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 
+import agents.AnimalAgent.Gender;
 import behaviours.plant.GeneratePlant;
 import elements.Plant;
 import jade.core.AID;
+import jade.wrapper.StaleProxyException;
+import behaviours.observer.AddAgents;
 import behaviours.observer.MoveApproval;
 import behaviours.observer.RemoveAgent;
 import simulation.PredatorPreyModel;
 import utils.Communication;
 import utils.Position;
+import utils.PositionGenerator;
+import utils.RandomPositionGenerator;
 
 /**
  * Each world has an Observer agent which keeps track of the world's state,
@@ -95,6 +100,49 @@ public final class ObserverAgent extends GenericAgent {
         return this.agentsPositions.get(agentId);
     }
 
+    public void addPredators(int numPredators) {
+        
+        PositionGenerator positionGenerator = new RandomPositionGenerator(width, height);
+        Random random = new Random();
+        
+        for(int i = 0 ; i < numPredators ; i++) {
+            int genderIndex = random.nextInt(2); // 0 or 1
+            Gender gender = Gender.FEMALE;
+            Position position;
+            do {
+                position = positionGenerator.getPosition();
+                if(genderIndex == 0)  gender = Gender.MALE;
+            } while(this.agentsPositions.containsValue(position));
+            
+            try {
+                this.model.addPredator(position, gender);
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void addPreys(int numPreys) {
+        
+        PositionGenerator positionGenerator = new RandomPositionGenerator(width, height);
+        Random random = new Random();
+        
+        for(int i = 0 ; i < numPreys ; i++) {
+            int genderIndex = random.nextInt(2); // 0 or 1
+            Gender gender = Gender.FEMALE;
+            Position position;
+            do {
+                position = positionGenerator.getPosition();
+                if(genderIndex == 0)  gender = Gender.MALE;
+            } while(this.agentsPositions.containsValue(position));
+            
+            try {
+                this.model.addPrey(position, gender);
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void setup() {
         super.setup();
@@ -107,6 +155,7 @@ public final class ObserverAgent extends GenericAgent {
         System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
         this.addBehaviour(new MoveApproval(this));
+        this.addBehaviour(new AddAgents(this));
         this.addBehaviour(new GeneratePlant(this));
         this.addBehaviour(new RemoveAgent(this));
     }

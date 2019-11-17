@@ -49,7 +49,7 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
 
         
         AnimalAgent animal = (AnimalAgent) myAgent;
-        /*
+        
         if (animal.getEnergy() < Configs.MIN_ENERGY_MATE) {
             this.behaviourManager.removeSubBehaviour(this);
             this.behaviourManager.updateBehaviour();
@@ -57,23 +57,22 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
             if(this.state == State.MOVE_TO_FEMALE)
             informFemaleWithoutEnergy();
             return;
-        }*/
+        }
         
-        System.out.println("--> Male: " + this.state + "  " + animal.getPosition() + "  " + femalePosition);
         switch (state) {
             case RANDOM_MOVE:
                 if (moveCompleted)
                     addNextMove();
                 break;
             case MOVE_TO_FEMALE:
-                if(moveCompleted)
-                    if(reachedFemale())
-                        this.setEndMateState();
-                    else
-                        addNextToFemaleMove();
+                if(reachedFemale())
+                    this.setEndMateState(); 
+                else
+                    addNextToFemaleMove();
                 break;
             case END_MATE:
                 this.mate();
+                animal.removeMateColor();
                 this.behaviourManager.removeSubBehaviour(this);
                 this.behaviourManager.updateBehaviour();
                 break;
@@ -120,7 +119,9 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
     }
 
     private void informFemaleWithoutEnergy() {
-        System.out.println("without energy!");
+        AnimalAgent animal = (AnimalAgent)myAgent;
+
+        animal.removeMateColor();
         ACLMessage terminateMsg = new ACLMessage(ACLMessage.INFORM);
         terminateMsg.setOntology(Communication.Ontology.TERMINATE);
         terminateMsg.addReceiver(female);

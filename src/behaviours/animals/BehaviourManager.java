@@ -45,12 +45,7 @@ public class BehaviourManager extends ParallelBehaviour {
         double energy = agent.getEnergy();
         
         Behaviour nextBehaviour = null;
-
-        if(this.agent.getGender() == Gender.FEMALE)
-                nextBehaviour = new FemaleMateManager(agent, this);
-            else 
-                nextBehaviour = new MaleMateManager(agent, this);
-        /*        
+                
         if(energy >= Configs.MIN_ENERGY_MATE)
             if(this.agent.getGender() == Gender.FEMALE)
                 nextBehaviour = new FemaleMateManager(agent, this);
@@ -61,7 +56,7 @@ public class BehaviourManager extends ParallelBehaviour {
         else if(energy > 0)
             nextBehaviour = new EatManager(agent);
         else    
-            nextBehaviour = new DieManager(agent);*/
+            nextBehaviour = new DieManager(agent);
         
         this.addSubBehaviour(nextBehaviour);         
     }
