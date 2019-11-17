@@ -12,6 +12,8 @@ public final class Communication {
         public static final String WITHOUT_ENERGY = "without-energy";
         public static final String TELL_FOOD = "tell-food-ontology";
         public static final String TERMINATE = "terminating";
+        public static final String GIVE_BIRTH_PREDATORS = "birth-predators";
+        public static final String GIVE_BIRTH_PREYS = "birth-preys";
         public static final String HANDLE_EAT = "handle-eat";
 
     }

@@ -1,14 +1,9 @@
 package behaviours.animals.mate;
 
 import sajas.core.behaviours.DataStore;
-import jade.domain.FIPANames;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
-import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import sajas.core.Agent;
-import sajas.proto.AchieveREResponder;
-import sajas.proto.ProposeResponder;
 import sajas.proto.states.MsgReceiver;
 import utils.Communication;
 
@@ -35,8 +30,6 @@ public class WaitMale extends MsgReceiver {
     @Override
     protected void handleMessage(ACLMessage msg) {
 
-        System.out.println("-------------- received mate message");
-        
         String ontology = msg.getOntology();
 
         switch(ontology) {

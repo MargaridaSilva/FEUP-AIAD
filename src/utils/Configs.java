@@ -18,8 +18,11 @@ public final class Configs {
     // Maximum energy expenditure
     public static final double MAX_ENERGY_EXP = 0.01;
 
-    // Number of children
-    public static final int NUM_CHILDREN = 2;
+    // Max number of predator children
+    public static final int PREDATOR_NUM_CHILDREN = 2;
+
+    // Max number of prey children
+    public static final int PREY_NUM_CHILDREN = 2;
 
     // Minimum energy required for an animal to mate
     public static final double MIN_ENERGY_MATE = 0.8; 
