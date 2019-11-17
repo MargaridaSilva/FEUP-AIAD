@@ -167,9 +167,10 @@ public class PredatorPreyModel extends Repast3Launcher {
     private void launchAgents() throws StaleProxyException {
 
         launchObserver();
-        launchPredators();
-        launchPreys();
         launchPlants();
+        launchPreys();
+        launchPredators();
+
     }
 
     @Override
