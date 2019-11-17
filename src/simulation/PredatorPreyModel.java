@@ -44,6 +44,7 @@ public class PredatorPreyModel extends Repast3Launcher {
     private int plants = 5;
     private int nPreys = 0;
     private int nPredators = 0;
+    private int nPlants = 0;
 
     public PredatorPreyModel() {
         elementsList = new ArrayList<>();
@@ -144,17 +145,35 @@ public class PredatorPreyModel extends Repast3Launcher {
         this.observer.addAgent(prey);
     }
 
-    private void launchPlants(){
+    private void launchPlants() throws StaleProxyException {
 
         int numPlants = plants;
 
         for (int i = 0; i < numPlants; ++i) {
+            Position plantPosition = positionGenerator.getPosition();
+            this.addPlant(plantPosition);
+        }
+    }
 
-            String id = "plants-" + i;
-            Position plantsPosition = positionGenerator.getPosition();
+    public void addPlant(Position position) throws StaleProxyException {
+        nPlants++;
+        String id = "plant-" + nPlants;
+        Plant plant = Plant.generatePlant(this, space, id, position);
+        this.addElement(plant);
+        this.observer.addPlant(plant);
+    }
 
-            Plant plant = Plant.generatePlant(this, space, id, plantsPosition);
-            this.addElement(plant);
+    public void removePlant(Position position) throws StaleProxyException {
+        nPlants--;
+        for(Drawable drawable : this.elementsList){
+            if(drawable instanceof Plant){
+                Plant plant = (Plant) drawable;
+                if(plant.getPosition().equals(position)){
+                    this.removeElement(plant);
+                    this.observer.removePlant(plant);
+                    break;
+                }
+            }
         }
     }
 

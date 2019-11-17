@@ -3,6 +3,7 @@ package utils;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public final class Position implements Serializable {
 
@@ -40,6 +41,11 @@ public final class Position implements Serializable {
         Position p2 = (Position) obj;
 
         return (p2.x == this.x && p2.y == this.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.x, this.y);
     }
 
     @Override

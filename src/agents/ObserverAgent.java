@@ -1,12 +1,10 @@
 package agents;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import agents.AnimalAgent.Gender;
+import behaviours.animals.eat.WaitEatPlant;
 import behaviours.plant.GeneratePlant;
 import elements.Plant;
 import jade.core.AID;
@@ -54,12 +52,16 @@ public final class ObserverAgent extends GenericAgent {
 
     public void addPlant(Plant plant){
         this.plantsPositions.add(plant.getPosition());
-        this.model.addElement(plant);
+    }
+
+    public void removePlant(Plant plant){
+        this.plantsPositions.remove(plant.getPosition());
     }
 
     public Boolean isPrey(AID agent) {
         return this.preysPositions.containsKey(agent);
     }
+
     public Position generateNewPosition(){
         Position position = new Position(0, 0);
         Random random = new Random();
@@ -81,8 +83,22 @@ public final class ObserverAgent extends GenericAgent {
     }
 
     public void removeAgent(AID agentId) {
-        
         this.agentsPositions.remove(agentId);
+    }
+
+    public AID getAID(Position agentPosition){
+        Iterator<Map.Entry<AID, Position>>
+                iterator = this.agentsPositions.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<AID, Position> entry = iterator.next();
+
+            if (agentPosition.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+
+        return null;
     }
 
     public boolean isPositionTaken(Position position) {
@@ -173,6 +189,7 @@ public final class ObserverAgent extends GenericAgent {
         this.addBehaviour(new GeneratePlant(this));
         this.addBehaviour(new RemoveAgent(this));
         this.addBehaviour(new TellFood(this));
+        this.addBehaviour(new WaitEatPlant(this));
     }
 
     @Override
