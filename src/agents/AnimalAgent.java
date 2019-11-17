@@ -141,7 +141,11 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
     }
 
     public void setEnergy(double energy) {
-        this.energy = energy;
+        if(energy>1){
+            this.energy = 1;
+        }else{
+            this.energy = energy;
+        }
     }
 
     public Gender getGender() {

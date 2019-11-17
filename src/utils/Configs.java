@@ -30,4 +30,7 @@ public final class Configs {
     // Minimum energy required for an animal to move randomly
     public static final double MIN_ENERGY_RANDOM = 0.5;
 
+    // Energy given to preys when eat a plant
+    public static final double PLANT_ENERGY = 0.1;
+
 }

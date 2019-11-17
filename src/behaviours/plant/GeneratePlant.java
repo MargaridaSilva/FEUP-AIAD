@@ -4,6 +4,7 @@ import java.util.Random;
 
 import agents.ObserverAgent;
 import elements.Plant;
+import jade.wrapper.StaleProxyException;
 import utils.Configs;
 import utils.Position;
 import sajas.core.Agent;
@@ -21,18 +22,20 @@ public class GeneratePlant extends TickerBehaviour {
     @Override
     protected void onTick() {
 
-
-        if(random.nextFloat() < 0.9){
+        if (random.nextFloat() < 0.9) {
             return;
         }
 
         ObserverAgent observer = (ObserverAgent) this.myAgent;
-
         Position position = observer.generateNewPosition();
-        if(position != null){
-            observer.addPlant(Plant.generatePlant(observer.getModel(),observer.getModel().getSpace(), "plant-1", position));
+        if (position != null) {
+            try {
+                observer.getModel().addPlant(position);
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+
         }
-       
+
     }
-    
 }

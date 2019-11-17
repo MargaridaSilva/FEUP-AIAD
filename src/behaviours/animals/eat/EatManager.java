@@ -7,16 +7,14 @@ import agents.PreyAgent;
 import behaviours.animals.BehaviourManager;
 import behaviours.animals.move.Move;
 import behaviours.animals.move.MoveManager;
-import behaviours.animals.move.MoveToGoal;
 import jade.lang.acl.ACLMessage;
 import sajas.core.behaviours.Behaviour;
-import sajas.core.AID;
-import sajas.core.behaviours.SequentialBehaviour;
+import jade.core.AID;
 import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
+import utils.Locator;
 import utils.Position;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class EatManager extends TickerBehaviour implements MoveManager {
@@ -47,8 +45,8 @@ public class EatManager extends TickerBehaviour implements MoveManager {
         }
         //else if(moveCompleted)
           //  this.addNextMove();
-          
-        if(onFood()){
+
+        if(this.onFood()){
             this.eatFood();
         }else{
             this.moveTowardsFood();
@@ -56,13 +54,17 @@ public class EatManager extends TickerBehaviour implements MoveManager {
     }
 
     private void eatFood(){
+        ACLMessage msg = null;
         //Eat
         if(myAgent instanceof PredatorAgent){
             //TODO: Get AID from prey
             AID aid = null;
+            msg =  EatPrey.prepareRequest(myAgent, aid);
         }else if(myAgent instanceof PreyAgent){
-
+            AID observer = Locator.findObserver(myAgent);
+            msg = EatPlant.prepareRequest(myAgent, observer, food);
         }
+        this.behaviourManager.addSubBehaviour(new Eat(myAgent, msg));
     }
 
     private void moveTowardsFood(){

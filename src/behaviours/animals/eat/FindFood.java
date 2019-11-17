@@ -56,6 +56,7 @@ public class FindFood extends AchieveREInitiator {
         try {
             HashSet<Position> positions = (HashSet<Position>) inform.getContentObject();
             Position closestFood = this.agent.getPosition().getClosestPosition(positions);
+            parentBehaviour.setFood(closestFood);
             parentBehaviour.addSubBehaviour(new MoveToGoal(parentBehaviour, myAgent, closestFood));
         } catch (UnreadableException e) {
             e.printStackTrace();

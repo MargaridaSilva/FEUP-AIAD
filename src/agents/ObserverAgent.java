@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import agents.AnimalAgent.Gender;
+import behaviours.animals.eat.WaitEatPlant;
 import behaviours.plant.GeneratePlant;
 import elements.Plant;
 import jade.core.AID;
@@ -52,12 +53,10 @@ public final class ObserverAgent extends GenericAgent {
 
     public void addPlant(Plant plant){
         this.plantsPositions.add(plant.getPosition());
-        this.model.addElement(plant);
     }
 
     public void removePlant(Plant plant){
-        this.plantsPositions.add(plant.getPosition());
-        this.model.addElement(plant);
+        this.plantsPositions.remove(plant.getPosition());
     }
 
     public Boolean isPrey(AID agent) {
@@ -191,6 +190,7 @@ public final class ObserverAgent extends GenericAgent {
         this.addBehaviour(new GeneratePlant(this));
         this.addBehaviour(new RemoveAgent(this));
         this.addBehaviour(new TellFood(this));
+        this.addBehaviour(new WaitEatPlant(this));
     }
 
     @Override

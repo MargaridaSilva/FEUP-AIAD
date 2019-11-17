@@ -3,29 +3,29 @@ package behaviours.animals.eat;
 import agents.AnimalAgent;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
-import sajas.core.AID;
+import jade.core.AID;
 import sajas.core.Agent;
 import sajas.proto.AchieveREInitiator;
 import utils.Communication;
-import utils.Locator;
 import utils.MessageConstructor;
 
-public class Eat extends AchieveREInitiator{
+import java.io.Serializable;
 
+public class Eat extends AchieveREInitiator{
 
     public Eat(Agent a, ACLMessage msg) {
         super(a, msg);
     }
 
-    public static ACLMessage prepareRequest(Agent agent, AID prey) {
+    public static ACLMessage prepareRequest(Agent agent, AID target, String ontology, Serializable content) {
 
         ACLMessage msg = MessageConstructor.getMessage(
-                prey,
+                target,
                 ACLMessage.INFORM,
                 FIPANames.InteractionProtocol.FIPA_REQUEST,
-                Communication.Ontology.EAT_PREY,
+                ontology,
                 Communication.Language.FOOD,
-                null);
+                content);
 
         return msg;
     }
@@ -34,9 +34,7 @@ public class Eat extends AchieveREInitiator{
     protected void handleInform(ACLMessage inform){
         String energy_str = inform.getContent();
         Double energy = Double.parseDouble(energy_str);
-
         AnimalAgent animalAgent = (AnimalAgent) myAgent;
-
         animalAgent.setEnergy(animalAgent.getEnergy() + energy);
     }
 }
