@@ -15,7 +15,7 @@ public class WaitMale extends MsgReceiver {
             MessageTemplate.and(
                     MessageTemplate.MatchPerformative(ACLMessage.INFORM),
                     MessageTemplate.or(
-            MessageTemplate.MatchOntology(Communication.Ontology.PREDATOR_REACHED_FEMALE),
+            MessageTemplate.MatchOntology(Communication.Ontology.REACHED_FEMALE),
             MessageTemplate.MatchOntology(Communication.Ontology.WITHOUT_ENERGY)));
 
     public WaitMale(Agent agent, FemaleMateManager mateManager) {
@@ -33,7 +33,7 @@ public class WaitMale extends MsgReceiver {
         String ontology = msg.getOntology();
 
         switch(ontology) {
-            case Communication.Ontology.PREDATOR_REACHED_FEMALE:
+            case Communication.Ontology.REACHED_FEMALE:
                 this.mateManager.setMateState();
                 break;
             case Communication.Ontology.WITHOUT_ENERGY:

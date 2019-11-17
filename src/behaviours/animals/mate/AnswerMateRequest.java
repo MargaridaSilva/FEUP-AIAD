@@ -23,7 +23,7 @@ public class AnswerMateRequest extends ContractNetResponder {
     private static final MessageTemplate template = MessageTemplate.and(
             MessageTemplate.and(MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                     MessageTemplate.MatchPerformative(ACLMessage.CFP)),
-            MessageTemplate.MatchOntology(Communication.Ontology.PREDATOR_FIND_MATE));
+            MessageTemplate.MatchOntology(Communication.Ontology.FIND_MATE));
 
     public AnswerMateRequest(Agent maleAgent, MaleMateManager mateManager) {
         this(maleAgent, template);
@@ -31,11 +31,11 @@ public class AnswerMateRequest extends ContractNetResponder {
         this.female = null;
         this.femalePosition = null;
     }
-
+    
     public AnswerMateRequest(Agent maleAgent, MessageTemplate messageTemplate) {
         super(maleAgent, messageTemplate);
     }
-
+    
     @Override
     protected ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
 

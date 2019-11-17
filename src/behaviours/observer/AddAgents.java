@@ -21,7 +21,7 @@ public class AddAgents extends MsgReceiver {
     }
 
     public AddAgents(Agent agent, MessageTemplate messageTemplate) {
-        super(agent, messageTemplate, sajas.proto.states.MsgReceiver.INFINITE, new DataStore(), "add.agents");
+        super(agent, messageTemplate, sajas.proto.states.MsgReceiver.INFINITE, new DataStore(), "add-agents");
     }
 
     @Override
@@ -40,5 +40,7 @@ public class AddAgents extends MsgReceiver {
             observer.addPredators(numChildren);
         else
             observer.addPreys(numChildren);
+
+        this.reset(template, sajas.proto.states.MsgReceiver.INFINITE, new DataStore(), "add-agents");
     }
 }

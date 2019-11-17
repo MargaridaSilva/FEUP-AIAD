@@ -3,6 +3,7 @@ package behaviours.observer;
 import java.util.ArrayList;
 
 import agents.ObserverAgent;
+import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -36,6 +37,7 @@ public class MoveApproval extends ProposeResponder {
         ACLMessage reply = propose.createReply();
         Position position = null;
         ObserverAgent observer = (ObserverAgent) this.myAgent;
+        AID sender = propose.getSender();
 
         try {
             if (propose.getOntology() == Communication.Ontology.VALIDATE_MOVE_GOAL) {
@@ -61,7 +63,9 @@ public class MoveApproval extends ProposeResponder {
             
             reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
         } else {
-            observer.updateAgentPosition(propose.getSender(), position);
+
+            observer.updateAgentPosition(sender, position);
+            observer.updateIfPrey(sender, position);
             reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
         }
 

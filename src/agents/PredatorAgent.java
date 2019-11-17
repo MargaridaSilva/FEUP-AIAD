@@ -34,9 +34,9 @@ public final class PredatorAgent extends AnimalAgent {
     private void registerServices() {
         if(this.gender == Gender.MALE) {
             this.registerService(Communication.ServiceType.PREDATOR_MATE, 
-                             Communication.ServiceName.PREDATOR_REPRODUCTION, 
-                             new String[]{Communication.Language.PREDATOR_MATE}, 
-                             new String[]{Communication.Ontology.PREDATOR_FIND_MATE});
+                             Communication.ServiceName.REPRODUCTION, 
+                             new String[]{Communication.Language.MATE}, 
+                             new String[]{Communication.Ontology.FIND_MATE});
         }
     }
 

@@ -25,7 +25,7 @@ public class RandomManager extends TickerBehaviour implements MoveManager {
 
     @Override
     protected void onTick() {
-
+        
         AnimalAgent animal = (AnimalAgent)myAgent;
 
         if(animal.getEnergy() < Configs.MIN_ENERGY_RANDOM) {

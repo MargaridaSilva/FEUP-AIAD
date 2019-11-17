@@ -46,7 +46,6 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
 
     @Override
     protected void onTick() {
-
         
         AnimalAgent animal = (AnimalAgent) myAgent;
         
@@ -88,7 +87,7 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
     public void mate() {
         
         ACLMessage terminateMsg = new ACLMessage(ACLMessage.INFORM);
-        terminateMsg.setOntology(Communication.Ontology.PREDATOR_REACHED_FEMALE);
+        terminateMsg.setOntology(Communication.Ontology.REACHED_FEMALE);
         terminateMsg.addReceiver(female);
         this.myAgent.send(terminateMsg);
     }
@@ -100,6 +99,8 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
 
     public void setMoveToFemaleState(AID female, Position femalePosition) {
         
+        AnimalAgent animal = (AnimalAgent)myAgent;
+        animal.setMateColor();
         this.myAgent.removeBehaviour(answerMateRequest);
         this.female = female;
         this.femalePosition = femalePosition;

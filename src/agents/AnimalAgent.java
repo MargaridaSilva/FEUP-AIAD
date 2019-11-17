@@ -74,6 +74,12 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
         updateNodeColor();
     }
 
+    public void decreaseEnergy(double value) {
+        
+        this.energy -= value;
+        updateNodeColor();
+    }
+
     private Color getDefaultColor() {
         switch(gender) {
             case MALE:
@@ -128,15 +134,15 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
     }
 
     public void removeMateColor() {
+        
         setNodeColor(getDefaultColor());
     }
 
     protected void updateNodeColor() {
-        Color defaultColor = getDefaultColor();
         int opacity = (int)Math.round(255 * energy);
         if(opacity < 0)
             opacity = 1;
-        Color newColor = new Color(defaultColor.getRed(), defaultColor.getGreen(), defaultColor.getBlue(), opacity);
+        Color newColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
         setNodeColor(newColor);
     }
 
