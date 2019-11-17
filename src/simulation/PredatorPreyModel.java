@@ -39,8 +39,8 @@ public class PredatorPreyModel extends Repast3Launcher {
     private Displayable display;
     private int width = 20;
     private int height = 20;
-    private int malePredators = 1;
-    private int femalePredators = 1;
+    private int malePredators = 0;
+    private int femalePredators = 0;
     private int malePreys = 1;
     private int femalePreys = 1;
     private int plants = 5;

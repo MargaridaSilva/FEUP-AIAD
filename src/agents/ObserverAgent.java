@@ -46,7 +46,6 @@ public final class ObserverAgent extends GenericAgent {
 
         this.agentsPositions.put(agent.getAID(), agent.getPosition());
         if (agent instanceof PreyAgent) {
-            System.out.println("PREY");
             this.preysPositions.put(agent.getAID(), agent.getPosition());
         }
     }

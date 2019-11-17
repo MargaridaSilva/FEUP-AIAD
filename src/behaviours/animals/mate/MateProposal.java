@@ -22,6 +22,11 @@ public class MateProposal extends ContractNetInitiator {
     @Override
     protected void handleAllResponses(Vector responses, Vector acceptances) {
 
+        if(responses.isEmpty()) {
+            this.mateManager.resendMateRequest();
+            return;
+        }
+
         // Evaluate all proposals
         float bestProposal = -1;
         Enumeration e = responses.elements();

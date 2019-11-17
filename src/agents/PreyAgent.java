@@ -3,6 +3,7 @@ package agents;
 import simulation.PredatorPreyModel;
 import simulation.Space;
 import uchicago.src.sim.gui.SimGraphics;
+import utils.Communication;
 import utils.Position;
 
 import behaviours.animals.BehaviourManager;
@@ -24,8 +25,21 @@ public class PreyAgent extends AnimalAgent {
 
         super.addBehaviour(new BehaviourManager(this));
 
+        // register services
+        this.registerServices();
+        
         System.out.println("Prey-agent "+ getAID().getName()+" is ready.");
+        
+    }
+
+    private void registerServices() {
         this.registerService("prey-service", "prey-name", new String[]{},  new String[]{});
+        if(this.gender == Gender.MALE) {
+            this.registerService(Communication.ServiceType.PREY_MATE, 
+                             Communication.ServiceName.REPRODUCTION, 
+                             new String[]{Communication.Language.MATE}, 
+                             new String[]{Communication.Ontology.FIND_MATE});
+        }
     }
 
     // Drawable interface

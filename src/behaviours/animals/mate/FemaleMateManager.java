@@ -2,7 +2,6 @@ package behaviours.animals.mate;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 import agents.AnimalAgent;
@@ -41,7 +40,6 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
 
     @Override
     protected void onTick() {
-        System.out.println("FEMALE AGENT " + myAgent.getName() + "- MATING");
 
         AnimalAgent animal = (AnimalAgent) myAgent;
         
@@ -53,8 +51,6 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
          
         switch (state) {
         case RANDOM_MOVE_CFP:
-            if (moveCompleted)
-                addNextMove();
             break;
         case WAIT_MALE:
             break;
@@ -74,7 +70,8 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
             this.removeSubBehaviour(waitMale);
             waitMale = null;
         }
-
+        AnimalAgent animal = (AnimalAgent)myAgent;
+        animal.decreaseEnergy(1 - Configs.MIN_ENERGY_MATE);
         Random random = new Random();
         int maxNumChildren = Configs.PREY_NUM_CHILDREN;
         int numChildren;
@@ -88,23 +85,29 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
         setEndMateState();
     }
 
+    public void resendMateRequest() {
+        
+        launchCFP();
+    }
+
     public void giveBirth(int numChildren) {
 
         AID observerAgent = Locator.findObserver(myAgent);
         ACLMessage birthMessage = new ACLMessage(ACLMessage.INFORM);
         String ontology = Communication.Ontology.GIVE_BIRTH_PREYS;
-
+        
         if (myAgent instanceof PredatorAgent)
             ontology = Communication.Ontology.GIVE_BIRTH_PREDATORS;
 
         birthMessage.setOntology(ontology);
         birthMessage.addReceiver(observerAgent);
-
+        
         try {
             birthMessage.setContentObject(numChildren);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
         this.myAgent.send(birthMessage);
     }
 
@@ -152,7 +155,6 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
             waitMale = null;
         }
 
-        this.possibleMoves = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
         CallToMate callToMate = new CallToMate(myAgent, this);
         this.addSubBehaviour(callToMate);
     }

@@ -36,7 +36,7 @@ public class EatManager extends TickerBehaviour implements MoveManager {
 
     @Override
     protected void onTick() {
-        System.out.println("AGENT " + myAgent.getName() + "- EATING " + ((AnimalAgent) myAgent).getEnergy());
+        
         AnimalAgent animal = (AnimalAgent) myAgent;
 
         if (animal.getEnergy() <= Configs.MIN_ENERGY_EAT || animal.getEnergy() >= Configs.MAX_ENERGY_EAT) {
