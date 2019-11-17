@@ -39,6 +39,14 @@ public class EatManager extends TickerBehaviour implements MoveManager {
     @Override
     protected void onTick() {
         System.out.println("AGENT " + myAgent.getName() + "- EATING " + ((AnimalAgent) myAgent).getEnergy());
+        AnimalAgent animal = (AnimalAgent) myAgent;
+
+        if (animal.getEnergy() <= 0) {
+            this.behaviourManager.removeSubBehaviour(this);
+            this.behaviourManager.updateBehaviour();
+        }
+        //else if(moveCompleted)
+          //  this.addNextMove();
         if(onFood()){
             //Eat
             this.eatFood();
@@ -46,6 +54,8 @@ public class EatManager extends TickerBehaviour implements MoveManager {
         }else{
             behaviourManager.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
         }
+
+
     }
 
     private void eatFood(){
