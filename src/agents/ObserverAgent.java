@@ -87,21 +87,6 @@ public final class ObserverAgent extends GenericAgent {
         this.agentsPositions.remove(agentId);
     }
 
-    public AID getAID(Position agentPosition){
-        Iterator<Map.Entry<AID, Position>>
-                iterator = this.agentsPositions.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry<AID, Position> entry = iterator.next();
-
-            if (agentPosition.equals(entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-
-        return null;
-    }
-
     public boolean isPositionTaken(Position position) {
         
         return this.agentsPositions.containsValue(position);

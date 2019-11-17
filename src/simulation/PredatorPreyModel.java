@@ -2,11 +2,13 @@ package simulation;
 
 import java.util.ArrayList;
 
+import agents.AnimalAgent;
 import agents.ObserverAgent;
 import agents.PredatorAgent;
 import agents.PreyAgent;
 import agents.AnimalAgent.Gender;
 import elements.Plant;
+import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.StaleProxyException;
@@ -259,6 +261,19 @@ public class PredatorPreyModel extends Repast3Launcher {
 
     public void setPlants(int plants) {
         this.plants = plants;
+    }
+
+    public AID getAID(Position agentPosition){
+
+        for(Drawable drawable : this.elementsList){
+            if(drawable instanceof AnimalAgent){
+                AnimalAgent animalAgent = (AnimalAgent) drawable;
+                if(animalAgent.getPosition().equals(agentPosition)){
+                    return animalAgent.getAID();
+                }
+            }
+        }
+        return null;
     }
 
     @Override

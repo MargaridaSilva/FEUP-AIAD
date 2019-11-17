@@ -33,4 +33,10 @@ public final class Configs {
     // Energy given to preys when eat a plant
     public static final double PLANT_ENERGY = 0.1;
 
+    // Energy level where agent starts looking for food
+    public static final double MIN_ENERGY_EAT = 0;
+
+    // Energy level where agent stops looking for food
+    public static final double MAX_ENERGY_EAT = 0.5;
+
 }

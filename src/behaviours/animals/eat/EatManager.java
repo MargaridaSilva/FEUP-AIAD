@@ -39,7 +39,7 @@ public class EatManager extends TickerBehaviour implements MoveManager {
         System.out.println("AGENT " + myAgent.getName() + "- EATING " + ((AnimalAgent) myAgent).getEnergy());
         AnimalAgent animal = (AnimalAgent) myAgent;
 
-        if (animal.getEnergy() <= 0) {
+        if (animal.getEnergy() <= Configs.MIN_ENERGY_EAT || animal.getEnergy() >= Configs.MAX_ENERGY_EAT) {
             this.behaviourManager.removeSubBehaviour(this);
             this.behaviourManager.updateBehaviour();
         }
@@ -57,9 +57,9 @@ public class EatManager extends TickerBehaviour implements MoveManager {
         ACLMessage msg = null;
         //Eat
         if(myAgent instanceof PredatorAgent){
-            //TODO: Get AID from prey
-            AID aid = null;
-            msg =  EatPrey.prepareRequest(myAgent, aid);
+            AnimalAgent animal = (AnimalAgent) myAgent;
+            AID prey = animal.getModel().getAID(food);
+            msg =  EatPrey.prepareRequest(myAgent, prey);
         }else if(myAgent instanceof PreyAgent){
             AID observer = Locator.findObserver(myAgent);
             msg = EatPlant.prepareRequest(myAgent, observer, food);
