@@ -20,7 +20,7 @@ public final class ObserverAgent extends GenericAgent {
 
     private final int width;
     private final int height;
-    private HashMap<Position, AID> agentsPositions;
+    private HashMap<AID, Position> agentsPositions;
     private HashMap<AID, Position> preysPositions;
 
     public ObserverAgent(PredatorPreyModel model) {
@@ -33,23 +33,17 @@ public final class ObserverAgent extends GenericAgent {
 
     public void addAgent(AnimalAgent agent) {
 
-        this.agentsPositions.put(agent.getPosition(), agent.getAID());
+        this.agentsPositions.put(agent.getAID(), agent.getPosition());
     }
 
     public void removeAgent(AID agentId) {
         
-        for (Map.Entry<Position, AID> mapPosition : agentsPositions.entrySet()) {
-            
-            if(mapPosition.getValue().equals(agentId)) {
-                agentsPositions.remove(mapPosition.getKey());
-                return;
-            }
-        }
+        this.agentsPositions.remove(agentId);
     }
 
     public boolean isPositionTaken(Position position) {
         
-        return this.agentsPositions.containsKey(position);
+        return this.agentsPositions.containsValue(position);
     }
 
     public boolean isPositionOutLimits(Position position) {
@@ -59,20 +53,15 @@ public final class ObserverAgent extends GenericAgent {
         return outX || outY;
     }
 
-    public void updateAgentPosition(AID agentAID, Position position) {
+    public void updateAgentPosition(AID agentId, Position position) {
         
-        if(!this.agentsPositions.containsValue(agentAID)) return;
-        
-        Position key = null;
-        for (Map.Entry<Position, AID> mapPosition : agentsPositions.entrySet()) {
-            
-            if(mapPosition.getValue().equals(agentAID)) {
-                key = mapPosition.getKey();
-                break;
-            }
-        }
-        this.agentsPositions.remove(key);
-        this.agentsPositions.put(position, agentAID);
+        if(!this.agentsPositions.containsKey(agentId)) 
+            return;
+        this.agentsPositions.put(agentId, position);
+    }
+
+    public Position getAgentPosition(AID agentId) {
+        return this.agentsPositions.get(agentId);
     }
 
     @Override
