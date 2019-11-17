@@ -170,7 +170,6 @@ public class PredatorPreyModel extends Repast3Launcher {
         launchPlants();
         launchPreys();
         launchPredators();
-
     }
 
     @Override

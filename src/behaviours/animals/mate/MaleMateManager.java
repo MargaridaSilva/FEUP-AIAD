@@ -46,8 +46,8 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
 
     @Override
     protected void onTick() {
+        System.out.println("MALE AGENT " + myAgent.getName() + "- MATING");
 
-        
         AnimalAgent animal = (AnimalAgent) myAgent;
         
         if (animal.getEnergy() < Configs.MIN_ENERGY_MATE) {
