@@ -49,11 +49,11 @@ public class BehaviourManager extends ParallelBehaviour {
         Behaviour nextBehaviour = null;
 
         if(energy >= Configs.MIN_ENERGY_MATE)
-            nextBehaviour = new RandomManager(agent, this);
+            nextBehaviour = new MateManager(agent);
         else if(energy >= Configs.MIN_ENERGY_RANDOM)
             nextBehaviour = new RandomManager(agent, this);
         else if(energy > 0)
-            nextBehaviour = new RandomManager(agent, this);
+            nextBehaviour = new EatManager(agent);
         else    
             nextBehaviour = new DieManager(agent);
         
