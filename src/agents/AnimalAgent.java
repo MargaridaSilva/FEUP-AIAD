@@ -127,6 +127,10 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
         setNodeColor(Color.MAGENTA);
     }
 
+    public void removeMateColor() {
+        setNodeColor(getDefaultColor());
+    }
+
     protected void updateNodeColor() {
         Color defaultColor = getDefaultColor();
         int opacity = (int)Math.round(255 * energy);

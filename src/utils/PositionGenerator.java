@@ -16,7 +16,8 @@ public abstract class PositionGenerator {
         return new Position(0,0);
     }
 
-    public Position getRandomPosition(){
+    public Position getRandomPosition() {
+
         Random random = new Random();
         int x = random.nextInt(width);
         int y = random.nextInt(height);

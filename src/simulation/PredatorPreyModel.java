@@ -2,7 +2,6 @@ package simulation;
 
 import java.util.ArrayList;
 
-import agents.AnimalAgent;
 import agents.ObserverAgent;
 import agents.PredatorAgent;
 import agents.PreyAgent;
@@ -43,6 +42,8 @@ public class PredatorPreyModel extends Repast3Launcher {
     private int malePreys = 1;
     private int femalePreys = 1;
     private int plants = 5;
+    private int nPreys = 0;
+    private int nPredators = 0;
 
     public PredatorPreyModel() {
         elementsList = new ArrayList<>();
@@ -97,7 +98,6 @@ public class PredatorPreyModel extends Repast3Launcher {
 
         for (int i = 0; i < numPredators; ++i) {
 
-            String id = "predator-" + i;
             Position predatorPosition = positionGenerator.getPosition();
             Gender gender = Gender.MALE;
 
@@ -105,11 +105,17 @@ public class PredatorPreyModel extends Repast3Launcher {
                 gender = Gender.FEMALE;
             }
 
-            PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, space, id, predatorPosition, gender);
-            this.addElement(predator);
-            this.mainContainer.acceptNewAgent(id, predator).start();
-            this.observer.addAgent(predator);
+            addPredator(predatorPosition, gender);
         }
+    }
+
+    public void addPredator(Position position, Gender gender) throws StaleProxyException {
+        nPredators++;
+        String id = "predator-" + nPredators;
+        PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, space, id, position, gender);
+        this.addElement(predator);
+        this.mainContainer.acceptNewAgent(id, predator).start();
+        this.observer.addAgent(predator);
     }
 
     private void launchPreys() throws StaleProxyException {
@@ -118,18 +124,24 @@ public class PredatorPreyModel extends Repast3Launcher {
 
         for (int i = 0; i < numPreys; ++i) {
 
-            String id = "prey-" + i;
             Position preyPosition = positionGenerator.getPosition();
             Gender gender = Gender.MALE;
 
             if(i >= malePreys) {
                 gender = Gender.FEMALE;
             }
-
-            PreyAgent prey = PreyAgent.generatePreyAgent(this, space, id, preyPosition, gender);
-            this.addElement(prey);
-            this.mainContainer.acceptNewAgent(id, prey).start();
+            
+            addPrey(preyPosition, gender);
         }
+    }
+
+    public void addPrey(Position position, Gender gender) throws StaleProxyException {
+        nPreys++;
+        String id = "preys-" + nPreys; 
+        PreyAgent prey = PreyAgent.generatePreyAgent(this, space, id, position, gender);
+        this.addElement(prey);
+        this.mainContainer.acceptNewAgent(id, prey).start();
+        this.observer.addAgent(prey);
     }
 
     private void launchPlants(){
