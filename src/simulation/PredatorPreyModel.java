@@ -129,6 +129,7 @@ public class PredatorPreyModel extends Repast3Launcher {
             PreyAgent prey = PreyAgent.generatePreyAgent(this, space, id, preyPosition, gender);
             this.addElement(prey);
             this.mainContainer.acceptNewAgent(id, prey).start();
+            this.observer.addAgent(prey);
         }
     }
 
