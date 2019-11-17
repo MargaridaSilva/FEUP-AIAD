@@ -28,7 +28,7 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
     private ArrayList<Integer> possibleMoves;
     private Position femalePosition;
     private AID female;
-    private AnswerMateRequest answerMateRequest;
+    private AnswerMateProposal answerMateRequest;
 
     public MaleMateManager(AnimalAgent a, BehaviourManager behaviourManager) {
 
@@ -40,7 +40,7 @@ public class MaleMateManager extends TickerBehaviour implements MoveManager {
         this.femalePosition = null;
         this.female = null;
         this.addNextMove();
-        this.answerMateRequest = new AnswerMateRequest(a, this);
+        this.answerMateRequest = new AnswerMateProposal(a, this);
         a.addBehaviour(answerMateRequest);
     }
 
