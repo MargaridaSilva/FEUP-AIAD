@@ -52,11 +52,9 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
 
     @Override
     protected void takeDown() {
-
         super.takeDown();
-        model.removeAgent(this);
+        model.removeElement(this);
         informObserverDelete();
-        
     }
 
     /**
