@@ -3,7 +3,6 @@ package agents;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
 
 import behaviours.plant.GeneratePlant;
@@ -12,7 +11,6 @@ import jade.core.AID;
 import behaviours.observer.MoveApproval;
 import behaviours.observer.RemoveAgent;
 import behaviours.observer.TellFood;
-import jade.core.AID;
 import simulation.PredatorPreyModel;
 import utils.Communication;
 import utils.Position;
@@ -29,7 +27,7 @@ public final class ObserverAgent extends GenericAgent {
     private final int height;
     private HashMap<AID, Position> agentsPositions;
     private HashMap<AID, Position> preysPositions;
-    private HashSet<Position> plantsPosition;
+    private HashSet<Position> plantsPositions;
 
     public ObserverAgent(PredatorPreyModel model) {
         super(model);
@@ -37,19 +35,26 @@ public final class ObserverAgent extends GenericAgent {
         this.height = model.getHeight();
         this.agentsPositions = new HashMap<>();
         this.preysPositions = new HashMap<>();
-        this.plantsPosition = new HashSet<>();
+        this.plantsPositions = new HashSet<>();
     }
 
     public void addAgent(AnimalAgent agent) {
 
         this.agentsPositions.put(agent.getAID(), agent.getPosition());
+        if (agent instanceof PreyAgent) {
+            System.out.println("PREY");
+            this.preysPositions.put(agent.getAID(), agent.getPosition());
+        }
     }
 
     public void addPlant(Plant plant){
-        this.plantsPosition.add(plant.getPosition());
+        this.plantsPositions.add(plant.getPosition());
         this.model.addElement(plant);
     }
 
+    public Boolean isPrey(AID agent) {
+        return this.preysPositions.containsKey(agent);
+    }
     public Position generateNewPosition(){
         Position position = new Position(0, 0);
         Random random = new Random();
@@ -59,7 +64,7 @@ public final class ObserverAgent extends GenericAgent {
         while(nAttempts > 0 && invalidPosition){
             position.x = random.nextInt(this.getModel().getWidth());
             position.y = random.nextInt(this.getModel().getHeight());
-            invalidPosition = isPositionTaken(position) || plantsPosition.contains(position);
+            invalidPosition = isPositionTaken(position) || plantsPositions.contains(position);
             nAttempts--;
         }
         
@@ -92,6 +97,12 @@ public final class ObserverAgent extends GenericAgent {
         if(!this.agentsPositions.containsKey(agentId)) 
             return;
         this.agentsPositions.put(agentId, position);
+    }
+
+    public void updateIfPrey(AID agentId, Position position) {
+
+        if (this.preysPositions.containsKey(agentId))
+            this.preysPositions.put(agentId, position);
     }
 
     public Position getAgentPosition(AID agentId) {
@@ -129,4 +140,7 @@ public final class ObserverAgent extends GenericAgent {
         return this.preysPositions;
     }
 
+    public Serializable getPlants() {
+        return this.plantsPositions;
+    }
 }
