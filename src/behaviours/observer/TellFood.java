@@ -33,6 +33,7 @@ public class TellFood extends AchieveREResponder {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("REPLIED");
         return reply;
     }
 }
