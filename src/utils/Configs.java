@@ -10,6 +10,8 @@ public final class Configs {
 
     public static final Color FEMALE_COLOR = new Color(245, 66, 149);
 
+    public static final Color PLANT_COLOR = new Color(58, 95, 11);
+
     // Minimum energy expenditure
     public static final double MIN_ENERGY_EXP = 0.005;
 

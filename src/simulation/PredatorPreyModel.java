@@ -7,6 +7,7 @@ import agents.ObserverAgent;
 import agents.PredatorAgent;
 import agents.PreyAgent;
 import agents.AnimalAgent.Gender;
+import elements.Plant;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.StaleProxyException;
@@ -17,6 +18,7 @@ import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Displayable;
+import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.Object2DDisplay;
 import utils.Position;
 import utils.PositionGenerator;
@@ -24,7 +26,7 @@ import utils.RandomPositionGenerator;
 
 public class PredatorPreyModel extends Repast3Launcher {
 
-    private ArrayList<AnimalAgent> agentList;
+    private ArrayList<Drawable> elementsList;
 
     private ObserverAgent observer;
 
@@ -36,15 +38,14 @@ public class PredatorPreyModel extends Repast3Launcher {
     private Displayable display;
     private int width = 20;
     private int height = 20;
-
     private int malePredators = 1;
     private int femalePredators = 1;
     private int malePreys = 1;
     private int femalePreys = 1;
+    private int plants = 5;
 
     public PredatorPreyModel() {
-        
-        agentList = new ArrayList<AnimalAgent>();
+        elementsList = new ArrayList<>();
         positionGenerator = new RandomPositionGenerator(width, height);
     }
 
@@ -54,8 +55,9 @@ public class PredatorPreyModel extends Repast3Launcher {
         mainContainer = rt.createMainContainer(p1);
     }
 
-    public String[] getInitParams() {
-        String[] params = {"Width", "Height", "MalePredators", "FemalePredators", "MalePreys", "FemalePreys"};
+    @Override
+    public String[] getInitParam() {
+        String[] params = {"Width", "Height", "MalePredators", "FemalePredators", "MalePreys", "FemalePreys", "Plants"};
         return params;
     }
 
@@ -73,19 +75,20 @@ public class PredatorPreyModel extends Repast3Launcher {
         display = space.getDisplay();
         
         dsurf.addDisplayableProbeable(display, "Predator Prey Display");
-        ((Object2DDisplay) display).setObjectList(agentList);
+        
+        ((Object2DDisplay) display).setObjectList(elementsList);
         addSimEventListener(dsurf);
         dsurf.display();
 
         getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
     }
 
-    public void removeAgent(AnimalAgent agent) {
-        this.agentList.remove(agent);
+    public void removeElement(Drawable elem) {
+        this.elementsList.remove(elem);
     }
 
-    public void addAgent(AnimalAgent agent) {
-        this.agentList.add(agent);
+    public void addElement(Drawable elem) {
+        this.elementsList.add(elem);
     }
 
     private void launchPredators() throws StaleProxyException {
@@ -103,7 +106,7 @@ public class PredatorPreyModel extends Repast3Launcher {
             }
 
             PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, space, id, predatorPosition, gender);
-            this.agentList.add(predator);
+            this.addElement(predator);
             this.mainContainer.acceptNewAgent(id, predator).start();
             this.observer.addAgent(predator);
         }
@@ -124,8 +127,22 @@ public class PredatorPreyModel extends Repast3Launcher {
             }
 
             PreyAgent prey = PreyAgent.generatePreyAgent(this, space, id, preyPosition, gender);
-            this.agentList.add(prey);
+            this.addElement(prey);
             this.mainContainer.acceptNewAgent(id, prey).start();
+        }
+    }
+
+    private void launchPlants(){
+
+        int numPlants = plants;
+
+        for (int i = 0; i < numPlants; ++i) {
+
+            String id = "plants-" + i;
+            Position plantsPosition = positionGenerator.getPosition();
+
+            Plant plant = Plant.generatePlant(this, space, id, plantsPosition);
+            this.addElement(plant);
         }
     }
 
@@ -140,6 +157,7 @@ public class PredatorPreyModel extends Repast3Launcher {
         launchObserver();
         launchPredators();
         launchPreys();
+        launchPlants();
     }
 
     @Override
@@ -203,16 +221,23 @@ public class PredatorPreyModel extends Repast3Launcher {
         this.femalePreys = femalePreys;
     }
 
-    @Override
-    public String[] getInitParam() {
+    
+    public int getPlants() {
+        return plants;
+    }
 
-        return new String[]{"MalePredators", "Height", "Width", "FemalePredators", "MalePreys", "FemalePreys"};
+    public void setPlants(int plants) {
+        this.plants = plants;
     }
 
     @Override
     public String getName() {
         
         return "Predator Prey Simulation";
+    }
+
+    public Space getSpace(){
+        return space;
     }
 
     @Override
@@ -229,4 +254,5 @@ public class PredatorPreyModel extends Repast3Launcher {
             e.printStackTrace();
         }
     }
+
 }

@@ -2,7 +2,7 @@ package behaviours.animals.move;
 
 import sajas.core.Agent;
 import utils.Position;
-
+/*
 public class MoveToGoal extends Move {
 
     private Position goalPosition;
@@ -34,4 +34,4 @@ public class MoveToGoal extends Move {
         
         getNextPosition(nextMove);
     }
-}
+}*/

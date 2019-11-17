@@ -2,9 +2,15 @@ package agents;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 
+import behaviours.plant.GeneratePlant;
+import elements.Plant;
+import jade.core.AID;
 import behaviours.observer.MoveApproval;
+import behaviours.observer.RemoveAgent;
 import behaviours.observer.TellFood;
 import jade.core.AID;
 import simulation.PredatorPreyModel;
@@ -21,8 +27,9 @@ public final class ObserverAgent extends GenericAgent {
 
     private final int width;
     private final int height;
-    private HashMap<Position, AID> agentsPositions;
+    private HashMap<AID, Position> agentsPositions;
     private HashMap<AID, Position> preysPositions;
+    private HashSet<Position> plantsPosition;
 
     public ObserverAgent(PredatorPreyModel model) {
         super(model);
@@ -30,27 +37,47 @@ public final class ObserverAgent extends GenericAgent {
         this.height = model.getHeight();
         this.agentsPositions = new HashMap<>();
         this.preysPositions = new HashMap<>();
+        this.plantsPosition = new HashSet<>();
     }
 
     public void addAgent(AnimalAgent agent) {
 
-        this.agentsPositions.put(agent.getPosition(), agent.getAID());
+        this.agentsPositions.put(agent.getAID(), agent.getPosition());
+    }
+
+    public void addPlant(Plant plant){
+        this.plantsPosition.add(plant.getPosition());
+        this.model.addElement(plant);
+    }
+
+    public Position generateNewPosition(){
+        Position position = new Position(0, 0);
+        Random random = new Random();
+        int nAttempts = 10;
+        boolean invalidPosition = true;
+
+        while(nAttempts > 0 && invalidPosition){
+            position.x = random.nextInt(this.getModel().getWidth());
+            position.y = random.nextInt(this.getModel().getHeight());
+            invalidPosition = isPositionTaken(position) || plantsPosition.contains(position);
+            nAttempts--;
+        }
+        
+        if(nAttempts == 0){
+            position = null;
+        }
+
+        return position;
     }
 
     public void removeAgent(AID agentId) {
         
-        for (Map.Entry<Position, AID> mapPosition : agentsPositions.entrySet()) {
-            
-            if(mapPosition.getValue().equals(agentId)) {
-                agentsPositions.remove(mapPosition.getKey());
-                return;
-            }
-        }
+        this.agentsPositions.remove(agentId);
     }
 
     public boolean isPositionTaken(Position position) {
         
-        return this.agentsPositions.containsKey(position);
+        return this.agentsPositions.containsValue(position);
     }
 
     public boolean isPositionOutLimits(Position position) {
@@ -60,20 +87,15 @@ public final class ObserverAgent extends GenericAgent {
         return outX || outY;
     }
 
-    public void updateAgentPosition(AID agentAID, Position position) {
+    public void updateAgentPosition(AID agentId, Position position) {
         
-        if(!this.agentsPositions.containsValue(agentAID)) return;
-        
-        Position key = null;
-        for (Map.Entry<Position, AID> mapPosition : agentsPositions.entrySet()) {
-            
-            if(mapPosition.getValue().equals(agentAID)) {
-                key = mapPosition.getKey();
-                break;
-            }
-        }
-        this.agentsPositions.remove(key);
-        this.agentsPositions.put(position, agentAID);
+        if(!this.agentsPositions.containsKey(agentId)) 
+            return;
+        this.agentsPositions.put(agentId, position);
+    }
+
+    public Position getAgentPosition(AID agentId) {
+        return this.agentsPositions.get(agentId);
     }
 
     @Override
@@ -88,6 +110,8 @@ public final class ObserverAgent extends GenericAgent {
         System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
         this.addBehaviour(new MoveApproval(this));
+        this.addBehaviour(new GeneratePlant(this));
+        this.addBehaviour(new RemoveAgent(this));
         this.addBehaviour(new TellFood(this));
     }
 

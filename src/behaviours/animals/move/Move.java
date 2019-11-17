@@ -1,120 +1,99 @@
 package behaviours.animals.move;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
-import java.util.Vector;
 
 import agents.AnimalAgent;
+import sajas.core.behaviours.Behaviour;
+import utils.Communication;
+import utils.Locator;
+import utils.Position;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import sajas.core.Agent;
-import sajas.proto.IteratedAchieveREInitiator;
-import utils.Communication;
-import utils.Locator;
-import utils.MessageConstructor;
-import utils.Position;
 
-public class Move extends IteratedAchieveREInitiator {
+public class Move extends Behaviour {
 
-    protected static final int[][] MOVES = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-    protected Position nextPosition;
-    protected boolean moveApproved;
-    protected ArrayList<Integer> remainingMoves;
+    protected RandomManager randomManager;
+    private final int[][] MOVES = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    private ArrayList<Integer> remainingMoves;
+    private RequestMoveApproval requestApprovalBehaviour;
+    private boolean finish;
 
-    public Move(Agent a) {
-        this(a, false);
-    }
-
-    /***
-     * Useful to skip call to firstMove()
-     */
-    public Move(Agent a, boolean skipFirstMove) {
-        super(a, null);
-        
-        this.remainingMoves = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
-        this.nextPosition = null;
-        this.moveApproved = false;
-        if(!skipFirstMove)
-            this.firstMove();
-    }
-
-    protected void firstMove() {
-
-        getMove();
-        ACLMessage firstRequestMessage = getProposalMessage(nextPosition);
-        this.reset(firstRequestMessage);
+    public Move(RandomManager randomManager, Agent agent, ArrayList<Integer> remainingMoves) {
+        super(agent);
+        this.randomManager = randomManager;
+        this.remainingMoves = remainingMoves;
+        this.requestApprovalBehaviour = null;
+        this.finish = false;
     }
 
     @Override
-    protected void handleAllResultNotifications(Vector resultNotifications, Vector nextRequests) {
+    public void action() {
+        
+        // Generate new move
+        Position nextPossiblePosition = this.getNextPossiblePosition();
 
-        if (resultNotifications.isEmpty())
+        if(remainingMoves.size() == 0) 
+        { 
+            this.finish = true;
             return;
-
-        ACLMessage response = (ACLMessage) resultNotifications.get(0);
-
-        if (response.getPerformative() == ACLMessage.INFORM) {
-            this.moveApproved = true;
-            
-            ((AnimalAgent) myAgent).setPosition(this.nextPosition);
-            return;
-        } else if (response.getPerformative() == ACLMessage.FAILURE) {
-            getMove();
-            ACLMessage newRequestMessage = getProposalMessage(nextPosition);
-            nextRequests.addElement(newRequestMessage);
         }
+
+        ACLMessage proposal = this.getProposalMessage(nextPossiblePosition);
+        requestApprovalBehaviour = new RequestMoveApproval(this.myAgent, proposal, this.randomManager, nextPossiblePosition, remainingMoves);
+        this.randomManager.addSubBehaviour(requestApprovalBehaviour);
+        this.finish = true;
     }
-    
+
     @Override
-    protected boolean checkTermination(boolean currentDone, int currentResult) {
+    public boolean done() {
         
-        boolean terminated = false;
-        
-        if(remainingMoves.isEmpty()) {
-            System.out.println("Agent " + myAgent.getAID() + " can't move to any position.");
-            terminated = true;
-        }
-        else if(moveApproved)
-            terminated = true;
-
-        return terminated;
+        return finish;
     }
 
-    protected void getMove() {
+    protected Position getNextPossiblePosition() {
 
-        if(remainingMoves.isEmpty())  // all positions are taken
-            return;
-
-        Random random = new Random();
-        int randomIndex = random.nextInt(remainingMoves.size());
-        int[] move = MOVES[remainingMoves.get(randomIndex)];
-        this.remainingMoves.remove(randomIndex);
-        getNextPosition(move);
-    }
-
-    protected void getNextPosition(int[] move) {
         AnimalAgent agent = (AnimalAgent) this.myAgent;
-        this.nextPosition = new Position(agent.getX() + move[0], agent.getY() + move[1]);
+
+        Random random = new Random(System.currentTimeMillis());
+
+        int randomIndex = random.nextInt(remainingMoves.size());
+        int[] move = this.MOVES[remainingMoves.get(randomIndex)];
+        this.remainingMoves.remove(randomIndex);
+        Position currentPosition = agent.getPosition();
+        return getMovePosition(move, currentPosition);
+    }
+
+    protected Position getMovePosition(int[] move, Position initialPosition) {
+
+        Position nextPosition = new Position(initialPosition.x + move[0], initialPosition.y + move[1]);
+        return nextPosition;
     }
 
     protected ACLMessage getProposalMessage(Position possiblePosition) {
+        
+        // locate the Observer agent
+        AID observerAgentName =  Locator.findObserver(myAgent);
 
-        // prepare request message
-        String ontology;
-        Serializable content = possiblePosition;
-
-        AID observerAgent = Locator.findObserver(myAgent);
-        if (observerAgent == null) {
+        if(observerAgentName == null) {
             System.out.println("Predator-agent " + this.myAgent.getAID().getName() + " can't find the Observer agent.");
             return null;
         }
 
-        ontology = Communication.Ontology.VALIDATE_MOVE;
-        ACLMessage msg = MessageConstructor.getMessage(observerAgent, ACLMessage.REQUEST,
-                FIPANames.InteractionProtocol.ITERATED_FIPA_REQUEST, ontology, Communication.Language.MOVE, content);
+        // prepare Propose message
+        ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+        msg.addReceiver(observerAgentName);
+        msg.setProtocol(FIPANames.InteractionProtocol.FIPA_PROPOSE);
+        msg.setOntology(Communication.Ontology.VALIDATE_MOVE);
+        try {
+            msg.setContentObject(possiblePosition);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
         return msg;
     }
 }

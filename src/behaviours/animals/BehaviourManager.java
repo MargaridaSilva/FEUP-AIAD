@@ -45,6 +45,7 @@ public class BehaviourManager extends ParallelBehaviour {
     public void updateBehaviour() {
 
         double energy = agent.getEnergy();
+        
         Behaviour nextBehaviour = null;
 
         if(energy >= Configs.MIN_ENERGY_MATE)
@@ -55,7 +56,7 @@ public class BehaviourManager extends ParallelBehaviour {
             nextBehaviour = new EatManager(agent, this);
         else    
             nextBehaviour = new DieManager(agent);
-   
+        
         this.addSubBehaviour(nextBehaviour);         
     }
 }

@@ -28,8 +28,6 @@ public final class PredatorAgent extends AnimalAgent {
         // register services
         this.registerServices();
 
-        super.addBehaviour(new BehaviourManager(this));
-
 		System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");
     }
 
