@@ -1,9 +1,11 @@
 package behaviours.observer;
 
 import agents.ObserverAgent;
+import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 import sajas.core.Agent;
 import sajas.proto.AchieveREResponder;
 import utils.Communication;
@@ -27,13 +29,18 @@ public class TellFood extends AchieveREResponder {
     protected ACLMessage handleRequest(ACLMessage request){
 
         ACLMessage reply = request.createReply();
+        AID sender = request.getSender();
+
         reply.setPerformative(ACLMessage.INFORM);
         try {
-            reply.setContentObject(agent.getPreys());
+            if (agent.isPrey(sender))
+                reply.setContentObject(agent.getPlants());
+            else reply.setContentObject(agent.getPreys());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("REPLIED");
+        System.out.println(agent.getPreys());
         return reply;
     }
 }

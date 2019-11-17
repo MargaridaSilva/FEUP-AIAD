@@ -40,7 +40,7 @@ public class EatManager extends TickerBehaviour {
             eat.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
 
             // Move Towards Food
-            eat.addSubBehaviour(new MoveToGoal(myAgent, food));
+            //eat.addSubBehaviour(new MoveToGoal(myAgent, food));
 
             this.parentBehaviour.addSubBehaviour(eat);
         }
