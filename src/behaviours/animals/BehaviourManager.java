@@ -6,7 +6,8 @@ import agents.AnimalAgent.Gender;
 import behaviours.animals.die.DieManager;
 import behaviours.animals.eat.EatManager;
 import behaviours.animals.mate.AnswerMateRequest;
-import behaviours.animals.mate.MateManager;
+import behaviours.animals.mate.FemaleMateManager;
+import behaviours.animals.mate.MaleMateManager;
 import behaviours.animals.move.RandomManager;
 import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.ParallelBehaviour;
@@ -33,9 +34,6 @@ public class BehaviourManager extends ParallelBehaviour {
 
     private void addPredatorDefaultBehaviours() {
 
-        if(agent.getGender() == Gender.MALE)
-            agent.addBehaviour(new AnswerMateRequest(agent, this));
-            
     }
 
     private void addPreyDefaultBehaviours() {
@@ -47,9 +45,12 @@ public class BehaviourManager extends ParallelBehaviour {
         double energy = agent.getEnergy();
         
         Behaviour nextBehaviour = null;
-
+                
         if(energy >= Configs.MIN_ENERGY_MATE)
-            nextBehaviour = new MateManager(agent);
+            if(this.agent.getGender() == Gender.FEMALE)
+                nextBehaviour = new FemaleMateManager(agent, this);
+            else 
+                nextBehaviour = new MaleMateManager(agent, this);
         else if(energy >= Configs.MIN_ENERGY_RANDOM)
             nextBehaviour = new RandomManager(agent, this);
         else if(energy > 0)

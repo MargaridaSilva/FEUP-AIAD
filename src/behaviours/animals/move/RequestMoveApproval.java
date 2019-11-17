@@ -13,14 +13,14 @@ public class RequestMoveApproval extends ProposeInitiator {
 
     private Position possiblePosition;
     private ArrayList<Integer> remainingMoves;
-    private RandomManager randomManager;
+    private MoveManager moveManager;
 
-    public RequestMoveApproval(Agent agent, ACLMessage msg, RandomManager randomManager, Position possiblePosition,
+    public RequestMoveApproval(Agent agent, ACLMessage msg, MoveManager moveManager, Position possiblePosition,
             ArrayList<Integer> remainingMoves) {
                 super(agent, msg);
                 
         this.possiblePosition = possiblePosition;
-        this.randomManager = randomManager;
+        this.moveManager = moveManager;
         this.remainingMoves = remainingMoves;
     }
 
@@ -34,15 +34,15 @@ public class RequestMoveApproval extends ProposeInitiator {
         agent.setPosition(this.possiblePosition);
 
         ArrayList<Integer> possibleMoves = new ArrayList<>(Arrays.asList(0,1,2,3));
-        this.randomManager.setMoveCompleted(possibleMoves);
-        this.randomManager.removeSubBehaviour(this);
+        this.moveManager.setMoveCompleted(possibleMoves);
+        this.moveManager.removeSubBehaviour(this);
     }
 
     @Override
     protected void handleRejectProposal(ACLMessage reject_proposal) {
         
         super.handleRejectProposal(reject_proposal);
-        this.randomManager.setMoveCompleted(remainingMoves);
-        this.randomManager.removeSubBehaviour(this);
+        this.moveManager.setMoveCompleted(remainingMoves);
+        this.moveManager.removeSubBehaviour(this);
     }
 }

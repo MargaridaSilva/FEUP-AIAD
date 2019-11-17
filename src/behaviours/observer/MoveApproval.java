@@ -42,10 +42,10 @@ public class MoveApproval extends ProposeResponder {
         try {
             if (propose.getOntology() == Communication.Ontology.VALIDATE_MOVE_GOAL) {
                 ArrayList<Position> content = (ArrayList<Position>) propose.getContentObject();
-
-                if (content.get(0) == content.get(1)) {
-                    reply.setPerformative(ACLMessage.INFORM);
-                    observer.updateAgentPosition(sender, content.get(0));
+                
+                if (content.get(0).equals(content.get(1))) {
+                    reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                    observer.updateAgentPosition(propose.getSender(), content.get(0));
                     return reply;
                 }
                 position = content.get(0);

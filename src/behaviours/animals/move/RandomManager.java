@@ -5,21 +5,19 @@ import java.util.Arrays;
 
 import agents.AnimalAgent;
 import behaviours.animals.BehaviourManager;
-import jade.util.leap.Collection;
 import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
 
-public class RandomManager extends TickerBehaviour {
+public class RandomManager extends TickerBehaviour implements MoveManager {
 
-    private Move randomMoveBehaviour;
-    private BehaviourManager parentBehaviour;
+    private BehaviourManager behaviourManager;
     private boolean moveCompleted;
     private ArrayList<Integer> possibleMoves;
 
-    public RandomManager(AnimalAgent a, BehaviourManager parentBehaviour) {
+    public RandomManager(AnimalAgent a, BehaviourManager behaviourManager) {
         super(a, Configs.TICK_PERIOD);
-        this.parentBehaviour = parentBehaviour;
+        this.behaviourManager = behaviourManager;
         this.moveCompleted = false;
         this.possibleMoves = new ArrayList<>(Arrays.asList(0,1,2,3));
         this.addNextMove();
@@ -27,12 +25,12 @@ public class RandomManager extends TickerBehaviour {
 
     @Override
     protected void onTick() {
-
+        System.out.println("AGENT " + myAgent.getName() + "- CHILLING");
         AnimalAgent animal = (AnimalAgent)myAgent;
 
         if(animal.getEnergy() < Configs.MIN_ENERGY_RANDOM) {
-            this.parentBehaviour.removeSubBehaviour(this);
-            this.parentBehaviour.updateBehaviour();
+            this.behaviourManager.removeSubBehaviour(this);
+            this.behaviourManager.updateBehaviour();
         }
         else if(moveCompleted)
             this.addNextMove();
@@ -42,22 +40,21 @@ public class RandomManager extends TickerBehaviour {
     public void addNextMove() {
         
         moveCompleted = false;
-        randomMoveBehaviour = new Move(this, myAgent, possibleMoves);
-        this.parentBehaviour.addSubBehaviour(randomMoveBehaviour);
+        Move randomMoveBehaviour = new Move(this, myAgent, possibleMoves);
+        this.behaviourManager.addSubBehaviour(randomMoveBehaviour);
     }
 
     public void setMoveCompleted(ArrayList<Integer> nextPossibleMoves) {
-        
+
         this.moveCompleted = true;
         this.possibleMoves = nextPossibleMoves;
     }
     
-    
     public void removeSubBehaviour(Behaviour b) {
-        this.parentBehaviour.removeSubBehaviour(b);
+        this.behaviourManager.removeSubBehaviour(b);
     }
 
     public void addSubBehaviour(Behaviour b) {
-        this.parentBehaviour.addSubBehaviour(b);
+        this.behaviourManager.addSubBehaviour(b);
     }
 }

@@ -16,15 +16,15 @@ import sajas.core.Agent;
 
 public class Move extends Behaviour {
 
-    protected RandomManager randomManager;
-    private final int[][] MOVES = {{1,0}, {-1,0}, {0,1}, {0,-1}};
-    private ArrayList<Integer> remainingMoves;
-    private RequestMoveApproval requestApprovalBehaviour;
-    private boolean finish;
+    protected MoveManager moveManager;
+    protected final int[][] MOVES = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    protected ArrayList<Integer> remainingMoves;
+    protected RequestMoveApproval requestApprovalBehaviour;
+    protected boolean finish;
 
-    public Move(RandomManager randomManager, Agent agent, ArrayList<Integer> remainingMoves) {
+    public Move(MoveManager moveManager, Agent agent, ArrayList<Integer> remainingMoves) {
         super(agent);
-        this.randomManager = randomManager;
+        this.moveManager = moveManager;
         this.remainingMoves = remainingMoves;
         this.requestApprovalBehaviour = null;
         this.finish = false;
@@ -43,8 +43,8 @@ public class Move extends Behaviour {
         }
 
         ACLMessage proposal = this.getProposalMessage(nextPossiblePosition);
-        requestApprovalBehaviour = new RequestMoveApproval(this.myAgent, proposal, this.randomManager, nextPossiblePosition, remainingMoves);
-        this.randomManager.addSubBehaviour(requestApprovalBehaviour);
+        requestApprovalBehaviour = new RequestMoveApproval(this.myAgent, proposal, this.moveManager, nextPossiblePosition, remainingMoves);
+        this.moveManager.addSubBehaviour(requestApprovalBehaviour);
         this.finish = true;
     }
 

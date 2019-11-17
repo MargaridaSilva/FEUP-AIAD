@@ -1,6 +1,7 @@
 package behaviours.animals.eat;
 
 import agents.AnimalAgent;
+import behaviours.animals.move.MoveToGoal;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -55,9 +56,10 @@ public class FindFood extends AchieveREInitiator {
         try {
             HashSet<Position> positions = (HashSet<Position>) inform.getContentObject();
             Position closestFood = this.agent.getPosition().getClosestPosition(positions);
-            parentBehaviour.setFood(closestFood);
+            parentBehaviour.addSubBehaviour(new MoveToGoal(parentBehaviour, myAgent, closestFood));
         } catch (UnreadableException e) {
             e.printStackTrace();
         }
+
     }
 }

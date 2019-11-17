@@ -3,7 +3,6 @@ package behaviours.animals.mate;
 import java.util.ArrayList;
 
 import agents.AnimalAgent;
-import behaviours.animals.BehaviourManager;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -16,12 +15,12 @@ import utils.MessageConstructor;
 public class CallToMate extends Behaviour {
 
     private boolean finished;
-    private BehaviourManager parentBehaviour;
+    private FemaleMateManager mateManager;
 
-    public CallToMate(Agent femaleAgent, BehaviourManager parentBehaviour) {
+    public CallToMate(Agent femaleAgent, FemaleMateManager mateManager) {
         super(femaleAgent);
         this.finished = false;
-        this.parentBehaviour = parentBehaviour;
+        this.mateManager = mateManager;
     }
     @Override
     public void action() {
@@ -32,7 +31,7 @@ public class CallToMate extends Behaviour {
                                                     Communication.Ontology.PREDATOR_FIND_MATE, 
                                                     Communication.Language.PREDATOR_MATE, 
                                                     ((AnimalAgent)this.myAgent).getPosition());
-        this.parentBehaviour.addSubBehaviour(new MateProposal(this.myAgent, msg, this.parentBehaviour));
+        this.mateManager.addSubBehaviour(new MateProposal(this.myAgent, msg, this.mateManager));
         this.finished = true;
     }
 
