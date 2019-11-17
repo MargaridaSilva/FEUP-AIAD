@@ -12,7 +12,7 @@ public final class Communication {
         public static final String TELL_FOOD = "tell-food-ontology";
         public static final String TERMINATE = "terminating";
         public static final String HANDLE_EAT = "handle-eat";
-
+        public static final String EAT_PREY = "eat-prey";
     }
 
     // service types

@@ -2,18 +2,14 @@ package behaviours.animals.eat;
 
 import agents.AnimalAgent;
 
+import agents.PredatorAgent;
+import agents.PreyAgent;
 import behaviours.animals.BehaviourManager;
-import jade.core.AID;
-import jade.lang.acl.ACLMessage;
-import sajas.core.behaviours.Behaviour;
+import sajas.core.AID;
 import sajas.core.behaviours.SequentialBehaviour;
 import sajas.core.behaviours.TickerBehaviour;
-import utils.Communication;
 import utils.Configs;
-import utils.Locator;
 import utils.Position;
-
-import java.io.IOException;
 
 public class EatManager extends TickerBehaviour {
 
@@ -32,35 +28,34 @@ public class EatManager extends TickerBehaviour {
     @Override
     protected void onTick() {
 
-
         if(onFood()){
-            //Eat
             this.eatFood();
-
         }else{
-            SequentialBehaviour eat = new SequentialBehaviour(myAgent);
-
-            // Find Food
-            eat.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
-
-            // Move Towards Food
-            //eat.addSubBehaviour(new MoveToGoal(myAgent, food));
-
-            this.parentBehaviour.addSubBehaviour(eat);
+            this.moveTowardsFood();
         }
     }
 
     private void eatFood(){
-        AID observerAgent = Locator.findObserver(myAgent);
-        ACLMessage terminateMsg = new ACLMessage(ACLMessage.INFORM);
-        terminateMsg.setOntology(Communication.Ontology.HANDLE_EAT);
-        terminateMsg.addReceiver(observerAgent);
-        try {
-            terminateMsg.setContentObject(food);
-        } catch (IOException e) {
-            e.printStackTrace();
+        //Eat
+        if(myAgent instanceof PredatorAgent){
+            //TODO: Get AID from prey
+            AID aid = null;
+            this.parentBehaviour.addSubBehaviour(new Eat(myAgent, Eat.prepareRequest(myAgent, aid)));
+        }else if(myAgent instanceof PreyAgent){
+
         }
-        myAgent.send(terminateMsg);
+    }
+
+    private void moveTowardsFood(){
+        SequentialBehaviour eat = new SequentialBehaviour(myAgent);
+
+        // Find Food
+        eat.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
+
+        // Move Towards Food
+        //eat.addSubBehaviour(new MoveToGoal(myAgent, food));
+
+        this.parentBehaviour.addSubBehaviour(eat);
     }
 
     private boolean onFood(){

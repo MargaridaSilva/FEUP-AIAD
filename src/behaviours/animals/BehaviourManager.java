@@ -5,6 +5,7 @@ import agents.PredatorAgent;
 import agents.AnimalAgent.Gender;
 import behaviours.animals.die.DieManager;
 import behaviours.animals.eat.EatManager;
+import behaviours.animals.eat.WaitPredator;
 import behaviours.animals.mate.AnswerMateRequest;
 import behaviours.animals.mate.MateManager;
 import behaviours.animals.move.RandomManager;
@@ -39,7 +40,7 @@ public class BehaviourManager extends ParallelBehaviour {
     }
 
     private void addPreyDefaultBehaviours() {
-
+        agent.addBehaviour(new WaitPredator(agent));
     }
 
     public void updateBehaviour() {
