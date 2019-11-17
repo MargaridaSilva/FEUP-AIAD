@@ -14,7 +14,7 @@ import sajas.proto.ContractNetResponder;
 import utils.Communication;
 import utils.Position;
 
-public class AnswerMateRequest extends ContractNetResponder {
+public class AnswerMateProposal extends ContractNetResponder {
 
     private MaleMateManager mateManager;
     private AID female;
@@ -25,14 +25,14 @@ public class AnswerMateRequest extends ContractNetResponder {
                     MessageTemplate.MatchPerformative(ACLMessage.CFP)),
             MessageTemplate.MatchOntology(Communication.Ontology.PREDATOR_FIND_MATE));
 
-    public AnswerMateRequest(Agent maleAgent, MaleMateManager mateManager) {
+    public AnswerMateProposal(Agent maleAgent, MaleMateManager mateManager) {
         this(maleAgent, template);
         this.mateManager = mateManager;
         this.female = null;
         this.femalePosition = null;
     }
 
-    public AnswerMateRequest(Agent maleAgent, MessageTemplate messageTemplate) {
+    public AnswerMateProposal(Agent maleAgent, MessageTemplate messageTemplate) {
         super(maleAgent, messageTemplate);
     }
 
