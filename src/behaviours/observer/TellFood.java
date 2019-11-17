@@ -11,6 +11,7 @@ import sajas.proto.AchieveREResponder;
 import utils.Communication;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 public class TellFood extends AchieveREResponder {
 

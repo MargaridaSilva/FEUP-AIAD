@@ -3,6 +3,7 @@ package agents;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 
 import behaviours.plant.GeneratePlant;
@@ -136,12 +137,11 @@ public final class ObserverAgent extends GenericAgent {
         System.out.println("Observer-agent " + this.getAID() + " terminating");
     }
 
-    public Serializable getPreys() {
-        HashSet<Position> preys = (HashSet<Position>) this.preysPositions.values();
-        return preys;
+    public HashSet<Position> getPreys() {
+        return new HashSet<>(this.preysPositions.values());
     }
 
-    public Serializable getPlants() {
+    public HashSet<Position> getPlants() {
         return this.plantsPositions;
     }
 }

@@ -1,6 +1,8 @@
 package utils;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
 
 public final class Position implements Serializable {
 
@@ -20,11 +22,11 @@ public final class Position implements Serializable {
         return Math.sqrt(Math.pow(p2.x - this.x, 2) + Math.pow(p2.y - this.y, 2));
     }
 
-    public Position getClosestPosition(Position[] possibleTargets) {
-        Position closest = possibleTargets[0];
-        for (int i = 1; i < possibleTargets.length; i++){
-            if (this.getDist(possibleTargets[i-1]) > this.getDist(possibleTargets[i]))
-                closest = possibleTargets[i];
+    public Position getClosestPosition(HashSet<Position> possibleTargets) {
+        Position closest = new Position(1000,1000);
+        for (Position pos: possibleTargets){
+            if (this.getDist(closest) > this.getDist(pos))
+                closest = pos;
         }
         return closest;
     }

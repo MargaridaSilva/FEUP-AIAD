@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 public class FindFood extends AchieveREInitiator {
 
@@ -52,11 +53,9 @@ public class FindFood extends AchieveREInitiator {
     @Override
     protected void handleInform(ACLMessage inform){
         try {
-            Position[] positions = (Position[]) inform.getContentObject();
+            HashSet<Position> positions = (HashSet<Position>) inform.getContentObject();
             Position closestFood = this.agent.getPosition().getClosestPosition(positions);
             parentBehaviour.setFood(closestFood);
-            System.out.println(closestFood);
-
         } catch (UnreadableException e) {
             e.printStackTrace();
         }

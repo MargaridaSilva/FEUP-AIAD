@@ -3,10 +3,17 @@ package behaviours.animals.eat;
 import agents.AnimalAgent;
 
 import behaviours.animals.BehaviourManager;
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
+import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.SequentialBehaviour;
 import sajas.core.behaviours.TickerBehaviour;
+import utils.Communication;
 import utils.Configs;
+import utils.Locator;
 import utils.Position;
+
+import java.io.IOException;
 
 public class EatManager extends TickerBehaviour {
 
@@ -25,17 +32,44 @@ public class EatManager extends TickerBehaviour {
     @Override
     protected void onTick() {
 
-        SequentialBehaviour eat = new SequentialBehaviour(myAgent);
 
-        // Find Food
-        eat.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
+        if(onFood()){
+            //Eat
+            this.eatFood();
 
-        // Move Towards Food
-        //eat.addSubBehaviour(new MoveToGoal(myAgent, food));
+        }else{
+            SequentialBehaviour eat = new SequentialBehaviour(myAgent);
 
-        // Eat
+            // Find Food
+            eat.addSubBehaviour(new FindFood(myAgent, FindFood.prepareRequest(myAgent), this));
 
-        this.parentBehaviour.addSubBehaviour(eat);
+            // Move Towards Food
+            //eat.addSubBehaviour(new MoveToGoal(myAgent, food));
 
+            this.parentBehaviour.addSubBehaviour(eat);
+        }
     }
+
+    private void eatFood(){
+        AID observerAgent = Locator.findObserver(myAgent);
+        ACLMessage terminateMsg = new ACLMessage(ACLMessage.INFORM);
+        terminateMsg.setOntology(Communication.Ontology.HANDLE_EAT);
+        terminateMsg.addReceiver(observerAgent);
+        try {
+            terminateMsg.setContentObject(food);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        myAgent.send(terminateMsg);
+    }
+
+    private boolean onFood(){
+        AnimalAgent animalAgent = (AnimalAgent) this.myAgent;
+
+        if(animalAgent == null || this.food == null) return false;
+
+        return animalAgent.getPosition().equals(this.food);
+    }
+
+
 }
