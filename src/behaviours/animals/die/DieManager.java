@@ -17,7 +17,6 @@ public class DieManager extends SimpleBehaviour {
 
     @Override
     public void action() {
-
         this.myAgent.doDelete();
         done = true;
 

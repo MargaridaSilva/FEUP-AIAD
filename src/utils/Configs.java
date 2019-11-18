@@ -39,4 +39,6 @@ public final class Configs {
     // Energy level where agent stops looking for food
     public static final double MAX_ENERGY_EAT = 0.5;
 
+    public static final double LIVING_ENERGY = 0.005;
+
 }
