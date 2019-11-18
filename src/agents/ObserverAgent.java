@@ -194,4 +194,14 @@ public final class ObserverAgent extends GenericAgent {
     public HashSet<Position> getPlants() {
         return this.plantsPositions;
     }
+
+    public int getNumPlants() {
+        return this.plantsPositions.size();
+    }
+    public int getNumPreys() {
+        return this.preysPositions.size();
+    }
+    public int getNumPredators() {
+        return this.agentsPositions.size() - this.preysPositions.size();
+    }
 }

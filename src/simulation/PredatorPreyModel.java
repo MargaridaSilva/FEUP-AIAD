@@ -1,5 +1,6 @@
 package simulation;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 import agents.AnimalAgent;
@@ -15,6 +16,9 @@ import jade.wrapper.StaleProxyException;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
+import uchicago.src.sim.analysis.DataRecorder;
+import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.sim.engine.BasicAction;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
@@ -47,6 +51,7 @@ public class PredatorPreyModel extends Repast3Launcher {
     private int nPreys = 0;
     private int nPredators = 0;
     private int nPlants = 0;
+    private OpenSequenceGraph graph = null;
 
     public PredatorPreyModel() {
         elementsList = new ArrayList<>();
@@ -84,7 +89,28 @@ public class PredatorPreyModel extends Repast3Launcher {
         addSimEventListener(dsurf);
         dsurf.display();
 
+        buildGraph();
+        //DataRecorder graphRecorder = new DataRecorder("./experiments/plants", this);
         getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
+        getSchedule().scheduleActionAtInterval(1, graph, "step", Schedule.LAST);
+        ////getSchedule().scheduleActionAtInterval(10, new BasicAction() {
+        //    public void execute() {
+        //        graphRecorder.record();
+        //    }
+        //});
+        //getSchedule().scheduleActionAtEnd(graphRecorder, "writeToFile");
+    }
+
+    public void buildGraph(){
+        if (graph != null)
+            graph.dispose();
+        graph = new OpenSequenceGraph("Energies Producers-Brokers", this);
+        graph.setAxisTitles("time", "quantity");
+        graph.addSequence("Plants", () -> { return this.observer.getNumPlants();}, Color.green);
+        graph.addSequence("Predators", () -> { return this.observer.getNumPredators();}, Color.red);
+        graph.addSequence("Preys", () -> { return this.observer.getNumPreys();}, Color.blue);
+
+        graph.display();
     }
 
     public void removeElement(Drawable elem) {

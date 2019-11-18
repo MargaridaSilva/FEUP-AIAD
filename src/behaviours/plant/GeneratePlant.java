@@ -22,7 +22,7 @@ public class GeneratePlant extends TickerBehaviour {
     @Override
     protected void onTick() {
 
-        if (random.nextFloat() < 0.9) {
+        if (random.nextFloat() < 0.999) {
             return;
         }
 
