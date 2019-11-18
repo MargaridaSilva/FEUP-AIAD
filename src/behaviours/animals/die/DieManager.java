@@ -1,7 +1,9 @@
 package behaviours.animals.die;
 
 import agents.AnimalAgent;
+import jade.core.AID;
 import sajas.core.behaviours.SimpleBehaviour;
+import utils.Locator;
 
 public class DieManager extends SimpleBehaviour {
 
@@ -15,10 +17,9 @@ public class DieManager extends SimpleBehaviour {
 
     @Override
     public void action() {
-        
-        System.out.println("Agent " + myAgent.getAID() + " is going to terminate");
         this.myAgent.doDelete();
         done = true;
+
     }
 
     @Override

@@ -26,6 +26,8 @@ public class BehaviourManager extends ParallelBehaviour {
 
     private void addDefaultBehaviours() {
 
+        agent.addBehaviour(new Live(agent, this));
+
         if(agent instanceof PredatorAgent)
             this.addPredatorDefaultBehaviours();
         else
@@ -45,7 +47,7 @@ public class BehaviourManager extends ParallelBehaviour {
         double energy = agent.getEnergy();
         
         Behaviour nextBehaviour = null;
-                
+
         if(energy >= Configs.MIN_ENERGY_MATE)
             if(this.agent.getGender() == Gender.FEMALE)
                 nextBehaviour = new FemaleMateManager(agent, this);

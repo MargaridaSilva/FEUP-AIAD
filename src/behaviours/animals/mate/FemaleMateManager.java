@@ -48,8 +48,6 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
             this.behaviourManager.updateBehaviour(); 
             return; 
         }
-
-        animal.decreaseEnergyDueToTime();
          
         switch (state) {
         case RANDOM_MOVE_CFP:

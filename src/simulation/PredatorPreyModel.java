@@ -52,6 +52,10 @@ public class PredatorPreyModel extends Repast3Launcher {
     private int nPredators = 0;
     private int nPlants = 0;
     private OpenSequenceGraph graph = null;
+    private ObserverAgent observer2;
+    private ObserverAgent observer3;
+    private ObserverAgent observer4;
+    private ObserverAgent observer5;
 
     public PredatorPreyModel() {
         elementsList = new ArrayList<>();
@@ -208,7 +212,15 @@ public class PredatorPreyModel extends Repast3Launcher {
     private void launchObserver() throws StaleProxyException {
         
         this.observer = new ObserverAgent(this);
+        this.observer2 = new ObserverAgent(this);
+        this.observer3 = new ObserverAgent(this);
+        this.observer4 = new ObserverAgent(this);
+        this.observer5 = new ObserverAgent(this);
         this.mainContainer.acceptNewAgent("observer", this.observer).start();
+        this.mainContainer.acceptNewAgent("observer2", this.observer2).start();
+        this.mainContainer.acceptNewAgent("observer3", this.observer3).start();
+        this.mainContainer.acceptNewAgent("observer4", this.observer4).start();
+        this.mainContainer.acceptNewAgent("observer5", this.observer5).start();
     }
 
     private void launchAgents() throws StaleProxyException {
