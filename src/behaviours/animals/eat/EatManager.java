@@ -14,8 +14,10 @@ import sajas.core.behaviours.TickerBehaviour;
 import utils.Configs;
 import utils.Locator;
 import utils.Position;
+import utils.RandomPositionGenerator;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class EatManager extends TickerBehaviour implements MoveManager {
 
@@ -23,11 +25,14 @@ public class EatManager extends TickerBehaviour implements MoveManager {
     BehaviourManager behaviourManager;
     private boolean moveCompleted;
     private ArrayList<Integer> possibleMoves;
+    private double maxEnergy;
 
     public EatManager(AnimalAgent a, BehaviourManager behaviourManager) {
         super(a, Configs.TICK_PERIOD);
         this.behaviourManager = behaviourManager;
         this.moveCompleted = false;
+        Random random = new Random();
+        maxEnergy = random.nextDouble() - 0.5;
     }
 
     public void setFood(Position food) {
@@ -39,7 +44,7 @@ public class EatManager extends TickerBehaviour implements MoveManager {
         
         AnimalAgent animal = (AnimalAgent) myAgent;
 
-        if (animal.getEnergy() <= Configs.MIN_ENERGY_EAT || animal.getEnergy() >= Configs.MAX_ENERGY_EAT) {
+        if (animal.getEnergy() <= Configs.MIN_ENERGY_EAT || animal.getEnergy() >= maxEnergy) {
             this.behaviourManager.removeSubBehaviour(this);
             this.behaviourManager.updateBehaviour();
         }
