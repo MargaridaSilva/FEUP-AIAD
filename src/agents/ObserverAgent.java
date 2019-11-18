@@ -83,7 +83,11 @@ public final class ObserverAgent extends GenericAgent {
     }
 
     public void removeAgent(AID agentId) {
-        this.agentsPositions.remove(agentId);
+        if (this.preysPositions.containsKey(agentId))
+            this.agentsPositions.remove(agentId);
+        if (this.preysPositions.containsKey(agentId))
+            this.preysPositions.remove(agentId);
+        System.out.println("REMOVED" + agentId);
     }
 
     public boolean isPositionTaken(Position position) {

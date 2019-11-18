@@ -42,11 +42,8 @@ public final class PredatorAgent extends AnimalAgent {
 
     @Override
     protected void takeDown() {
-        
         super.takeDown();
-        
         this.deRegisterServices();
-
         System.out.println("Predator-agent " + this.getAID() + " terminating");
     }
 
