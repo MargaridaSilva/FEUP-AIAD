@@ -80,6 +80,12 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
         updateNodeColor();
     }
 
+    public void decreaseEnergyDueToTime() {
+
+        this.energy -= 0.005;
+        updateNodeColor();
+    }
+
     private Color getDefaultColor() {
         switch(gender) {
             case MALE:
