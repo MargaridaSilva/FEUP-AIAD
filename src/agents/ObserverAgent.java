@@ -29,9 +29,9 @@ public final class ObserverAgent extends GenericAgent {
 
     private final int width;
     private final int height;
-    private HashMap<AID, Position> agentsPositions;
-    private HashMap<AID, Position> preysPositions;
-    private HashSet<Position> plantsPositions;
+    private static HashMap<AID, Position> agentsPositions;
+    private static HashMap<AID, Position> preysPositions;
+    private static HashSet<Position> plantsPositions;
 
     public ObserverAgent(PredatorPreyModel model) {
         super(model);

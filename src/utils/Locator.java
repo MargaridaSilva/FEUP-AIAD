@@ -1,6 +1,7 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -35,7 +36,10 @@ public final class Locator {
    
         if(observerAID.size() == 0)
             return null;
-        else
-            return observerAID.get(0);
+        else {
+            Random rand = new Random(System.currentTimeMillis());
+            int num = rand.nextInt(5);
+            return observerAID.get(num);
+        }
     }
 }
