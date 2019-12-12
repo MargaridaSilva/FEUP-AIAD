@@ -37,7 +37,7 @@ public class PredatorPreyModel extends Repast3Launcher {
 
     private PositionGenerator positionGenerator;
     private ContainerController mainContainer;
-    
+
     private Space space;
     private DisplaySurface dsurf;
     private Displayable display;
@@ -47,10 +47,12 @@ public class PredatorPreyModel extends Repast3Launcher {
     private int femalePredators = 0;
     private int malePreys = 1;
     private int femalePreys = 1;
-    private int plants = 5;
+    private int plants = 10;
     private int nPreys = 0;
     private int nPredators = 0;
     private int nPlants = 0;
+    private double energy_expenditure_predators = 0.0075;
+    private double energy_expenditure_preys = 0.0075;
     private OpenSequenceGraph graph = null;
     private ObserverAgent observer2;
     private ObserverAgent observer3;
@@ -60,6 +62,20 @@ public class PredatorPreyModel extends Repast3Launcher {
     public PredatorPreyModel() {
         elementsList = new ArrayList<>();
         positionGenerator = new RandomPositionGenerator(width, height);
+    }
+
+    public PredatorPreyModel(int num_plants, int num_predators, int num_preys, double ratio_predators, double ratio_preys, double energy_expenditure_predators, double energy_expenditure_preys) {
+        this();
+        this.plants = num_plants;
+
+        this.malePredators =  (int) Math.floor(num_predators * ratio_predators + 0.5d);
+        this.femalePredators = num_predators - this.malePredators;
+
+        this.malePreys =  (int) Math.floor(num_preys * ratio_preys + 0.5d);
+        this.femalePreys = num_preys - this.malePreys;
+
+        this.energy_expenditure_predators = energy_expenditure_predators;
+        this.energy_expenditure_preys = energy_expenditure_preys;
     }
 
     public void launchJade() {
@@ -75,9 +91,9 @@ public class PredatorPreyModel extends Repast3Launcher {
     }
 
     public void buildAndScheduleDisplay() {
-        
+
         // display surface
-        if (dsurf != null) 
+        if (dsurf != null)
             dsurf.dispose();
 
         System.gc();
@@ -86,9 +102,9 @@ public class PredatorPreyModel extends Repast3Launcher {
 
         space = new PredatorPreySpace(this, width, height);
         display = space.getDisplay();
-        
+
         dsurf.addDisplayableProbeable(display, "Predator Prey Display");
-        
+
         ((Object2DDisplay) display).setObjectList(elementsList);
         addSimEventListener(dsurf);
         dsurf.display();
@@ -163,14 +179,14 @@ public class PredatorPreyModel extends Repast3Launcher {
             if(i >= malePreys) {
                 gender = Gender.FEMALE;
             }
-            
+
             addPrey(preyPosition, gender);
         }
     }
 
     public void addPrey(Position position, Gender gender) throws StaleProxyException {
         nPreys++;
-        String id = "preys-" + nPreys; 
+        String id = "preys-" + nPreys;
         PreyAgent prey = PreyAgent.generatePreyAgent(this, space, id, position, gender);
         this.addElement(prey);
         this.mainContainer.acceptNewAgent(id, prey).start();
@@ -210,7 +226,7 @@ public class PredatorPreyModel extends Repast3Launcher {
     }
 
     private void launchObserver() throws StaleProxyException {
-        
+
         this.observer = new ObserverAgent(this);
         this.observer2 = new ObserverAgent(this);
         this.observer3 = new ObserverAgent(this);
@@ -232,15 +248,26 @@ public class PredatorPreyModel extends Repast3Launcher {
     }
 
     @Override
-	public void begin() {
-		super.begin();
+    public void begin() {
+        super.begin();
         buildAndScheduleDisplay();
-	}
+    }
 
     public static void main(String[] args) {
+
+
+
+        int num_plants = Integer.parseInt(args[0]);
+        int num_predators = Integer.parseInt(args[1]);
+        int num_preys  = Integer.parseInt(args[2]);
+        double ratio_predators = Double.parseDouble(args[3]);
+        double ratio_preys = Double.parseDouble(args[4]);
+        double energy_expenditure_predators = Double.parseDouble(args[5]);
+        double energy_expenditure_preys = Double.parseDouble(args[6]);
+
         SimInit init = new SimInit();
         init.setNumRuns(1); // works only in batch mode
-        PredatorPreyModel model = new PredatorPreyModel();
+        PredatorPreyModel model = new PredatorPreyModel(num_plants, num_predators, num_preys, ratio_predators, ratio_preys, energy_expenditure_predators,energy_expenditure_preys);
         init.loadModel(model, null, false);
     }
 
@@ -292,7 +319,7 @@ public class PredatorPreyModel extends Repast3Launcher {
         this.femalePreys = femalePreys;
     }
 
-    
+
     public int getPlants() {
         return plants;
     }
@@ -316,7 +343,7 @@ public class PredatorPreyModel extends Repast3Launcher {
 
     @Override
     public String getName() {
-        
+
         return "Predator Prey Simulation";
     }
 
@@ -324,9 +351,18 @@ public class PredatorPreyModel extends Repast3Launcher {
         return space;
     }
 
+    public double getEnergy_expenditure_predators() {
+        return energy_expenditure_predators;
+    }
+
+    public double getEnergy_expenditure_preys() {
+        return energy_expenditure_preys;
+    }
+
+
     @Override
     protected void launchJADE() {
-        
+
         Runtime rt = Runtime.instance();
         Profile p1 = new ProfileImpl();
         mainContainer = rt.createMainContainer(p1);

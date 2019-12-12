@@ -13,6 +13,7 @@ public class PreyAgent extends AnimalAgent {
     private PreyAgent(PredatorPreyModel model, Space space, String id, Position position, Gender gender) {
 
         super(model, space, id, position, gender);
+        this.energyExpenditure = model.getEnergy_expenditure_preys();
     }
 
     public static PreyAgent generatePreyAgent(PredatorPreyModel model, Space space, String id, Position position, Gender gender) {

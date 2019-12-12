@@ -41,7 +41,6 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
         this.setEnergy(0.5 + 0.5 * random.nextDouble());
 
         // random number in [MIN_ENERGY_EXP, MAX_ENERGY_EXP]
-        this.energyExpenditure = Configs.MIN_ENERGY_EXP + (Configs.MAX_ENERGY_EXP - Configs.MIN_ENERGY_EXP) * random.nextDouble();
     }
 
     @Override
