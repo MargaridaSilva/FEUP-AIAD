@@ -32,7 +32,7 @@ public class EatManager extends TickerBehaviour implements MoveManager {
         this.behaviourManager = behaviourManager;
         this.moveCompleted = false;
         Random random = new Random();
-        maxEnergy = random.nextDouble() - 0.5;
+        maxEnergy = 0.5;
     }
 
     public void setFood(Position food) {
@@ -44,7 +44,7 @@ public class EatManager extends TickerBehaviour implements MoveManager {
         
         AnimalAgent animal = (AnimalAgent) myAgent;
 
-        if (animal.getEnergy() <= Configs.MIN_ENERGY_EAT || animal.getEnergy() >= maxEnergy) {
+        if (animal.getEnergy() <= Configs.MIN_ENERGY_EAT || animal.getEnergy() >= Configs.MAX_ENERGY_EAT) {
             this.behaviourManager.removeSubBehaviour(this);
             this.behaviourManager.updateBehaviour();
         }

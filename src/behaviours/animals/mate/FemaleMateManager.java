@@ -73,13 +73,13 @@ public class FemaleMateManager extends TickerBehaviour implements MoveManager {
         AnimalAgent animal = (AnimalAgent)myAgent;
         animal.decreaseEnergy(1 - Configs.MIN_ENERGY_MATE);
         Random random = new Random();
-        int maxNumChildren = Configs.PREY_NUM_CHILDREN;
+        //int maxNumChildren = Configs.PREY_NUM_CHILDREN;
         int numChildren;
 
-        if (myAgent instanceof PredatorAgent)
-            maxNumChildren = Configs.PREDATOR_NUM_CHILDREN;
+        //if (myAgent instanceof PredatorAgent)
+        //    maxNumChildren = Configs.PREDATOR_NUM_CHILDREN;
 
-        numChildren = random.nextInt(maxNumChildren) + 1;
+        numChildren = 1;
         this.giveBirth(numChildren);
 
         setEndMateState();

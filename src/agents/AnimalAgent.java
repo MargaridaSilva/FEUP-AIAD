@@ -38,7 +38,7 @@ public abstract class AnimalAgent extends GenericAgent implements Drawable {
         Random random = new Random();
 
         // random number in [0.5 , 1.0]
-        this.setEnergy(0.5 + 0.5 * random.nextDouble());
+        this.setEnergy(1);
 
         // random number in [MIN_ENERGY_EXP, MAX_ENERGY_EXP]
     }
