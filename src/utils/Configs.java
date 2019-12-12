@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public final class Configs {
 
-    public static final int TICK_PERIOD = 100;
+    public static final int TICK_PERIOD = 1;
 
     public static final Color MALE_COLOR = new Color(66, 149, 245);
 

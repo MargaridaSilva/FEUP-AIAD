@@ -1,6 +1,7 @@
 package simulation;
 
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 
 import agents.AnimalAgent;
@@ -51,8 +52,15 @@ public class PredatorPreyModel extends Repast3Launcher {
     private int nPreys = 0;
     private int nPredators = 0;
     private int nPlants = 0;
+    private double ratio_predators = 1;
+    private double ratio_preys =     1;
     private double energy_expenditure_predators = 0.0075;
     private double energy_expenditure_preys = 0.0075;
+    private int preys = 2;
+    private int predators = 2;
+    private boolean classified = false;
+    private boolean regression = false;
+    private double total_life = 0;
     private OpenSequenceGraph graph = null;
     private ObserverAgent observer2;
     private ObserverAgent observer3;
@@ -67,6 +75,10 @@ public class PredatorPreyModel extends Repast3Launcher {
     public PredatorPreyModel(int num_plants, int num_predators, int num_preys, double ratio_predators, double ratio_preys, double energy_expenditure_predators, double energy_expenditure_preys) {
         this();
         this.plants = num_plants;
+        this.predators = num_predators;
+        this.preys = num_preys;
+        this.ratio_predators = ratio_predators;
+        this.ratio_preys = ratio_preys;
 
         this.malePredators =  (int) Math.floor(num_predators * ratio_predators + 0.5d);
         this.femalePredators = num_predators - this.malePredators;
@@ -88,6 +100,45 @@ public class PredatorPreyModel extends Repast3Launcher {
     public String[] getInitParam() {
         String[] params = {"Width", "Height", "MalePredators", "FemalePredators", "MalePreys", "FemalePreys", "Plants"};
         return params;
+    }
+
+    public void writeClassificationResult(String class_result)  {
+        if (!this.classified) {
+            FileWriter fileWriter = null; //Set true for append mode
+            try {
+                fileWriter = new FileWriter("classification_dataset.csv", true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            PrintWriter out = new PrintWriter(fileWriter);
+            out.println(this.plants + "," + this.predators + "," + this.preys + "," + this.ratio_predators + "," + this.ratio_preys + "," + this.energy_expenditure_predators + "," + this.energy_expenditure_preys + "," + class_result);
+            out.close();
+            this.classified = true;
+        }
+
+        if (this.regression)
+            System.exit(0);
+    }
+
+    public void writeRegressionResult() {
+        if (!this.regression) {
+            FileWriter fileWriter = null; //Set true for append mod
+            try {
+                fileWriter = new FileWriter("regression_dataset.csv", true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            PrintWriter out = new PrintWriter(fileWriter);
+            out.println(this.plants + "," + this.predators + "," + this.preys + "," + this.ratio_predators + "," + this.ratio_preys + "," + this.energy_expenditure_predators + "," + this.energy_expenditure_preys + "," + (this.total_life / this.predators));
+            out.close();
+            this.regression = true;
+        }
+        if (this.classified)
+            System.exit(0);
+    }
+
+    public void updateLifeExpectancy() {
+        this.total_life += this.getSchedule().getCurrentTime();
     }
 
     public void buildAndScheduleDisplay() {
@@ -254,9 +305,6 @@ public class PredatorPreyModel extends Repast3Launcher {
     }
 
     public static void main(String[] args) {
-
-
-
         int num_plants = Integer.parseInt(args[0]);
         int num_predators = Integer.parseInt(args[1]);
         int num_preys  = Integer.parseInt(args[2]);
@@ -265,8 +313,10 @@ public class PredatorPreyModel extends Repast3Launcher {
         double energy_expenditure_predators = Double.parseDouble(args[5]);
         double energy_expenditure_preys = Double.parseDouble(args[6]);
 
+
         SimInit init = new SimInit();
         init.setNumRuns(1); // works only in batch mode
+
         PredatorPreyModel model = new PredatorPreyModel(num_plants, num_predators, num_preys, ratio_predators, ratio_preys, energy_expenditure_predators,energy_expenditure_preys);
         init.loadModel(model, null, false);
     }

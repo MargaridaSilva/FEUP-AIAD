@@ -86,8 +86,20 @@ public final class ObserverAgent extends GenericAgent {
         if (this.agentsPositions.containsKey(agentId))
             this.agentsPositions.remove(agentId);
 
-        if (this.preysPositions.containsKey(agentId))
+        if (this.preysPositions.containsKey(agentId)) {
             this.preysPositions.remove(agentId);
+        }
+        else {
+            this.model.updateLifeExpectancy();
+        }
+
+        if (this.preysPositions.size() == 0){
+            this.model.writeClassificationResult("predator");
+        }
+        else if (this.agentsPositions.size() == this.preysPositions.size()){
+            this.model.writeClassificationResult("prey");
+            this.model.writeRegressionResult();
+        }
     }
 
     public boolean isPositionTaken(Position position) {
