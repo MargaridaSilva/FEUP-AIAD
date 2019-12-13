@@ -41,7 +41,7 @@ public class FindFood extends AchieveREInitiator {
         AID observerAgent = Locator.findObserver(agent);
 
         if (observerAgent == null) {
-            System.out.println("Predator-agent " + agent.getAID().getName() + " can't find the Observer agent.");
+            //System.out.println("Predator-agent " + agent.getAID().getName() + " can't find the Observer agent.");
             return null;
         }
 

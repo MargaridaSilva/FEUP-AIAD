@@ -42,8 +42,8 @@ public class PredatorPreyModel extends Repast3Launcher {
     private Space space;
     private DisplaySurface dsurf;
     private Displayable display;
-    private int width = 20;
-    private int height = 20;
+    private int width = 30;
+    private int height = 30;
     private int malePredators = 0;
     private int femalePredators = 0;
     private int malePreys = 1;
@@ -62,6 +62,7 @@ public class PredatorPreyModel extends Repast3Launcher {
     private boolean regression = false;
     private double total_life = 0;
     private OpenSequenceGraph graph = null;
+    private static ArrayList<ObserverAgent> observers = new ArrayList<ObserverAgent>();
     private ObserverAgent observer2;
     private ObserverAgent observer3;
     private ObserverAgent observer4;
@@ -88,6 +89,7 @@ public class PredatorPreyModel extends Repast3Launcher {
 
         this.energy_expenditure_predators = energy_expenditure_predators;
         this.energy_expenditure_preys = energy_expenditure_preys;
+
     }
 
     public void launchJade() {
@@ -158,12 +160,12 @@ public class PredatorPreyModel extends Repast3Launcher {
 
         ((Object2DDisplay) display).setObjectList(elementsList);
         addSimEventListener(dsurf);
-        dsurf.display();
+        //dsurf.display();
 
-        buildGraph();
+        //buildGraph();
         //DataRecorder graphRecorder = new DataRecorder("./experiments/plants", this);
-        getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
-        getSchedule().scheduleActionAtInterval(1, graph, "step", Schedule.LAST);
+        //getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
+        //getSchedule().scheduleActionAtInterval(1, graph, "step", Schedule.LAST);
         ////getSchedule().scheduleActionAtInterval(10, new BasicAction() {
         //    public void execute() {
         //        graphRecorder.record();
@@ -177,9 +179,9 @@ public class PredatorPreyModel extends Repast3Launcher {
             graph.dispose();
         graph = new OpenSequenceGraph("Energies Producers-Brokers", this);
         graph.setAxisTitles("time", "quantity");
-        graph.addSequence("Plants", () -> { return this.observer.getNumPlants();}, Color.green);
-        graph.addSequence("Predators", () -> { return this.observer.getNumPredators();}, Color.red);
-        graph.addSequence("Preys", () -> { return this.observer.getNumPreys();}, Color.blue);
+        graph.addSequence("Plants", () -> { return observers.get(0).getNumPlants();}, Color.green);
+        graph.addSequence("Predators", () -> { return observers.get(0).getNumPredators();}, Color.red);
+        graph.addSequence("Preys", () -> { return observers.get(0).getNumPreys();}, Color.blue);
 
         graph.display();
     }
@@ -215,7 +217,7 @@ public class PredatorPreyModel extends Repast3Launcher {
         PredatorAgent predator = PredatorAgent.generatePredatorAgent(this, space, id, position, gender);
         this.addElement(predator);
         this.mainContainer.acceptNewAgent(id, predator).start();
-        this.observer.addAgent(predator);
+        this.observers.get(0).addAgent(predator);
     }
 
     private void launchPreys() throws StaleProxyException {
@@ -241,7 +243,7 @@ public class PredatorPreyModel extends Repast3Launcher {
         PreyAgent prey = PreyAgent.generatePreyAgent(this, space, id, position, gender);
         this.addElement(prey);
         this.mainContainer.acceptNewAgent(id, prey).start();
-        this.observer.addAgent(prey);
+        this.observers.get(0).addAgent(prey);
     }
 
     private void launchPlants() throws StaleProxyException {
@@ -259,7 +261,7 @@ public class PredatorPreyModel extends Repast3Launcher {
         String id = "plant-" + nPlants;
         Plant plant = Plant.generatePlant(this, space, id, position);
         this.addElement(plant);
-        this.observer.addPlant(plant);
+        this.observers.get(0).addPlant(plant);
     }
 
     public void removePlant(Position position) throws StaleProxyException {
@@ -269,7 +271,7 @@ public class PredatorPreyModel extends Repast3Launcher {
                 Plant plant = (Plant) drawable;
                 if(plant.getPosition().equals(position)){
                     this.removeElement(plant);
-                    this.observer.removePlant(plant);
+                    this.observers.get(0).removePlant(plant);
                     break;
                 }
             }
@@ -277,17 +279,11 @@ public class PredatorPreyModel extends Repast3Launcher {
     }
 
     private void launchObserver() throws StaleProxyException {
+        for (int i = 0; i < this.malePredators; i++) {
+            this.observers.add(new ObserverAgent(this));
+            this.mainContainer.acceptNewAgent("observer"+ i, this.observers.get(i)).start();
+        }
 
-        this.observer = new ObserverAgent(this);
-        this.observer2 = new ObserverAgent(this);
-        this.observer3 = new ObserverAgent(this);
-        this.observer4 = new ObserverAgent(this);
-        this.observer5 = new ObserverAgent(this);
-        this.mainContainer.acceptNewAgent("observer", this.observer).start();
-        this.mainContainer.acceptNewAgent("observer2", this.observer2).start();
-        this.mainContainer.acceptNewAgent("observer3", this.observer3).start();
-        this.mainContainer.acceptNewAgent("observer4", this.observer4).start();
-        this.mainContainer.acceptNewAgent("observer5", this.observer5).start();
     }
 
     private void launchAgents() throws StaleProxyException {
@@ -318,7 +314,7 @@ public class PredatorPreyModel extends Repast3Launcher {
         init.setNumRuns(1); // works only in batch mode
 
         PredatorPreyModel model = new PredatorPreyModel(num_plants, num_predators, num_preys, ratio_predators, ratio_preys, energy_expenditure_predators,energy_expenditure_preys);
-        init.loadModel(model, null, false);
+        init.loadModel(model, null, true);
     }
 
     public int getWidth() {

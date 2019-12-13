@@ -29,7 +29,7 @@ public class PreyAgent extends AnimalAgent {
         // register services
         this.registerServices();
         
-        System.out.println("Prey-agent "+ getAID().getName()+" is ready.");
+        //System.out.println("Prey-agent "+ getAID().getName()+" is ready.");
         
     }
 
@@ -63,7 +63,7 @@ public class PreyAgent extends AnimalAgent {
         
         this.deRegisterServices();
 
-        System.out.println("Prey-agent " + this.getAID() + " terminating");
+        //System.out.println("Prey-agent " + this.getAID() + " terminating");
     }
 
 }

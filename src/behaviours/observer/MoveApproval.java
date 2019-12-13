@@ -56,7 +56,7 @@ public class MoveApproval extends ProposeResponder {
             e.printStackTrace();
         }
 
-        boolean positionTaken = observer.isPositionTaken(position);
+        boolean positionTaken = false;
         boolean positionOutLimits = observer.isPositionOutLimits(position);
 
         if (positionTaken || positionOutLimits) {

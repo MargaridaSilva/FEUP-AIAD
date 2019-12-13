@@ -40,7 +40,7 @@ public class CallToMate extends Behaviour {
                                                     Communication.Language.MATE, 
                                                     ((AnimalAgent)this.myAgent).getPosition());
 
-        Date date = new Date(System.currentTimeMillis() + 1000);    // wait 1 second for proposals
+        Date date = new Date(System.currentTimeMillis() + 5000);    // wait 1 second for proposals
         msg.setReplyByDate(date);                                     
         this.mateManager.addSubBehaviour(new MateProposal(this.myAgent, msg, this.mateManager));
         this.finished = true;

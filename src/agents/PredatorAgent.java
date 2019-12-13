@@ -29,7 +29,7 @@ public final class PredatorAgent extends AnimalAgent {
         // register services
         this.registerServices();
 
-		System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");
+		//System.out.println("Predator-agent "+ this.getAID().getName()+" is ready.");
     }
 
     private void registerServices() {
@@ -45,7 +45,7 @@ public final class PredatorAgent extends AnimalAgent {
     protected void takeDown() {
         super.takeDown();
         this.deRegisterServices();
-        System.out.println("Predator-agent " + this.getAID() + " terminating");
+        //System.out.println("Predator-agent " + this.getAID() + " terminating");
     }
 
      // Drawable interface

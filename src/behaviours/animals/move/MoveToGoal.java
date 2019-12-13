@@ -49,7 +49,7 @@ public class MoveToGoal extends Move {
         AID observerAgentName =  Locator.findObserver(myAgent);
 
         if(observerAgentName == null) {
-            System.out.println("Predator-agent " + this.myAgent.getAID().getName() + " can't find the Observer agent.");
+            //System.out.println("Predator-agent " + this.myAgent.getAID().getName() + " can't find the Observer agent.");
             return null;
         }
 

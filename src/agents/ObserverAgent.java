@@ -88,17 +88,15 @@ public final class ObserverAgent extends GenericAgent {
 
         if (this.preysPositions.containsKey(agentId)) {
             this.preysPositions.remove(agentId);
-        }
-        else {
             this.model.updateLifeExpectancy();
         }
 
         if (this.preysPositions.size() == 0){
             this.model.writeClassificationResult("predator");
+            this.model.writeRegressionResult();
         }
         else if (this.agentsPositions.size() == this.preysPositions.size()){
             this.model.writeClassificationResult("prey");
-            this.model.writeRegressionResult();
         }
     }
 
@@ -183,7 +181,7 @@ public final class ObserverAgent extends GenericAgent {
                             new String[]{Communication.Language.MOVE, Communication.Language.FOOD},
                              new String[]{Communication.Ontology.VALIDATE_MOVE, Communication.Ontology.TELL_FOOD});
         
-        System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
+        //System.out.println("Observer-agent "+ getAID().getName()+" is ready.");
 
         this.addBehaviour(new MoveApproval(this));
         this.addBehaviour(new AddAgents(this));
@@ -200,7 +198,7 @@ public final class ObserverAgent extends GenericAgent {
         
         this.deRegisterServices();
 
-        System.out.println("Observer-agent " + this.getAID() + " terminating");
+        //System.out.println("Observer-agent " + this.getAID() + " terminating");
     }
 
     public HashSet<Position> getPreys() {

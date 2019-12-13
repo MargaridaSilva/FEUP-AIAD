@@ -26,7 +26,7 @@ public class RemoveAgent extends MsgReceiver {
     protected void handleMessage(ACLMessage msg) {
         ObserverAgent observer = (ObserverAgent)this.myAgent;
         observer.removeAgent(msg.getSender());
-        System.out.println(msg.getSender());
+        //System.out.println(msg.getSender());
 
         this.reset(template, sajas.proto.states.MsgReceiver.INFINITE, new DataStore(), "terminate-msg");
     }

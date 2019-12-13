@@ -38,7 +38,7 @@ public final class Locator {
             return null;
         else {
             Random rand = new Random(System.currentTimeMillis());
-            int num = rand.nextInt(5);
+            int num = rand.nextInt(observerAID.size());
             return observerAID.get(num);
         }
     }

@@ -79,7 +79,7 @@ public class Move extends Behaviour {
         AID observerAgentName =  Locator.findObserver(myAgent);
 
         if(observerAgentName == null) {
-            System.out.println("Predator-agent " + this.myAgent.getAID().getName() + " can't find the Observer agent.");
+            //System.out.println("Predator-agent " + this.myAgent.getAID().getName() + " can't find the Observer agent.");
             return null;
         }
 
