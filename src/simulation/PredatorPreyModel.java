@@ -279,7 +279,7 @@ public class PredatorPreyModel extends Repast3Launcher {
     }
 
     private void launchObserver() throws StaleProxyException {
-        for (int i = 0; i < this.malePredators; i++) {
+        for (int i = 0; i < Math.floor(((this.predators + this.preys) / 4)); i++) {
             this.observers.add(new ObserverAgent(this));
             this.mainContainer.acceptNewAgent("observer"+ i, this.observers.get(i)).start();
         }

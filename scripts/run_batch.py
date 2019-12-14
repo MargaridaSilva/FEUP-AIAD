@@ -1,12 +1,12 @@
 import subprocess
 
-for num_plants in [2, 15]:
-    for num_predators in [6, 10]:
-        for num_preys in [6, 10]:
-            for ratio_preds in [0.5]:
-                for ratio_preys in [0.5]:
-                    for e_preds in [0.01]:
-                        for e_preys in [0.01]:
+for num_plants in [2, 15, 60]:
+    for num_predators in [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 40]:
+        for num_preys in [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 40]:
+            for ratio_preds in [0.10, 0.5, 0.90]:
+                for ratio_preys in [0.10, 0.5, 0.90]:
+                    for e_preds in [0.005, 0.015, 0.05]:
+                        for e_preys in [0.005, 0.015, 0.05]:
                             subprocess.call(['./launch.sh', str(num_plants), str(num_preys), str(num_predators), str(ratio_preds), str(ratio_preys), str(e_preds), str(e_preys)])
 
 
