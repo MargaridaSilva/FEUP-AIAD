@@ -1,8 +1,8 @@
 import subprocess
 
 for num_plants in [2, 15, 60]:
-    for num_predators in [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 40]:
-        for num_preys in [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 40]:
+    for num_predators in [2, 10, 18, 26, 34]:
+        for num_preys in [2, 10, 18, 26, 34]:
             for ratio_preds in [0.10, 0.5, 0.90]:
                 for ratio_preys in [0.10, 0.5, 0.90]:
                     for e_preds in [0.005, 0.015, 0.05]:
