@@ -69,6 +69,7 @@ public class PredatorPreyModel extends Repast3Launcher {
     private ObserverAgent observer4;
     private ObserverAgent observer5;
     private HashMap<AID, Double> startTime;
+    private int totalPreys = 0;
 
     public PredatorPreyModel() {
         elementsList = new ArrayList<>();
@@ -134,7 +135,7 @@ public class PredatorPreyModel extends Repast3Launcher {
                 e.printStackTrace();
             }
             PrintWriter out = new PrintWriter(fileWriter);
-            out.println(this.plants + "," + this.predators + "," + this.preys + "," + this.ratio_predators + "," + this.ratio_preys + "," + this.energy_expenditure_predators + "," + this.energy_expenditure_preys + "," + (this.total_life / this.predators));
+            out.println(this.plants + "," + this.predators + "," + this.preys + "," + this.ratio_predators + "," + this.ratio_preys + "," + this.energy_expenditure_predators + "," + this.energy_expenditure_preys + "," + (this.total_life / this.totalPreys));
             out.close();
             this.regression = true;
         }
@@ -248,6 +249,7 @@ public class PredatorPreyModel extends Repast3Launcher {
         this.mainContainer.acceptNewAgent(id, prey).start();
         this.observers.get(0).addAgent(prey);
         this.startTime.put(prey.getAID(), this.getSchedule().getCurrentTime());
+        totalPreys++;
     }
 
     private void launchPlants() throws StaleProxyException {
