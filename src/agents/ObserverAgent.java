@@ -88,7 +88,7 @@ public final class ObserverAgent extends GenericAgent {
 
         if (this.preysPositions.containsKey(agentId)) {
             this.preysPositions.remove(agentId);
-            this.model.updateLifeExpectancy();
+            this.model.updateLifeExpectancy(agentId);
         }
 
         if (this.preysPositions.size() == 0){

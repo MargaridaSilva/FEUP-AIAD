@@ -3,6 +3,7 @@ package simulation;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import agents.AnimalAgent;
 import agents.ObserverAgent;
@@ -67,9 +68,11 @@ public class PredatorPreyModel extends Repast3Launcher {
     private ObserverAgent observer3;
     private ObserverAgent observer4;
     private ObserverAgent observer5;
+    private HashMap<AID, Double> startTime;
 
     public PredatorPreyModel() {
         elementsList = new ArrayList<>();
+        startTime = new HashMap<>();
         positionGenerator = new RandomPositionGenerator(width, height);
     }
 
@@ -139,8 +142,8 @@ public class PredatorPreyModel extends Repast3Launcher {
             System.exit(0);
     }
 
-    public void updateLifeExpectancy() {
-        this.total_life += this.getSchedule().getCurrentTime();
+    public void updateLifeExpectancy(AID agentId) {
+        this.total_life += (this.getSchedule().getCurrentTime() - this.startTime.get(agentId));
     }
 
     public void buildAndScheduleDisplay() {
@@ -244,6 +247,7 @@ public class PredatorPreyModel extends Repast3Launcher {
         this.addElement(prey);
         this.mainContainer.acceptNewAgent(id, prey).start();
         this.observers.get(0).addAgent(prey);
+        this.startTime.put(prey.getAID(), this.getSchedule().getCurrentTime());
     }
 
     private void launchPlants() throws StaleProxyException {
